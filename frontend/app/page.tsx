@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sparkles, Send } from "lucide-react"
-import { ClerkProvider, SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
 export default function Page() {
   const [email, setEmail] = useState("")
@@ -59,205 +59,203 @@ export default function Page() {
   ]
 
   return (
-    <ClerkProvider>
-      <div className="min-h-screen" style={{ backgroundColor: "#F5F0E1" }}>
-        {/* Header */}
-        <header className="flex justify-between items-center p-6">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <img
-                src="/images/logo.png"
-                alt="MentaMática Logo"
-                width={50}
-                height={50}
-                className="object-contain"
-              />
+    <div className="min-h-screen" style={{ backgroundColor: "#F5F0E1" }}>
+      {/* Header */}
+      <header className="flex justify-between items-center p-6">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img
+              src="/images/logo.png"
+              alt="MentaMática Logo"
+              width={50}
+              height={50}
+              className="object-contain"
+            />
+          </div>
+          <h1 className="text-2xl font-bold" style={{ color: "#2C3E50" }}>
+            MentaMática
+          </h1>
+        </div>
+
+        <SignedOut>
+          <SignInButton mode="modal">
+            <div className="flex justify-center">
+              <Button
+                className="font-bold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: "#F7DC6F",
+                  color: "#2C3E50",
+                  border: "2px solid #F4D03F",
+                }}
+              >
+                INICIAR SESIÓN
+              </Button>
             </div>
-            <h1 className="text-2xl font-bold" style={{ color: "#2C3E50" }}>
-              MentaMática
-            </h1>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-6 py-8">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h2 className="text-5xl font-bold mb-6 animate-fade-in" style={{ color: "#2C3E50" }}>
+            Piensa, juega y resuelve
+          </h2>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-12 animate-fade-in-delay">
+            MentaMática es una aplicación donde encontrarás una forma inteligente y divertida de aprender matemáticas.
+          </p>
+        </div>
+
+        {/* Interactive Section with Animations */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          {/* Left Animation */}
+          <div className="flex justify-center">
+            <SmoothCountingBox />
           </div>
 
+          {/* Center Registration */}
           <SignedOut>
-            <SignInButton mode="modal">
-              <div className="flex justify-center">
+            <SignUpButton mode="modal">
+              <div className="flex flex-col items-center justify-center">
                 <Button
-                  className="font-bold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor: "#F7DC6F",
-                    color: "#2C3E50",
-                    border: "2px solid #F4D03F",
-                  }}
-                >
-                  INICIAR SESIÓN
-                </Button>
-              </div>
-            </SignInButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </header>
-
-        {/* Main Content */}
-        <main className="container mx-auto px-6 py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold mb-6 animate-fade-in" style={{ color: "#2C3E50" }}>
-              Piensa, juega y resuelve
-            </h2>
-            <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-12 animate-fade-in-delay">
-              MentaMática es una aplicación donde encontrarás una forma inteligente y divertida de aprender matemáticas.
-            </p>
-          </div>
-
-          {/* Interactive Section with Animations */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {/* Left Animation */}
-            <div className="flex justify-center">
-              <SmoothCountingBox />
-            </div>
-
-            {/* Center Registration */}
-            <SignedOut>
-              <SignUpButton mode="modal">
-                <div className="flex flex-col items-center justify-center">
-                  <Button
-                    size="lg"
-                    className="font-bold px-12 py-6 rounded-full text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
-                    style={{
-                      backgroundColor: "#D2B48C",
-                      color: "white",
-                      border: "3px solid #C19A6B",
-                    }}
-                  >
-                    <Sparkles className="w-6 h-6 mr-2" />
-                    REGISTRARSE
-                  </Button>
-                </div>
-              </SignUpButton>
-            </SignedOut>
-
-            {/* Right Animation */}
-            <div className="flex justify-center">
-              <SmoothOperationsBox />
-            </div>
-          </div>
-
-          {/* Learning Modules */}
-          <div className="mb-16">
-            <h3 className="text-2xl font-bold text-center mb-8" style={{ color: "#2C3E50" }}>
-              Que aprenderás aquí:
-            </h3>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
-              {modules.map((module, index) => (
-                <div
-                  key={module.name}
-                  className="text-center cursor-pointer group hover:-translate-y-2 transition-transform duration-300"
-                >
-                  <div className="mb-3 flex justify-center">
-                    <div className="w-16 h-16 relative">
-                      <img
-                        src={module.icon || "/placeholder.svg?height=64&width=64"}
-                        alt={module.name}
-                        width={64}
-                        height={64}
-                        className="object-contain"
-                      />
-                    </div>
-                  </div>
-                  <h4 className="font-bold text-sm mb-1" style={{ color: "#2C3E50" }}>
-                    {module.name}
-                  </h4>
-                  <p className="text-xs text-gray-600">{module.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Email Subscription */}
-          <div className="max-w-md mx-auto text-center animate-fade-in-up">
-            <p className="text-gray-700 mb-4">Si deseas más información escribe tu correo electrónico</p>
-            <div className="relative">
-              <div className="flex items-center">
-                <Input
-                  type="email"
-                  placeholder="example@hotmail.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-l-full border-2 text-center transition-all duration-300 focus:scale-105"
+                  size="lg"
+                  className="font-bold px-12 py-6 rounded-full text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
                   style={{
                     backgroundColor: "#D2B48C",
-                    borderColor: "#C19A6B",
                     color: "white",
-                  }}
-                />
-                <Button
-                  onClick={handleSubmitEmail}
-                  className="rounded-r-full px-4 py-3 h-full hover:scale-110 transition-all duration-300"
-                  style={{
-                    backgroundColor: "#C19A6B",
-                    borderColor: "#C19A6B",
-                    color: "white",
+                    border: "3px solid #C19A6B",
                   }}
                 >
-                  <Send className="w-5 h-5" />
+                  <Sparkles className="w-6 h-6 mr-2" />
+                  REGISTRARSE
                 </Button>
               </div>
+            </SignUpButton>
+          </SignedOut>
+
+          {/* Right Animation */}
+          <div className="flex justify-center">
+            <SmoothOperationsBox />
+          </div>
+        </div>
+
+        {/* Learning Modules */}
+        <div className="mb-16">
+          <h3 className="text-2xl font-bold text-center mb-8" style={{ color: "#2C3E50" }}>
+            Que aprenderás aquí:
+          </h3>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+            {modules.map((module, index) => (
+              <div
+                key={module.name}
+                className="text-center cursor-pointer group hover:-translate-y-2 transition-transform duration-300"
+              >
+                <div className="mb-3 flex justify-center">
+                  <div className="w-16 h-16 relative">
+                    <img
+                      src={module.icon || "/placeholder.svg?height=64&width=64"}
+                      alt={module.name}
+                      width={64}
+                      height={64}
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
+                <h4 className="font-bold text-sm mb-1" style={{ color: "#2C3E50" }}>
+                  {module.name}
+                </h4>
+                <p className="text-xs text-gray-600">{module.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Email Subscription */}
+        <div className="max-w-md mx-auto text-center animate-fade-in-up">
+          <p className="text-gray-700 mb-4">Si deseas más información escribe tu correo electrónico</p>
+          <div className="relative">
+            <div className="flex items-center">
+              <Input
+                type="email"
+                placeholder="example@hotmail.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-l-full border-2 text-center transition-all duration-300 focus:scale-105"
+                style={{
+                  backgroundColor: "#D2B48C",
+                  borderColor: "#C19A6B",
+                  color: "white",
+                }}
+              />
+              <Button
+                onClick={handleSubmitEmail}
+                className="rounded-r-full px-4 py-3 h-full hover:scale-110 transition-all duration-300"
+                style={{
+                  backgroundColor: "#C19A6B",
+                  borderColor: "#C19A6B",
+                  color: "white",
+                }}
+              >
+                <Send className="w-5 h-5" />
+              </Button>
             </div>
           </div>
-        </main>
+        </div>
+      </main>
 
-        <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+      <style jsx>{`
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes bounceGentle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      
+      @keyframes slideInScale {
+        from { 
+          opacity: 0; 
+          transform: scale(0.8) translateY(20px); 
         }
-        
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
+        to { 
+          opacity: 1; 
+          transform: scale(1) translateY(0); 
         }
-        
-        @keyframes bounceGentle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        
-        @keyframes slideInScale {
-          from { 
-            opacity: 0; 
-            transform: scale(0.8) translateY(20px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: scale(1) translateY(0); 
-          }
-        }
-        
-        .animate-fade-in {
-          animation: fadeIn 1s ease-out;
-        }
-        
-        .animate-fade-in-delay {
-          animation: fadeIn 1s ease-out 0.3s both;
-        }
-        
-        .animate-fade-in-up {
-          animation: fadeInUp 0.6s ease-out both;
-        }
-        
-        .animate-bounce-gentle {
-          animation: bounceGentle 3s ease-in-out infinite;
-        }
-        
-        .animate-slide-in-scale {
-          animation: slideInScale 0.5s ease-out both;
-        }
-      `}</style>
-      </div>
-    </ClerkProvider>
+      }
+      
+      .animate-fade-in {
+        animation: fadeIn 1s ease-out;
+      }
+      
+      .animate-fade-in-delay {
+        animation: fadeIn 1s ease-out 0.3s both;
+      }
+      
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out both;
+      }
+      
+      .animate-bounce-gentle {
+        animation: bounceGentle 3s ease-in-out infinite;
+      }
+      
+      .animate-slide-in-scale {
+        animation: slideInScale 0.5s ease-out both;
+      }
+    `}</style>
+    </div>
   )
 }
 

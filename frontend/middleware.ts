@@ -1,12 +1,48 @@
-import { withClerkMiddleware } from '@clerk/nextjs/server';
+import { authMiddleware } from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
 
-export default withClerkMiddleware();
+export default authMiddleware({
+  // Rutas públicas que no requieren autenticación
+  publicRoutes: [
+    '/',
+  ],
+  
+  // Rutas que siempre serán protegidas
+  // PARA IR AGREGANDO OOOOOOJOOOOOO
+  ignoredRoutes: [
+    '/app/dashboard(.*)',
+    '/profile(.*)',
+    '/modules(.*)',
+    '/admin(.*)',
+  ],
+  
+  // Función para manejar redirecciones personalizadas
+  afterAuth(auth, req) {
+    // Si el usuario está autenticado y trata de acceder a una ruta pública
+    if (auth.userId && auth.isPublicRoute) {
+      // Redirigir desde la página principal o auth pages al dashboard
+      if (req.nextUrl.pathname === '/' || 
+          req.nextUrl.pathname.startsWith('/app/dashboard') || 
+          req.nextUrl.pathname.startsWith('/app/dashboard')) {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+      }
+    }
+    
+    // Si la ruta no es pública y el usuario no está autenticado
+    if (!auth.userId && !auth.isPublicRoute) {
+      // Redirigir al sign-in
+      return NextResponse.redirect(new URL('/app/dashboard', req.url));
+    }
+    
+    // Permitir el acceso en otros casos
+    return NextResponse.next();
+  }
+});
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
+    '/((?!.*\\..*|_next).*)', // Excluye archivos estáticos y rutas _next
+    '/',
     '/(api|trpc)(.*)',
   ],
 };

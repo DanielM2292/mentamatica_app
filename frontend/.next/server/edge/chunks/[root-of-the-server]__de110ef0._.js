@@ -25,14 +25,46 @@ __turbopack_context__.s({
     "config": (()=>config),
     "default": (()=>__TURBOPACK__default__export__)
 });
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$nextjs$2f$dist$2f$esm$2f$server$2f$withClerkMiddleware$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@clerk/nextjs/dist/esm/server/withClerkMiddleware.js [middleware-edge] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$nextjs$2f$dist$2f$esm$2f$server$2f$authMiddleware$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@clerk/nextjs/dist/esm/server/authMiddleware.js [middleware-edge] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$api$2f$server$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/next/dist/esm/api/server.js [middleware-edge] (ecmascript) <module evaluation>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$spec$2d$extension$2f$response$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/esm/server/web/spec-extension/response.js [middleware-edge] (ecmascript)");
 ;
-const __TURBOPACK__default__export__ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$nextjs$2f$dist$2f$esm$2f$server$2f$withClerkMiddleware$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["withClerkMiddleware"])();
+;
+const __TURBOPACK__default__export__ = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$nextjs$2f$dist$2f$esm$2f$server$2f$authMiddleware$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["authMiddleware"])({
+    // Rutas públicas que no requieren autenticación
+    publicRoutes: [
+        '/'
+    ],
+    // Rutas que siempre serán protegidas
+    // PARA IR AGREGANDO OOOOOOJOOOOOO
+    ignoredRoutes: [
+        '/app/dashboard(.*)',
+        '/profile(.*)',
+        '/modules(.*)',
+        '/admin(.*)'
+    ],
+    // Función para manejar redirecciones personalizadas
+    afterAuth (auth, req) {
+        // Si el usuario está autenticado y trata de acceder a una ruta pública
+        if (auth.userId && auth.isPublicRoute) {
+            // Redirigir desde la página principal o auth pages al dashboard
+            if (req.nextUrl.pathname === '/' || req.nextUrl.pathname.startsWith('/app/dashboard') || req.nextUrl.pathname.startsWith('/app/dashboard')) {
+                return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$spec$2d$extension$2f$response$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].redirect(new URL('/dashboard', req.url));
+            }
+        }
+        // Si la ruta no es pública y el usuario no está autenticado
+        if (!auth.userId && !auth.isPublicRoute) {
+            // Redirigir al sign-in
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$spec$2d$extension$2f$response$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].redirect(new URL('/app/dashboard', req.url));
+        }
+        // Permitir el acceso en otros casos
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$spec$2d$extension$2f$response$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].next();
+    }
+});
 const config = {
     matcher: [
-        // Skip Next.js internals and all static files, unless found in search params
-        '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-        // Always run for API routes
+        '/((?!.*\\..*|_next).*)',
+        '/',
         '/(api|trpc)(.*)'
     ]
 };

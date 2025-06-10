@@ -10,10 +10,6 @@ export const usuarios = pgTable("usuarios", {
     fecha_creacion: timestamp("fecha_creacion")
 })
 
-export const usuariosTransaccionesRelations = relations(usuarios, ({ many }) => ({transacciones_puntos: many(transacciones_puntos)}))
-
-export const usuariosResultadoRelations = relations(usuarios, ({ many }) => ({resultado_actividad: many(resultado_actividad)}))
-
 export const transacciones_puntos = pgTable("transacciones_puntos", {
     transaccion_id: varchar("transaccion_id", {length:10}).primaryKey(),
     usuario_id: varchar("usuario_id", {length:10}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
@@ -22,13 +18,6 @@ export const transacciones_puntos = pgTable("transacciones_puntos", {
     tipo: varchar("tipo", {length: 20}),
 })
 
-export const transaccionesUsuariosRelations = relations(transacciones_puntos, ({ one }) => ({
-    activeUsuario: one(usuarios, {
-        fields: [transacciones_puntos.usuario_id],
-        references: [usuarios.usuario_id]
-    })
-}))
-
 export const respuestas = pgTable("respuestas", {
     respuesta_id: varchar("respuesta_id", {length:10}).primaryKey(),
     resultado_id: varchar("resultado_id", {length:10}).references(() => resultado_actividad.resultado_id, {onDelete: "cascade"}),
@@ -36,8 +25,6 @@ export const respuestas = pgTable("respuestas", {
     tiempo_respuesta: integer("tiempo_respuesta"),
     completada: boolean("completada"),
 })
-
-export const respuestasResultadoRelations = relations(respuestas, ({ many }) => ({resultado_actividad: many(resultado_actividad)}))
 
 export const resultado_actividad = pgTable("resultado_actividad", {
     resultado_id: varchar("resultado_id", {length:10}).primaryKey(),
@@ -49,20 +36,6 @@ export const resultado_actividad = pgTable("resultado_actividad", {
     errores: integer("errores"),
     tiempo_total: integer("tiempo_total"),
 })
-
-export const resultadoRespuestasRelations = relations(resultado_actividad, ({ one }) => ({
-    activeUsuario: one(respuestas, {
-        fields: [resultado_actividad.resultado_id],
-        references: [respuestas.resultado_id]
-    })
-}))
-
-export const resultadoUsuariosRelations = relations(resultado_actividad, ({ one }) => ({
-    activeUsuario: one(usuarios, {
-        fields: [resultado_actividad.usuario_id],
-        references: [usuarios.usuario_id]
-    })
-}))
 
 export const actividades = pgTable("actividades", {
     actividad_id: varchar("actividad_id", {length:10}).primaryKey(),
@@ -96,4 +69,24 @@ export const avatar_opcion = pgTable("avatar_opcion", {
     nombre_opcion: varchar("nombre_opcion", {length: 50}),
     costo: integer("costo").notNull(),
 })
+
+export const usuariosRelations = relations(usuarios, ({ many }) => ({
+    resultadosActividades: many(resultado_actividad),
+    transacciones: many(transacciones_puntos),
+    avatarPersonalizado: many(avatar_personalizado),
+}));
+
+export const actividadesRelations = relations(actividades, ({ many }) => ({
+    resultados: many(resultado_actividad),
+}));
+
+export const resultadoActividadRelations = relations(resultado_actividad, ({ one, many }) => ({
+    usuario: one(usuarios, { fields: [resultado_actividad.usuario_id], references: [usuarios.usuario_id] }),
+    actividad: one(actividades, { fields: [resultado_actividad.actividad_id], references: [actividades.actividad_id] }),
+    respuestas: many(respuestas),
+}));
+
+export const avatarPersonalizadoRelations = relations(avatar_personalizado, ({ one }) => ({
+    usuario: one(usuarios, { fields: [avatar_personalizado.usuario_id], references: [usuarios.usuario_id] }),
+}));
 

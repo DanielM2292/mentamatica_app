@@ -1,0 +1,11 @@
+{
+  "name": "mentamatica_app",
+  "scripts": {
+    "dev": "concurrently \"npm:dev-frontend\" \"npm:dev-backend\"",
+    "dev-frontend": "cd frontend && npm run dev",
+    "dev-backend": "cd backend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

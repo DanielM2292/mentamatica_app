@@ -180,3 +180,11 @@
         `-- validation.ts
 
 46 directories, 133 files
+
+
+
+Para el la inicializacion del proyecto solo con un comando se creo el package.json en 
+la raiz del proyecto, luego se instalo concurrently 
+npm install concurrently --save-dev
+se inicializa las dos partes del proyecto desde la raiz con el npm run dev
+Mirar en consola en que puerto se lanza el Back y en cual el Front

@@ -70,7 +70,7 @@ export default function DashboardPage() {
       bgColor: "from-blue-200 to-indigo-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
     {
       id: "suma",
@@ -81,7 +81,7 @@ export default function DashboardPage() {
       bgColor: "from-green-200 to-emerald-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
     {
       id: "resta",
@@ -92,7 +92,7 @@ export default function DashboardPage() {
       bgColor: "from-orange-200 to-red-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
     {
       id: "multiplicacion",
@@ -103,7 +103,7 @@ export default function DashboardPage() {
       bgColor: "from-yellow-200 to-orange-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
     {
       id: "division",
@@ -114,7 +114,7 @@ export default function DashboardPage() {
       bgColor: "from-cyan-200 to-teal-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
     {
       id: "geometria",
@@ -125,7 +125,7 @@ export default function DashboardPage() {
       bgColor: "from-purple-200 to-pink-200",
       progress: 0,
       stars: 0,
-      isUnlocked: false,
+      isUnlocked: true,
     },
   ]);
 

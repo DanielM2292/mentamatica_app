@@ -1,63 +1,33 @@
 .
-|-- README.md
+|-- .gitignore
 |-- backend/
+|   |-- .env
+|   |-- .gitignore
 |   |-- README.md
+|   |-- app/
+|   |   `-- api/
+|   |       |-- courses/
+|   |       |   `-- route.ts
+|   |       `-- users/
+|   |           `-- route.ts
+|   |-- comandos.txt
+|   |-- db/
+|   |   |-- drizzle.ts
+|   |   |-- queries.ts
+|   |   `-- schema.ts
 |   |-- drizzle.config.ts
+|   |-- eslint.config.mjs
+|   |-- next-env.d.ts
+|   |-- next.config.ts
+|   |-- package-lock.json
 |   |-- package.json
-|   |-- src/
-|   |   |-- app.ts
-|   |   |-- config/
-|   |   |   |-- clerk.ts
-|   |   |   |-- cors.ts
-|   |   |   `-- database.ts
-|   |   |-- controllers/
-|   |   |   |-- activity.controller.ts
-|   |   |   |-- auth.controller.ts
-|   |   |   |-- modulo.controller.ts
-|   |   |   |-- progress.controller.ts
-|   |   |   `-- usuario.controller.ts
-|   |   |-- db/
-|   |   |   |-- index.ts
-|   |   |   |-- migrations/
-|   |   |   |   `-- 0001_initial.sql
-|   |   |   `-- schema.ts
-|   |   |-- middlewares/
-|   |   |   |-- auth.middleware.ts
-|   |   |   |-- cors.middleware.ts
-|   |   |   |-- errorHandler.ts
-|   |   |   `-- validation.middleware.ts
-|   |   |-- models/
-|   |   |   |-- actividad.model.ts
-|   |   |   |-- modulo.model.ts
-|   |   |   |-- progeso.model.ts
-|   |   |   |-- reward.model.ts
-|   |   |   `-- usuario.model.ts
-|   |   |-- routes/
-|   |   |   |-- activities.routes.ts
-|   |   |   |-- auth.routes.ts
-|   |   |   |-- index.ts
-|   |   |   |-- modulos.routes.ts
-|   |   |   |-- progress.routes.ts
-|   |   |   `-- usuarios.routes.ts
-|   |   |-- server.ts
-|   |   |-- services/
-|   |   |   |-- auth.service.ts
-|   |   |   |-- neuroeducation.service.ts
-|   |   |   |-- progress.service.ts
-|   |   |   `-- user.service.ts
-|   |   |-- types/
-|   |   |   |-- activity.types.ts
-|   |   |   |-- api.types.ts
-|   |   |   `-- user.types.ts
-|   |   `-- utils/
-|   |       |-- calculateStars.ts
-|   |       |-- hashPassword.ts
-|   |       |-- rewardLogic.ts
-|   |       |-- timeUtils.ts
-|   |       `-- validateEmail.ts
+|   |-- postcss.config.mjs
+|   |-- scripts/
+|   |   `-- seed.ts
 |   `-- tsconfig.json
 |-- estructura.txt
 |-- frontend/
+|   |-- .env
 |   |-- app/
 |   |   |-- dashboard/
 |   |   |   |-- layout.tsx
@@ -71,30 +41,55 @@
 |   |   |   |   |-- page.tsx
 |   |   |   |   `-- styles.module.css
 |   |   |   |-- division/
+|   |   |   |   `-- page.tsx
 |   |   |   |-- geometria/
+|   |   |   |   `-- page.tsx
 |   |   |   |-- multiplicacion/
+|   |   |   |   `-- page.tsx
 |   |   |   |-- numeracion/
+|   |   |   |   `-- page.tsx
 |   |   |   |-- resta/
+|   |   |   |   `-- page.tsx
 |   |   |   `-- suma/
+|   |   |       `-- page.tsx
 |   |   `-- page.tsx
 |   |-- components/
 |   |   |-- atoms/
 |   |   |   |-- Button.tsx
+|   |   |   |-- CoinCounter.tsx
 |   |   |   |-- Icon.tsx
 |   |   |   |-- Input.tsx
-|   |   |   `-- Star.tsx
+|   |   |   |-- LevelButton.tsx
+|   |   |   |-- ModuleIcon.tsx
+|   |   |   |-- ProgressBar.tsx
+|   |   |   |-- SideModuleButton.tsx
+|   |   |   |-- StarRating.tsx
+|   |   |   |-- VideoPlaceholder.tsx
+|   |   |   `-- index.ts
 |   |   |-- math-animation-box.tsx
 |   |   |-- math-animation.tsx
 |   |   |-- module-card.tsx
 |   |   |-- module-icon.tsx
 |   |   |-- molecules/
-|   |   |   |-- InputWithLabel.tsx
-|   |   |   `-- RewardDisplay.tsx
+|   |   |   |-- LevelCard.tsx
+|   |   |   |-- ModuleCard.tsx
+|   |   |   |-- ModuleContent.tsx
+|   |   |   |-- ModuleHeader.tsx
+|   |   |   |-- ModuleNavItem.tsx
+|   |   |   |-- ModuleSidebar.tsx
+|   |   |   |-- UserStats.tsx
+|   |   |   `-- index.ts
 |   |   |-- organisms/
 |   |   |   |-- ActivitySection.tsx
-|   |   |   `-- FeedbackModal.tsx
+|   |   |   |-- CognitiveAudioPanel.tsx
+|   |   |   |-- FeedbackModal.tsx
+|   |   |   |-- ModulePageTemplate.tsx
+|   |   |   `-- index.ts
 |   |   |-- pages/
+|   |   |   |-- Dashboard.tsx
 |   |   |   |-- HomePage.tsx
+|   |   |   |-- LevelPage.tsx
+|   |   |   |-- ModulePage.tsx
 |   |   |   |-- ProgressPage.tsx
 |   |   |   `-- SettingsPage.tsx
 |   |   |-- templates/
@@ -164,27 +159,6 @@
 |       `-- formatTime.ts
 |-- next-env.d.ts
 |-- package-lock.json
-|-- package.json
-`-- shared/
-    |-- constants/
-    |   |-- colors.ts
-    |   |-- modules.ts
-    |   `-- roles.ts
-    |-- types/
-    |   |-- actividad.ts
-    |   |-- common.ts
-    |   `-- usuario.ts
-    `-- utils/
-        |-- rewardLogic.ts
-        |-- timeUtils.ts
-        `-- validation.ts
+`-- package.json
 
-46 directories, 133 files
-
-
-
-Para el la inicializacion del proyecto solo con un comando se creo el package.json en 
-la raiz del proyecto, luego se instalo concurrently 
-npm install concurrently --save-dev
-se inicializa las dos partes del proyecto desde la raiz con el npm run dev
-Mirar en consola en que puerto se lanza el Back y en cual el Front
+37 directories, 124 files

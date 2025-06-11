@@ -65,7 +65,7 @@ function DashboardPage() {
             bgColor: "from-blue-200 to-indigo-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         },
         {
             id: "suma",
@@ -76,7 +76,7 @@ function DashboardPage() {
             bgColor: "from-green-200 to-emerald-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         },
         {
             id: "resta",
@@ -87,7 +87,7 @@ function DashboardPage() {
             bgColor: "from-orange-200 to-red-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         },
         {
             id: "multiplicacion",
@@ -98,7 +98,7 @@ function DashboardPage() {
             bgColor: "from-yellow-200 to-orange-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         },
         {
             id: "division",
@@ -109,7 +109,7 @@ function DashboardPage() {
             bgColor: "from-cyan-200 to-teal-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         },
         {
             id: "geometria",
@@ -120,7 +120,7 @@ function DashboardPage() {
             bgColor: "from-purple-200 to-pink-200",
             progress: 0,
             stars: 0,
-            isUnlocked: false
+            isUnlocked: true
         }
     ]);
     // Audios basados en neurociencia cognitiva para niños
@@ -1150,7 +1150,7 @@ function DashboardPage() {
         columnNumber: 5
     }, this);
 }
-_s(DashboardPage, "OkbzPwQsrVi8swuYpTbo5nmgKYo=", false, function() {
+_s(DashboardPage, "M6XqE26B/VYbFPANSiioUDh4JSI=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$clerk$2d$react$2f$dist$2f$esm$2f$hooks$2f$useUser$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useUser"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]

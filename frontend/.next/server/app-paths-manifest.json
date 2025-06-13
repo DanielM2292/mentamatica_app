@@ -1,11 +1,7 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/modules/conjuntos/page": "app/modules/conjuntos/page.js",
   "/modules/division/page": "app/modules/division/page.js",
-  "/modules/geometria/page": "app/modules/geometria/page.js",
-  "/modules/multiplicacion/page": "app/modules/multiplicacion/page.js",
   "/modules/numeracion/page": "app/modules/numeracion/page.js",
-  "/modules/resta/page": "app/modules/resta/page.js",
-  "/modules/suma/page": "app/modules/suma/page.js"
+  "/page": "app/page.js"
 }

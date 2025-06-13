@@ -135,8 +135,8 @@ const ConjuntosPage = ()=>{
         {
             id: 1,
             title: "Clasifica y agrupa",
-            description: "Arrastra obhetos al conjunto correcto",
-            type: "selection",
+            description: "Arrastra objetos al conjunto correcto",
+            type: "drag-drop",
             difficulty: "easy",
             completed: false,
             stars: 0
@@ -145,7 +145,7 @@ const ConjuntosPage = ()=>{
             id: 2,
             title: "La unión y la intersección",
             description: "Selecciona que elementos pertenecen a la unión o intersección de dos conjuntos",
-            type: "drag-drop",
+            type: "selection",
             difficulty: "easy",
             completed: false,
             stars: 0
@@ -154,7 +154,7 @@ const ConjuntosPage = ()=>{
             id: 3,
             title: "Detective del Conjunto Perdido",
             description: "Encuentra qué conjunto falta para completar una operación",
-            type: "matching",
+            type: "drag-drop",
             difficulty: "medium",
             completed: false,
             stars: 0

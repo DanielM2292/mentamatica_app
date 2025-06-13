@@ -1,18 +1,28 @@
+// Explicación de relaciones:
+/*
+- Cada usuario puede personalizar su avatar, pero **solo puede elegir una opción por categoría**.
+- La clave primaria compuesta (`usuario_id`, `categoria_id`) garantiza esta restricción.
+- `opcion_id` indica qué opción específica ha seleccionado el usuario dentro de esa categoría.
+- Esto evita que un usuario registre múltiples opciones dentro de la misma categoría.
+*/
+// Con esta documentación, queda claro que el diseño impide duplicaciones en la personalización del 
+// avatar y que la relación entre usuario, categoría y opción se respeta correctamente.
+
+
 import { relations } from "drizzle-orm";
 import { primaryKey, integer, pgTable, varchar, text, boolean, timestamp } from "drizzle-orm/pg-core";
 
 export const usuarios = pgTable("usuarios", {
-    usuario_id: varchar("usuario_id", {length:10}).primaryKey(),
+    usuario_id: varchar("usuario_id", {length:40}).primaryKey(),
     email: varchar("email", {length: 255}).notNull().unique(),
     nombre: varchar("nombre", {length: 100}).notNull(),
-    password_hash: varchar("password_hash", {length: 64}).notNull(),
-    monedas: integer("monedas").default(0),
-    fecha_creacion: timestamp("fecha_creacion")
+    monedas: integer("monedas").default(0).notNull(),
+    fecha_creacion: timestamp("fecha_creacion").defaultNow().notNull()
 })
 
 export const transacciones_puntos = pgTable("transacciones_puntos", {
     transaccion_id: varchar("transaccion_id", {length:10}).primaryKey(),
-    usuario_id: varchar("usuario_id", {length:10}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
+    usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     monedas: integer("monedas"),
     fecha: timestamp("fecha"),
     tipo: varchar("tipo", {length: 20}),
@@ -28,7 +38,7 @@ export const respuestas = pgTable("respuestas", {
 
 export const resultado_actividad = pgTable("resultado_actividad", {
     resultado_id: varchar("resultado_id", {length:10}).primaryKey(),
-    usuario_id: varchar("usuario_id", {length:10}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
+    usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     actividad_id: varchar("actividad_id", {length:10}).references(() => actividades.actividad_id, {onDelete: "cascade"}),
     fecha: timestamp("fecha"),
     estrellas: integer("estrellas"),
@@ -50,7 +60,7 @@ export const modulos = pgTable("modulos", {
 })
 
 export const avatar_personalizado = pgTable("avatar_personalizado", {
-    usuario_id: varchar("usuario_id", {length:10}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
+    usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     categoria_id: varchar("categoria_id", {length:10}).references(() => avatar_categoria.categoria_id, {onDelete: "cascade"}),
     opcion_id: varchar("opcion_id", {length: 10}).references(() => avatar_opcion.opcion_id, {onDelete: "cascade"}),
     fecha_desbloqueo: timestamp("fecha_desbloqueo"),
@@ -89,4 +99,3 @@ export const resultadoActividadRelations = relations(resultado_actividad, ({ one
 export const avatarPersonalizadoRelations = relations(avatar_personalizado, ({ one }) => ({
     usuario: one(usuarios, { fields: [avatar_personalizado.usuario_id], references: [usuarios.usuario_id] }),
 }));
-

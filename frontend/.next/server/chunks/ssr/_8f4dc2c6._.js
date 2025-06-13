@@ -89,8 +89,8 @@ const DivisionPage = ()=>{
     const activities = [
         {
             id: 1,
-            title: "Repartir en grupos",
-            description: "Aprende a dividir objetos en grupos iguales",
+            title: "Reparte los Dulces",
+            description: "Divide objetos entre personajes en partes iguales",
             type: "drag-drop",
             difficulty: "easy",
             completed: false,
@@ -98,44 +98,17 @@ const DivisionPage = ()=>{
         },
         {
             id: 2,
-            title: "División por 1",
-            description: "Descubre las divisiones más fáciles",
+            title: "División del Tesoro",
+            description: "Divide monedas según pistas del mapa",
             type: "selection",
-            difficulty: "easy",
+            difficulty: "medium",
             completed: false,
             stars: 0
         },
         {
             id: 3,
-            title: "Mitades exactas",
-            description: "Divide números en dos partes iguales",
-            type: "matching",
-            difficulty: "easy",
-            completed: false,
-            stars: 0
-        },
-        {
-            id: 4,
-            title: "División por 2",
-            description: "Domina la división entre 2",
-            type: "selection",
-            difficulty: "medium",
-            completed: false,
-            stars: 0
-        },
-        {
-            id: 5,
-            title: "División con resto",
-            description: "Aprende qué hacer cuando sobran elementos",
-            type: "drag-drop",
-            difficulty: "medium",
-            completed: false,
-            stars: 0
-        },
-        {
-            id: 6,
-            title: "Tablas de dividir",
-            description: "Practica divisiones del 3, 4 y 5",
+            title: "Pulsa la cifra Correcta",
+            description: "Elige entre opcioes la división correcta",
             type: "matching",
             difficulty: "hard",
             completed: false,
@@ -164,12 +137,12 @@ const DivisionPage = ()=>{
                         children: item.symbol
                     }, item.id, false, {
                         fileName: "[project]/app/modules/division/page.tsx",
-                        lineNumber: 152,
+                        lineNumber: 125,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 150,
+                lineNumber: 123,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -177,7 +150,7 @@ const DivisionPage = ()=>{
                 children: "÷"
             }, void 0, false, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 168,
+                lineNumber: 141,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -188,7 +161,7 @@ const DivisionPage = ()=>{
                 children: "12÷3"
             }, void 0, false, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 171,
+                lineNumber: 144,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -199,7 +172,7 @@ const DivisionPage = ()=>{
                 children: "=4"
             }, void 0, false, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 177,
+                lineNumber: 150,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -223,7 +196,7 @@ const DivisionPage = ()=>{
                                     children: "Volver"
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 218,
+                                    lineNumber: 191,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -238,12 +211,12 @@ const DivisionPage = ()=>{
                                                 className: "jsx-f1648d4e8295b6c2" + " " + "w-full h-full object-contain animate-bounce"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 229,
+                                                lineNumber: 202,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 228,
+                                            lineNumber: 201,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -254,7 +227,7 @@ const DivisionPage = ()=>{
                                                     children: "DIVISIÓN"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 237,
+                                                    lineNumber: 210,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -262,25 +235,25 @@ const DivisionPage = ()=>{
                                                     children: "Reparte y divide números"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 240,
+                                                    lineNumber: 213,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 236,
+                                            lineNumber: 209,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 227,
+                                    lineNumber: 200,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/modules/division/page.tsx",
-                            lineNumber: 217,
+                            lineNumber: 190,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -293,7 +266,7 @@ const DivisionPage = ()=>{
                                     className: "w-5 h-5 text-cyan-500 animate-pulse"
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 248,
+                                    lineNumber: 221,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -301,24 +274,24 @@ const DivisionPage = ()=>{
                                     children: "0"
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 249,
+                                    lineNumber: 222,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/modules/division/page.tsx",
-                            lineNumber: 247,
+                            lineNumber: 220,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/modules/division/page.tsx",
-                    lineNumber: 216,
+                    lineNumber: 189,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 215,
+                lineNumber: 188,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -340,7 +313,7 @@ const DivisionPage = ()=>{
                                             children: "VIDEO EXPLICATIVO"
                                         }, void 0, false, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 260,
+                                            lineNumber: 233,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -348,13 +321,13 @@ const DivisionPage = ()=>{
                                             children: "Descubre cómo dividir es repartir de forma justa"
                                         }, void 0, false, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 263,
+                                            lineNumber: 236,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 259,
+                                    lineNumber: 232,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -364,7 +337,7 @@ const DivisionPage = ()=>{
                                             className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-4 border-2 border-dashed border-gray-400 rounded-2xl group-hover:border-gray-600 transition-colors duration-300"
                                         }, void 0, false, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 269,
+                                            lineNumber: 242,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -375,7 +348,7 @@ const DivisionPage = ()=>{
                                                     children: "12"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 246,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -386,7 +359,7 @@ const DivisionPage = ()=>{
                                                     children: "÷"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 274,
+                                                    lineNumber: 247,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -397,13 +370,13 @@ const DivisionPage = ()=>{
                                                     children: "3"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 275,
+                                                    lineNumber: 248,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 272,
+                                            lineNumber: 245,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -417,7 +390,7 @@ const DivisionPage = ()=>{
                                                     children: "="
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 279,
+                                                    lineNumber: 252,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -428,13 +401,13 @@ const DivisionPage = ()=>{
                                                     children: "4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 280,
+                                                    lineNumber: 253,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 278,
+                                            lineNumber: 251,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -446,12 +419,12 @@ const DivisionPage = ()=>{
                                                         className: "w-8 h-8 text-gray-700 ml-1 group-hover:text-cyan-600 transition-colors duration-300"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 258,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 284,
+                                                    lineNumber: 257,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -459,13 +432,13 @@ const DivisionPage = ()=>{
                                                     children: "¿Cómo repartir en partes iguales?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 288,
+                                                    lineNumber: 261,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 283,
+                                            lineNumber: 256,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -479,7 +452,7 @@ const DivisionPage = ()=>{
                                                             children: "Grupo 1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 297,
+                                                            lineNumber: 270,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -494,18 +467,18 @@ const DivisionPage = ()=>{
                                                                     children: "●"
                                                                 }, num, false, {
                                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                                    lineNumber: 300,
+                                                                    lineNumber: 273,
                                                                     columnNumber: 23
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 298,
+                                                            lineNumber: 271,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 296,
+                                                    lineNumber: 269,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -516,7 +489,7 @@ const DivisionPage = ()=>{
                                                             children: "Grupo 2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 308,
+                                                            lineNumber: 281,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -531,18 +504,18 @@ const DivisionPage = ()=>{
                                                                     children: "●"
                                                                 }, num, false, {
                                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                                    lineNumber: 311,
+                                                                    lineNumber: 284,
                                                                     columnNumber: 23
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 309,
+                                                            lineNumber: 282,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 307,
+                                                    lineNumber: 280,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -553,7 +526,7 @@ const DivisionPage = ()=>{
                                                             children: "Grupo 3"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 319,
+                                                            lineNumber: 292,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -568,41 +541,41 @@ const DivisionPage = ()=>{
                                                                     children: "●"
                                                                 }, num, false, {
                                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                                    lineNumber: 322,
+                                                                    lineNumber: 295,
                                                                     columnNumber: 23
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 320,
+                                                            lineNumber: 293,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 318,
+                                                    lineNumber: 291,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 294,
+                                            lineNumber: 267,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 268,
+                                    lineNumber: 241,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/modules/division/page.tsx",
-                            lineNumber: 258,
+                            lineNumber: 231,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/modules/division/page.tsx",
-                        lineNumber: 257,
+                        lineNumber: 230,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -621,7 +594,7 @@ const DivisionPage = ()=>{
                                                 children: "÷"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 345,
+                                                lineNumber: 318,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -632,7 +605,7 @@ const DivisionPage = ()=>{
                                                 children: "8"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 346,
+                                                lineNumber: 319,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -643,13 +616,13 @@ const DivisionPage = ()=>{
                                                 children: "4"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 347,
+                                                lineNumber: 320,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/modules/division/page.tsx",
-                                        lineNumber: 344,
+                                        lineNumber: 317,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -663,7 +636,7 @@ const DivisionPage = ()=>{
                                                         children: "8"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 354,
+                                                        lineNumber: 327,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -671,7 +644,7 @@ const DivisionPage = ()=>{
                                                         children: "÷"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 355,
+                                                        lineNumber: 328,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -679,13 +652,13 @@ const DivisionPage = ()=>{
                                                         children: "2"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 356,
+                                                        lineNumber: 329,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 353,
+                                                lineNumber: 326,
                                                 columnNumber: 19
                                             }, this),
                                             activity.type === "selection" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -696,7 +669,7 @@ const DivisionPage = ()=>{
                                                         children: "6"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 361,
+                                                        lineNumber: 334,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -704,7 +677,7 @@ const DivisionPage = ()=>{
                                                         children: "÷"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 362,
+                                                        lineNumber: 335,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -712,13 +685,13 @@ const DivisionPage = ()=>{
                                                         children: "3"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 363,
+                                                        lineNumber: 336,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 360,
+                                                lineNumber: 333,
                                                 columnNumber: 19
                                             }, this),
                                             activity.type === "matching" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -729,7 +702,7 @@ const DivisionPage = ()=>{
                                                         children: "10"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 368,
+                                                        lineNumber: 341,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -737,7 +710,7 @@ const DivisionPage = ()=>{
                                                         children: "÷"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 369,
+                                                        lineNumber: 342,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -745,19 +718,19 @@ const DivisionPage = ()=>{
                                                         children: "5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 370,
+                                                        lineNumber: 343,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 367,
+                                                lineNumber: 340,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/modules/division/page.tsx",
-                                        lineNumber: 351,
+                                        lineNumber: 324,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -776,7 +749,7 @@ const DivisionPage = ()=>{
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 378,
+                                                            lineNumber: 351,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -784,13 +757,13 @@ const DivisionPage = ()=>{
                                                             children: activity.difficulty === "easy" ? "FÁCIL" : activity.difficulty === "medium" ? "MEDIO" : "DIFÍCIL"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/modules/division/page.tsx",
-                                                            lineNumber: 381,
+                                                            lineNumber: 354,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 377,
+                                                    lineNumber: 350,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -798,7 +771,7 @@ const DivisionPage = ()=>{
                                                     children: activity.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 391,
+                                                    lineNumber: 364,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -806,18 +779,18 @@ const DivisionPage = ()=>{
                                                     children: activity.description
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/modules/division/page.tsx",
-                                                    lineNumber: 394,
+                                                    lineNumber: 367,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/modules/division/page.tsx",
-                                            lineNumber: 376,
+                                            lineNumber: 349,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/modules/division/page.tsx",
-                                        lineNumber: 375,
+                                        lineNumber: 348,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -831,12 +804,12 @@ const DivisionPage = ()=>{
                                                         className: `w-4 h-4 transition-all duration-300 hover:scale-125 ${i < activity.stars ? "text-yellow-400 fill-current animate-pulse" : "text-gray-300 group-hover:text-yellow-200"}`
                                                     }, i, false, {
                                                         fileName: "[project]/app/modules/division/page.tsx",
-                                                        lineNumber: 403,
+                                                        lineNumber: 376,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 401,
+                                                lineNumber: 374,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(Button, {
@@ -848,31 +821,31 @@ const DivisionPage = ()=>{
                                                 children: activity.completed ? "Repetir" : "Jugar"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/modules/division/page.tsx",
-                                                lineNumber: 413,
+                                                lineNumber: 386,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/modules/division/page.tsx",
-                                        lineNumber: 400,
+                                        lineNumber: 373,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-700"
                                     }, void 0, false, {
                                         fileName: "[project]/app/modules/division/page.tsx",
-                                        lineNumber: 425,
+                                        lineNumber: 398,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, activity.id, true, {
                                 fileName: "[project]/app/modules/division/page.tsx",
-                                lineNumber: 336,
+                                lineNumber: 309,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/app/modules/division/page.tsx",
-                        lineNumber: 334,
+                        lineNumber: 307,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -883,7 +856,7 @@ const DivisionPage = ()=>{
                                 children: "Tu Progreso en División"
                             }, void 0, false, {
                                 fileName: "[project]/app/modules/division/page.tsx",
-                                lineNumber: 432,
+                                lineNumber: 405,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -895,12 +868,12 @@ const DivisionPage = ()=>{
                                     className: "jsx-f1648d4e8295b6c2" + " " + "bg-gradient-to-r from-cyan-400 to-teal-500 h-3 rounded-full transition-all duration-500"
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 436,
+                                    lineNumber: 409,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/modules/division/page.tsx",
-                                lineNumber: 435,
+                                lineNumber: 408,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -914,18 +887,18 @@ const DivisionPage = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 442,
+                                    lineNumber: 415,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/app/modules/division/page.tsx",
-                                lineNumber: 441,
+                                lineNumber: 414,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/modules/division/page.tsx",
-                        lineNumber: 431,
+                        lineNumber: 404,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -938,7 +911,7 @@ const DivisionPage = ()=>{
                                     children: "🧠 ¿Sabías qué?"
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 451,
+                                    lineNumber: 424,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -946,30 +919,30 @@ const DivisionPage = ()=>{
                                     children: "Dividir es repartir de forma justa: si tienes 12 caramelos y quieres repartirlos entre 3 amigos, ¡cada uno recibirá 4 caramelos! La división nos ayuda a ser justos al compartir."
                                 }, void 0, false, {
                                     fileName: "[project]/app/modules/division/page.tsx",
-                                    lineNumber: 454,
+                                    lineNumber: 427,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/modules/division/page.tsx",
-                            lineNumber: 450,
+                            lineNumber: 423,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/modules/division/page.tsx",
-                        lineNumber: 449,
+                        lineNumber: 422,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/modules/division/page.tsx",
-                lineNumber: 255,
+                lineNumber: 228,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/modules/division/page.tsx",
-        lineNumber: 148,
+        lineNumber: 121,
         columnNumber: 5
     }, this);
 };

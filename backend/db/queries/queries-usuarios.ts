@@ -21,27 +21,22 @@ export const usuarioQueries = {
     await db.insert(usuarios).values(data);
     return { success: true, message: "Usuario registrado correctamente" };
   },
-  // SI NECESITO MAS METODOS PARA MANIPULAR LOS USUARIOS LOS DESBLOQUEO AQUI
 
-//   async obtenerUsuario(usuario_id: string) {
-//     return await db
-//       .select()
-//       .from(usuarios)
-//       .where(eq(usuarios.usuario_id, usuario_id));
-//   },
+  async eliminarUsuario(usuario_id: string) {
+    console.log("Envia id del usuario a eliminar:", usuario_id);
+    await db
+      .delete(usuarios)
+      .where(eq(usuarios.usuario_id, usuario_id));
+    console.log("usuario eliminado:", usuario_id);
+    return { success: true, message: "Usuario eliminado correctamente" };
+  },
 
-//   async actualizarUsuario(usuario_id: string, data: Partial<typeof usuarios.$inferInsert>) {
-//     await db
-//       .update(usuarios)
-//       .set(data)
-//       .where(eq(usuarios.usuario_id, usuario_id));
-//     return { success: true, message: "Usuario actualizado correctamente" };
-//   },
-
-//   async eliminarUsuario(usuario_id: string) {
-//     await db
-//       .delete(usuarios)
-//       .where(eq(usuarios.usuario_id, usuario_id));
-//     return { success: true, message: "Usuario eliminado correctamente" };
-//   }
+  async actualizarUsuario(usuario_id: string, data: Partial<typeof usuarios.$inferInsert>) {
+    console.log("Datos antes de actualizar:", data);
+    await db
+      .update(usuarios)
+      .set(data)
+      .where(eq(usuarios.usuario_id, usuario_id));
+    return { success: true, message: "Usuario actualizado correctamente" };
+  },
 };

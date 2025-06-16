@@ -10,68 +10,20 @@ import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } 
 
 export default function Page() {
   const [email, setEmail] = useState("")
-  const { user, isSignedIn, isLoaded } = useUser();
   const router = useRouter();
-  const hasSentData = useRef(false);
+  const { isLoaded, isSignedIn, user } = useUser()
 
   console.log("Estado actual:", { 
     isLoaded, 
     isSignedIn, 
     userId: user?.id, 
-    hasSentData: hasSentData.current 
   });
-
   useEffect(() => {
-    // Esperar a que Clerk esté completamente cargado
-    if (!isLoaded) {
-      console.log("Clerk aún está cargando...");
-      return;
-    }
-
-    console.log("Clerk cargado. Estado de autenticación:", isSignedIn, "Usuario:", user);
-    
-    if (isSignedIn && user && !hasSentData.current) {
+    if (isSignedIn && user) {
       console.log("Usuario autenticado detectado, enviando datos...");
-      hasSentData.current = true; // Marcar que ya se enviaron los datos
-      
-      const userData = {
-        usuario_id: user.id,
-        email: user.primaryEmailAddress?.emailAddress,
-        nombre: user.fullName,
-      };
-      
-      console.log("Datos que se enviarán:", userData);
-
-      // Agregar un pequeño delay para asegurar que el proceso de auth esté completo
-      const timer = setTimeout(() => {
-        fetch("http://localhost:3000/api/usuarios", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-        })
-        .then(response => {
-          console.log("Respuesta recibida:", response.status, response.statusText);
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log("Respuesta de la API exitosa:", data);
-          // Redirigir después de confirmar el éxito
-          router.push("/dashboard");
-        })
-        .catch(error => {
-          console.error("Error al enviar datos:", error);
-          hasSentData.current = false; // Resetear para permitir reintento
-          // Aquí podrías mostrar un mensaje al usuario
-          alert("Hubo un error al procesar tu información. Por favor intenta de nuevo.", );
-        });
-      }, 1000); // Delay de 1 segundo
-
-      return () => clearTimeout(timer);
+      router.push("/dashboard");
     }
-  }, [user, isSignedIn, isLoaded, router]);
+  }, [isSignedIn, user])
 
   const handleSubmitEmail = (e: React.FormEvent) => {
     e.preventDefault()

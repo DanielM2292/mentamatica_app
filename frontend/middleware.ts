@@ -21,17 +21,16 @@ export default authMiddleware({
     // Si el usuario está autenticado y trata de acceder a una ruta pública
     if (auth.userId && auth.isPublicRoute) {
       // Redirigir desde la página principal o auth pages al dashboard
-      if (req.nextUrl.pathname === '/' || 
-          req.nextUrl.pathname.startsWith('/app/dashboard') || 
-          req.nextUrl.pathname.startsWith('/app/dashboard')) {
-        return NextResponse.redirect(new URL('/dashboard', req.url));
+      if (req.nextUrl.pathname.startsWith('/sign-in') || 
+          req.nextUrl.pathname.startsWith('/sign-up')) {
+        return NextResponse.redirect(new URL('/', req.url));
       }
     }
     
     // Si la ruta no es pública y el usuario no está autenticado
     if (!auth.userId && !auth.isPublicRoute) {
       // Redirigir al sign-in
-      return NextResponse.redirect(new URL('/app/dashboard', req.url));
+      return NextResponse.redirect(new URL('/', req.url));
     }
     
     // Permitir el acceso en otros casos

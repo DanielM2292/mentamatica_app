@@ -10,14 +10,20 @@ import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } 
 
 export default function Page() {
   const [email, setEmail] = useState("")
-  const { isSignedIn } = useUser();
   const router = useRouter();
+  const { isLoaded, isSignedIn, user } = useUser()
 
+  console.log("Estado actual:", { 
+    isLoaded, 
+    isSignedIn, 
+    userId: user?.id, 
+  });
   useEffect(() => {
-    if(isSignedIn) {
+    if (isSignedIn && user) {
+      console.log("Usuario autenticado detectado, enviando datos...");
       router.push("/dashboard");
     }
-  }, [isSignedIn, router]);
+  }, [isSignedIn, user])
 
   const handleSubmitEmail = (e: React.FormEvent) => {
     e.preventDefault()
@@ -87,7 +93,12 @@ export default function Page() {
         </div>
 
         <SignedOut>
-          <SignInButton mode="modal">
+          <SignInButton 
+            mode="modal"
+            // Configurar redirect después del login
+            afterSignInUrl="/"
+            afterSignUpUrl="/"
+          >
             <div className="flex justify-center">
               <Button
                 className="font-bold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
@@ -128,7 +139,10 @@ export default function Page() {
 
           {/* Center Registration */}
           <SignedOut>
-            <SignUpButton mode="modal">
+            <SignUpButton 
+              mode="modal"
+              afterSignUpUrl="/"
+            >
               <div className="flex flex-col items-center justify-center">
                 <Button
                   size="lg"

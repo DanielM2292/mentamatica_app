@@ -419,7 +419,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4 text-gray-800 animate-fade-in">
-            Bienvenido {userStats.name}
+            Bienvenido {user?.firstName}
           </h2>
           <p className="text-xl text-gray-600 animate-fade-in-delay">
             ¿Qué quieres aprender hoy?

@@ -1,6 +1,6 @@
-import { usuarios } from './schema';
+import { usuarios } from '../schema';
 import { cache } from "react";
-import { db } from "./drizzle";
+import { db } from "../drizzle";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 

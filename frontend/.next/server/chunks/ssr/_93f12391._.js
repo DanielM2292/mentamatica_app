@@ -163,7 +163,7 @@ function DashboardPage() {
         if (user) {
             setUserStats((prev)=>({
                     ...prev,
-                    name: user.firstName || user.username || "Usuario"
+                    name: user.fullName || user.username || "Usuario"
                 }));
         }
     }, [
@@ -628,7 +628,7 @@ function DashboardPage() {
                                 className: "jsx-726900d70e32a1cf" + " " + "text-4xl font-bold mb-4 text-gray-800 animate-fade-in",
                                 children: [
                                     "Bienvenido ",
-                                    user?.firstName
+                                    user?.username
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/dashboard/page.tsx",

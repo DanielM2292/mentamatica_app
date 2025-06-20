@@ -173,7 +173,7 @@ export default function DashboardPage() {
     if (user) {
       setUserStats(prev => ({
         ...prev,
-        name: user.firstName || user.username || "Usuario"
+        name: user.fullName || user.username || "Usuario"
       }));
     }
   }, [user]);
@@ -419,7 +419,7 @@ export default function DashboardPage() {
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4 text-gray-800 animate-fade-in">
-            Bienvenido {user?.firstName}
+            Bienvenido {user?.username}
           </h2>
           <p className="text-xl text-gray-600 animate-fade-in-delay">
             ¿Qué quieres aprender hoy?

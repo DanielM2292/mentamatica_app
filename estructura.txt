@@ -6,14 +6,21 @@
 |   |-- README.md
 |   |-- app/
 |   |   `-- api/
-|   |       |-- courses/
-|   |       |   `-- route.ts
-|   |       `-- users/
-|   |           `-- route.ts
+|   |       `-- clerk/
+|   |           `-- webhook/
+|   |               `-- route.ts
 |   |-- comandos.txt
 |   |-- db/
 |   |   |-- drizzle.ts
-|   |   |-- queries.ts
+|   |   |-- queries/
+|   |   |   |-- queries-modulo1.ts
+|   |   |   |-- queries-modulo2.ts
+|   |   |   |-- queries-modulo3.ts
+|   |   |   |-- queries-modulo4.ts
+|   |   |   |-- queries-modulo5.ts
+|   |   |   |-- queries-modulo6.ts
+|   |   |   |-- queries-modulo7.ts
+|   |   |   `-- queries-usuarios.ts
 |   |   `-- schema.ts
 |   |-- drizzle.config.ts
 |   |-- eslint.config.mjs
@@ -54,6 +61,7 @@
 |   |   |       `-- page.tsx
 |   |   `-- page.tsx
 |   |-- components/
+|   |   |-- AvatarCustomizer.tsx
 |   |   |-- atoms/
 |   |   |   |-- Button.tsx
 |   |   |   |-- CoinCounter.tsx
@@ -161,4 +169,4 @@
 |-- package-lock.json
 `-- package.json
 
-37 directories, 124 files
+38 directories, 131 files

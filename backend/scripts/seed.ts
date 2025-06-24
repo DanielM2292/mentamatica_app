@@ -178,31 +178,59 @@ const main = async () => {
     await db.insert(schema.avatar_categoria).values([
       {
         categoria_id: "AVC0001",
-        nombre_categoria: "Color de piel",
+        nombre_categoria: "Genero",
       },
       {
         categoria_id: "AVC0002",
-        nombre_categoria: "Forma y color de ojos",
+        nombre_categoria: "Color de piel",
       },
       {
         categoria_id: "AVC0003",
-        nombre_categoria: "Peinado",
+        nombre_categoria: "Forma de Ojos",
       },
       {
         categoria_id: "AVC0004",
-        nombre_categoria: "Color de cabello",
+        nombre_categoria: "Color de Ojos",
       },
       {
         categoria_id: "AVC0005",
-        nombre_categoria: "Accesorios",
+        nombre_categoria: "Cejas",
       },
       {
         categoria_id: "AVC0006",
-        nombre_categoria: "Ropa",
+        nombre_categoria: "Nariz",
       },
       {
         categoria_id: "AVC0007",
-        nombre_categoria: "Fondos o temas",
+        nombre_categoria: "Boca",
+      },
+      {
+        categoria_id: "AVC0008",
+        nombre_categoria: "Orejas",
+      },
+      {
+        categoria_id: "AVC0009",
+        nombre_categoria: "Vello facial",
+      },
+      {
+        categoria_id: "AVC0010",
+        nombre_categoria: "Tipo de pelo",
+      },
+      {
+        categoria_id: "AVC0011",
+        nombre_categoria: "Color de pelo",
+      },
+      {
+        categoria_id: "AVC0012",
+        nombre_categoria: "Ropa",
+      },
+      {
+        categoria_id: "AVC0013",
+        nombre_categoria: "Accesorios",
+      },
+      {
+        categoria_id: "AVC0014",
+        nombre_categoria: "Fondo",
       }
     ]);
 

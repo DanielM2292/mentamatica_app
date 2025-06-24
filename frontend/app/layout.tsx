@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Comic_Neue } from "next/font/google"
 import { ClerkProvider } from '@clerk/nextjs'
+import { Toaster } from "@/components/ui/toaster"
 import "./globals.css"
 
 // Optimización de fuentes con Next.js
@@ -60,6 +61,8 @@ export default function RootLayout({
               <p>© {new Date().getFullYear()} MentaMática - Aprendizaje basado en neurociencia cognitiva</p>
             </footer>
           </div>
+
+          <Toaster />
 
           {/* Script para inicializar efectos de sonido */}
           <script

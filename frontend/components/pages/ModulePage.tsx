@@ -1,5 +1,6 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useRouter, useParams } from 'next/navigation';
 import { ModulePageTemplate } from '../organisms/ModulePageTemplate';
 
 interface Module {
@@ -25,7 +26,7 @@ interface Level {
 
 const ModulePage: React.FC = () => {
   const { moduleId } = useParams<{ moduleId: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [coins, setCoins] = useState(0);
 
   const [modules] = useState<Module[]>([
@@ -192,29 +193,29 @@ const ModulePage: React.FC = () => {
 
   useEffect(() => {
     if (!currentModule) {
-      navigate('/dashboard');
+      router.push('/dashboard');
       return;
     }
 
     if (!currentModule.isUnlocked) {
-      navigate('/dashboard');
+      router.push('/dashboard');
       return;
     }
-  }, [currentModule, navigate]);
+  }, [currentModule, router]);
 
   const handleBack = () => {
-    navigate('/dashboard');
+    router.push('/dashboard');
   };
 
   const handleModuleSelect = (selectedModuleId: string) => {
     const selectedModule = modules.find(m => m.id === selectedModuleId);
     if (selectedModule?.isUnlocked) {
-      navigate(`/modules/${selectedModuleId}`);
+      router.push(`/modules/${selectedModuleId}`);
     }
   };
 
   const handleHomeClick = () => {
-    navigate('/dashboard');
+    router.push('/dashboard');
   };
 
   const handleSettingsClick = () => {
@@ -226,7 +227,7 @@ const ModulePage: React.FC = () => {
   };
 
   const handlePlayLevel = (levelId: number) => {
-    navigate(`/modules/${moduleId}/level/${levelId}`);
+    router.push(`/modules/${moduleId}/level/${levelId}`);
   };
 
   if (!currentModule) {

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+"use client";
+import { useState } from 'react';
 import { ModuleHeader } from '../molecules/ModuleHeader';
 import { ModuleSidebar } from '../molecules/ModuleSidebar';
 import { ModuleContent } from '../molecules/ModuleContent';

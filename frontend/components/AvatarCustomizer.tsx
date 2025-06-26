@@ -1,748 +1,634 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Save, Sparkles, Heart, Star, Lock, Coins } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { ArrowLeft, Heart, Star, Save, Settings, Download, User, Sparkles, Palette, Eye, Smile, Glasses as GlassesIcon, Crown, Zap, Camera, Wand2, Rainbow } from 'lucide-react';
 
-interface AvatarOptions {
-  gender: 'boy' | 'girl';
-  skinColor: string;
-  eyes: string;
-  eyeColor: string;
-  eyebrows: string;
-  nose: string;
-  mouth: string;
-  ears: string;
-  hairType: string;
-  hairColor: string;
-  clothing: string;
-  accessories: string;
-  background: string;
-  facialHair: string;
-}
+const ADVENTURER_OPTIONS = {
+  backgroundColor: [
+    'b6e3f4', 'c0aede', 'd1d4f9', 'ffd5dc', 'ffdfbf', 
+    'ff6b6b', '4ecdc4', '45b7d1', '96ceb4', 'ffeaa7', 
+    'dda0dd', 'f1f5f9', 'e2e8f0', 'cbd5e1', '94a3b8',
+    '64748b', '475569', '334155', '1e293b', '0f172a',
+    'transparent'
+  ],
+  earrings: [
+    'none', 'variant01', 'variant02', 'variant03', 'variant04', 'variant05', 'variant06'
+  ],
+  earringsColor: [
+    'ffe0bd', 'ffdbac', 'd08b5b', 'ae5d29', '92594a', '6a4c93'
+  ],
+  eyebrows: [
+    'variant01', 'variant02', 'variant03', 'variant04', 'variant05', 
+    'variant06', 'variant07', 'variant08', 'variant09', 'variant10',
+    'variant11', 'variant12', 'variant13', 'variant14', 'variant15'
+  ],
+  eyes: [
+    'variant01', 'variant02', 'variant03', 'variant04', 'variant05',
+    'variant06', 'variant07', 'variant08', 'variant09', 'variant10',
+    'variant11', 'variant12', 'variant13', 'variant14', 'variant15',
+    'variant16', 'variant17', 'variant18', 'variant19', 'variant20',
+    'variant21', 'variant22', 'variant23', 'variant24', 'variant25', 'variant26'
+  ],
+  features: [
+    'none', 'birthmark', 'blush', 'freckles'
+  ],
+  featuresColor: [
+    'ffe0bd', 'ffdbac', 'd08b5b', 'ae5d29', '92594a', '6a4c93'
+  ],
+  glasses: [
+    'none', 'variant01', 'variant02', 'variant03', 'variant04', 'variant05'
+  ],
+  glassesColor: [
+    '262e33', '0f3460', '5d4037', '6a4c93', 'a4161a', 'ba181b'
+  ],
+  hair: [
+    'none', 'long01', 'long02', 'long03', 'long04', 'long05', 'long06', 'long07', 'long08', 'long09', 'long10',
+    'long11', 'long12', 'long13', 'long14', 'long15', 'long16', 'long17', 'long18', 'long19', 'long20',
+    'long21', 'long22', 'long23', 'long24', 'long25', 'short01', 'short02', 'short03', 'short04', 'short05',
+    'short06', 'short07', 'short08', 'short09', 'short10', 'short11', 'short12', 'short13', 'short14', 'short15',
+    'short16', 'short17', 'short18', 'short19'
+  ],
+  hairColor: [
+    '0e0e0e', '3eac2c', '6a4e35', '0a0310', '2c1b18', '5c2317', '6a4c93', '9a031e', 'a4161a',
+    'ba181b', 'e5383b', 'f48c06', 'f77f00', 'fcbf49', 'f8d25c', 'ffdd44', 'a0522d', '654321', 
+    'daa520', 'ff4500', '2f4f4f', '800080'
+  ],
+  mouth: [
+    'variant01', 'variant02', 'variant03', 'variant04', 'variant05',
+    'variant06', 'variant07', 'variant08', 'variant09', 'variant10',
+    'variant11', 'variant12', 'variant13', 'variant14', 'variant15',
+    'variant16', 'variant17', 'variant18', 'variant19', 'variant20',
+    'variant21', 'variant22', 'variant23', 'variant24', 'variant25',
+    'variant26', 'variant27', 'variant28', 'variant29', 'variant30'
+  ],
+  skinColor: [
+    '9e5622', '763900', 'ecad80', 'fdbcb4', 'edb98a', 'd08b5b', 'ae5d29', '614335', 'f8d25c',
+    'ffcc88', 'f4a460', 'daa520', 'cd853f', 'f5deb3', 'deb887', 'a0522d', '8b4513', '654321'
+  ]
+};
 
-interface CategoryOption {
-  id: string;
-  name: string;
-  preview: string;
-  color?: string;
-  cost?: number;
-}
+const FRIENDLY_NAMES: Record<string, Record<string, string>> = {
+  backgroundColor: {
+    'transparent': '🚫',
+    'b6e3f4': '💙',
+    'c0aede': '💜',
+    'd1d4f9': '🌸',
+    'ffd5dc': '🌺',
+    'ffdfbf': '🍑',
+    'ff6b6b': '❤️',
+    '4ecdc4': '🌊',
+    '45b7d1': '🌀',
+    '96ceb4': '🌿',
+    'ffeaa7': '☀️'
+  },
+  earrings: {
+    'none': '🚫'
+  },
+  features: {
+    'none': '🚫',
+    'birthmark': '🔸',
+    'blush': '😊',
+    'freckles': '⭐'
+  },
+  glasses: {
+    'none': '🚫'
+  },
+  hair: {
+    'none': '🚫'
+  }
+};
+
+const CATEGORIES = [
+  { 
+    id: 'skinColor', 
+    name: 'Piel', 
+    icon: <User className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-orange-400 via-amber-400 to-yellow-400',
+    emoji: '👤',
+    bgColor: 'bg-gradient-to-br from-orange-100 to-amber-100'
+  },
+  { 
+    id: 'hair', 
+    name: 'Cabello', 
+    icon: <Crown className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-amber-400 via-yellow-400 to-lime-400',
+    emoji: '👑',
+    bgColor: 'bg-gradient-to-br from-amber-100 to-yellow-100'
+  },
+  { 
+    id: 'hairColor', 
+    name: 'Color', 
+    icon: <Palette className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-rose-400 via-pink-400 to-purple-400',
+    emoji: '🎨',
+    bgColor: 'bg-gradient-to-br from-rose-100 to-pink-100'
+  },
+  { 
+    id: 'eyes', 
+    name: 'Ojos', 
+    icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-blue-400 via-cyan-400 to-teal-400',
+    emoji: '👁️',
+    bgColor: 'bg-gradient-to-br from-blue-100 to-cyan-100'
+  },
+  { 
+    id: 'eyebrows', 
+    name: 'Cejas', 
+    icon: <Eye className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-green-400 via-emerald-400 to-teal-400',
+    emoji: '🤨',
+    bgColor: 'bg-gradient-to-br from-green-100 to-emerald-100'
+  },
+  { 
+    id: 'mouth', 
+    name: 'Boca', 
+    icon: <Smile className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-pink-400 via-rose-400 to-red-400',
+    emoji: '😊',
+    bgColor: 'bg-gradient-to-br from-pink-100 to-rose-100'
+  },
+  { 
+    id: 'glasses', 
+    name: 'Gafas', 
+    icon: <GlassesIcon className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-indigo-400 via-purple-400 to-pink-400',
+    emoji: '🤓',
+    bgColor: 'bg-gradient-to-br from-indigo-100 to-purple-100'
+  },
+  { 
+    id: 'earrings', 
+    name: 'Pendientes', 
+    icon: <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-yellow-400 via-orange-400 to-red-400',
+    emoji: '✨',
+    bgColor: 'bg-gradient-to-br from-yellow-100 to-orange-100'
+  },
+  { 
+    id: 'features', 
+    name: 'Extras', 
+    icon: <Zap className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-red-400 via-pink-400 to-purple-400',
+    emoji: '⚡',
+    bgColor: 'bg-gradient-to-br from-red-100 to-pink-100'
+  },
+  { 
+    id: 'backgroundColor', 
+    name: 'Fondo', 
+    icon: <Rainbow className="w-4 h-4 sm:w-5 sm:h-5" />, 
+    color: 'from-purple-400 via-pink-400 to-red-400',
+    emoji: '🌈',
+    bgColor: 'bg-gradient-to-br from-purple-100 to-pink-100'
+  }
+];
 
 interface AvatarCustomizerProps {
-  onBack: () => void;
-  onSave: (avatar: AvatarOptions) => void;
-  userCoins?: number;
+  onBack?: () => void;
+  onSave?: (avatar: any) => void;
 }
 
-const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ onBack, onSave, userCoins = 50 }) => {
-  const [currentCategory, setCurrentCategory] = useState<string>('gender');
-  const [avatar, setAvatar] = useState<AvatarOptions>({
-    gender: 'boy',
-    skinColor: '#FDBCB4',
-    eyes: 'normal',
-    eyeColor: '#4A5568',
-    eyebrows: 'normal',
-    nose: 'normal',
-    mouth: 'smile',
-    ears: 'normal',
-    hairType: 'short',
-    hairColor: '#8B4513',
-    clothing: 'casual',
-    accessories: 'none',
-    background: 'gradient1',
-    facialHair: 'none'
-  });
-
-  const [animatingOption, setAnimatingOption] = useState<string | null>(null);
+const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ 
+  onBack = () => console.log('Back'), 
+  onSave = (avatar) => console.log('Save', avatar)
+}) => {
+  const [avatarOptions, setAvatarOptions] = useState<Record<string, string>>({});
+  const [activeCategory, setActiveCategory] = useState('skinColor');
   const [showSaveAnimation, setShowSaveAnimation] = useState(false);
-  const [unlockedCategories, setUnlockedCategories] = useState<string[]>(['gender', 'skinColor']);
-  const avatarRef = useRef<HTMLDivElement>(null);
-  const particlesRef = useRef<HTMLDivElement>(null);
+  const [seed] = useState('mi-avatar-magico');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
 
-  // Simulamos GSAP con animaciones CSS personalizadas
   useEffect(() => {
-    if (avatarRef.current) {
-      avatarRef.current.style.animation = 'avatarFloat 3s ease-in-out infinite';
-    }
-  }, [avatar]);
-
-  const categories = [
-    { id: 'gender', name: 'Género', icon: '👤', color: 'from-pink-200 to-blue-200', isLocked: false, cost: 0 },
-    { id: 'skinColor', name: 'Color de Piel', icon: '🎨', color: 'from-orange-200 to-yellow-200', isLocked: false, cost: 0 },
-    { id: 'eyes', name: 'Forma de Ojos', icon: '👀', color: 'from-blue-200 to-cyan-200', isLocked: !unlockedCategories.includes('eyes'), cost: 10 },
-    { id: 'eyeColor', name: 'Color de Ojos', icon: '🌈', color: 'from-green-200 to-teal-200', isLocked: !unlockedCategories.includes('eyeColor'), cost: 15 },
-    { id: 'eyebrows', name: 'Cejas', icon: '✨', color: 'from-yellow-200 to-orange-200', isLocked: !unlockedCategories.includes('eyebrows'), cost: 12 },
-    { id: 'nose', name: 'Nariz', icon: '👃', color: 'from-green-200 to-emerald-200', isLocked: !unlockedCategories.includes('nose'), cost: 15 },
-    { id: 'mouth', name: 'Boca', icon: '👄', color: 'from-red-200 to-pink-200', isLocked: !unlockedCategories.includes('mouth'), cost: 10 },
-    { id: 'ears', name: 'Orejas', icon: '👂', color: 'from-purple-200 to-indigo-200', isLocked: !unlockedCategories.includes('ears'), cost: 20 },
-    { id: 'facialHair', name: 'Vello Facial', icon: '🧔', color: 'from-gray-200 to-slate-200', isLocked: !unlockedCategories.includes('facialHair'), cost: 18 },
-    { id: 'hairType', name: 'Tipo de Pelo', icon: '💇', color: 'from-yellow-200 to-orange-200', isLocked: !unlockedCategories.includes('hairType'), cost: 25 },
-    { id: 'hairColor', name: 'Color de Pelo', icon: '🌈', color: 'from-indigo-200 to-purple-200', isLocked: !unlockedCategories.includes('hairColor'), cost: 15 },
-    { id: 'clothing', name: 'Ropa', icon: '👕', color: 'from-teal-200 to-green-200', isLocked: !unlockedCategories.includes('clothing'), cost: 30 },
-    { id: 'accessories', name: 'Accesorios', icon: '🎀', color: 'from-pink-200 to-rose-200', isLocked: !unlockedCategories.includes('accessories'), cost: 50 },
-    { id: 'background', name: 'Fondo', icon: '🌟', color: 'from-cyan-200 to-blue-200', isLocked: !unlockedCategories.includes('background'), cost: 40 }
-  ];
-
-  const options: Record<string, CategoryOption[]> = {
-    gender: [
-      { id: 'boy', name: 'Niño', preview: '👦' },
-      { id: 'girl', name: 'Niña', preview: '👧' }
-    ],
-    skinColor: [
-      { id: '#FDBCB4', name: 'Claro', preview: '🟤', color: '#FDBCB4' },
-      { id: '#F1C27D', name: 'Medio', preview: '🟤', color: '#F1C27D' },
-      { id: '#E0AC69', name: 'Dorado', preview: '🟤', color: '#E0AC69' },
-      { id: '#C68642', name: 'Moreno', preview: '🟤', color: '#C68642' },
-      { id: '#8D5524', name: 'Oscuro', preview: '🟤', color: '#8D5524' },
-      { id: '#D4A574', name: 'Canela', preview: '🟤', color: '#D4A574' }
-    ],
-    eyes: [
-      { id: 'normal', name: 'Normales', preview: '👁️' },
-      { id: 'big', name: 'Grandes', preview: '😍' },
-      { id: 'small', name: 'Pequeños', preview: '😊' },
-      { id: 'almond', name: 'Almendrados', preview: '😌' },
-      { id: 'round', name: 'Redondos', preview: '😮' },
-      { id: 'sleepy', name: 'Somnolientos', preview: '😴' },
-      { id: 'wink', name: 'Guiño', preview: '😉' }
-    ],
-    eyeColor: [
-      { id: '#4A5568', name: 'Gris', preview: '⚫', color: '#4A5568' },
-      { id: '#8B4513', name: 'Café', preview: '🟤', color: '#8B4513' },
-      { id: '#2D5A87', name: 'Azul', preview: '🔵', color: '#2D5A87' },
-      { id: '#2F855A', name: 'Verde', preview: '🟢', color: '#2F855A' },
-      { id: '#553C9A', name: 'Violeta', preview: '🟣', color: '#553C9A' },
-      { id: '#C05621', name: 'Ámbar', preview: '🟠', color: '#C05621' }
-    ],
-    eyebrows: [
-      { id: 'normal', name: 'Normales', preview: '━' },
-      { id: 'thick', name: 'Gruesas', preview: '═' },
-      { id: 'thin', name: 'Delgadas', preview: '─' },
-      { id: 'arched', name: 'Arqueadas', preview: '︶' },
-      { id: 'straight', name: 'Rectas', preview: '▬' },
-      { id: 'bushy', name: 'Pobladas', preview: '≡' }
-    ],
-    nose: [
-      { id: 'normal', name: 'Normal', preview: '👃🏼' },
-      { id: 'small', name: 'Pequeña', preview: '👃🏻' },
-      { id: 'big', name: 'Grande', preview: '👃🏽' },
-      { id: 'button', name: 'Respingona', preview: '👃🏾' },
-      { id: 'pointed', name: 'Puntiaguda', preview: '🔺' },
-      { id: 'wide', name: 'Ancha', preview: '▽' }
-    ],
-    mouth: [
-      { id: 'smile', name: 'Sonrisa', preview: '😊' },
-      { id: 'big_smile', name: 'Sonrisa Grande', preview: '😄' },
-      { id: 'neutral', name: 'Neutral', preview: '😐' },
-      { id: 'small', name: 'Pequeña', preview: '🙂' },
-      { id: 'lips', name: 'Labios Gruesos', preview: '💋' },
-      { id: 'whistle', name: 'Silbido', preview: '😗' },
-      { id: 'tongue', name: 'Lengua', preview: '😛' }
-    ],
-    ears: [
-      { id: 'normal', name: 'Normales', preview: '👂' },
-      { id: 'small', name: 'Pequeñas', preview: '👂🏻' },
-      { id: 'big', name: 'Grandes', preview: '👂🏼' },
-      { id: 'pointed', name: 'Puntiagudas', preview: '🧝' },
-      { id: 'round', name: 'Redondas', preview: '⭕' }
-    ],
-    facialHair: [
-      { id: 'none', name: 'Sin Vello', preview: '🚫' },
-      { id: 'mustache', name: 'Bigote', preview: '👨' },
-      { id: 'beard', name: 'Barba', preview: '🧔' },
-      { id: 'goatee', name: 'Perilla', preview: '🐐' },
-      { id: 'stubble', name: 'Barba de 3 días', preview: '👤' }
-    ],
-    hairType: [
-      { id: 'short', name: 'Corto', preview: '👦' },
-      { id: 'medium', name: 'Mediano', preview: '👨' },
-      { id: 'long', name: 'Largo', preview: '👧' },
-      { id: 'curly', name: 'Rizado', preview: '👨‍🦱' },
-      { id: 'wavy', name: 'Ondulado', preview: '👩‍🦰' },
-      { id: 'braids', name: 'Trenzas', preview: '👧🏽' },
-      { id: 'ponytail', name: 'Cola', preview: '👱‍♀️' },
-      { id: 'bald', name: 'Calvo', preview: '👨‍🦲' },
-      { id: 'mohawk', name: 'Mohicano', preview: '🤘' }
-    ],
-    hairColor: [
-      { id: '#000000', name: 'Negro', preview: '⚫', color: '#000000' },
-      { id: '#8B4513', name: 'Castaño', preview: '🟤', color: '#8B4513' },
-      { id: '#CD853F', name: 'Rubio Oscuro', preview: '🟫', color: '#CD853F' },
-      { id: '#FFD700', name: 'Rubio', preview: '🟡', color: '#FFD700' },
-      { id: '#FF4500', name: 'Pelirrojo', preview: '🔴', color: '#FF4500' },
-      { id: '#9370DB', name: 'Morado', preview: '🟣', color: '#9370DB' },
-      { id: '#00CED1', name: 'Azul', preview: '🔵', color: '#00CED1' },
-      { id: '#FF69B4', name: 'Rosa', preview: '🩷', color: '#FF69B4' },
-      { id: '#32CD32', name: 'Verde', preview: '🟢', color: '#32CD32' },
-      { id: '#C0C0C0', name: 'Gris', preview: '⚪', color: '#C0C0C0' }
-    ],
-    clothing: [
-      { id: 'casual', name: 'Casual', preview: '👕' },
-      { id: 'formal', name: 'Elegante', preview: '👔' },
-      { id: 'sports', name: 'Deportiva', preview: '🏃' },
-      { id: 'hoodie', name: 'Sudadera', preview: '🧥' },
-      { id: 'dress', name: 'Vestido', preview: '👗' },
-      { id: 'superhero', name: 'Superhéroe', preview: '🦸' },
-      { id: 'princess', name: 'Princesa', preview: '👸' },
-      { id: 'pirate', name: 'Pirata', preview: '🏴‍☠️' },
-      { id: 'uniform', name: 'Uniforme', preview: '👮' }
-    ],
-    accessories: [
-      { id: 'none', name: 'Ninguno', preview: '❌' },
-      { id: 'glasses', name: 'Lentes', preview: '🤓' },
-      { id: 'sunglasses', name: 'Lentes de Sol', preview: '😎' },
-      { id: 'hat', name: 'Sombrero', preview: '🎩' },
-      { id: 'cap', name: 'Gorra', preview: '🧢' },
-      { id: 'bow', name: 'Moño', preview: '🎀' },
-      { id: 'crown', name: 'Corona', preview: '👑' },
-      { id: 'headband', name: 'Diadema', preview: '👸' },
-      { id: 'earrings', name: 'Aretes', preview: '💎' },
-      { id: 'necklace', name: 'Collar', preview: '📿' }
-    ],
-    background: [
-      { id: 'gradient1', name: 'Arcoíris', preview: '🌈' },
-      { id: 'gradient2', name: 'Atardecer', preview: '🌅' },
-      { id: 'space', name: 'Espacio', preview: '🌌' },
-      { id: 'forest', name: 'Bosque', preview: '🌲' },
-      { id: 'ocean', name: 'Océano', preview: '🌊' },
-      { id: 'castle', name: 'Castillo', preview: '🏰' },
-      { id: 'city', name: 'Ciudad', preview: '🏙️' },
-      { id: 'clouds', name: 'Nubes', preview: '☁️' },
-      { id: 'stars', name: 'Estrellas', preview: '⭐' }
-    ]
-  };
-
-  const unlockCategory = (categoryId: string, cost: number) => {
-    if (userCoins >= cost && !unlockedCategories.includes(categoryId)) {
-      setUnlockedCategories([...unlockedCategories, categoryId]);
-      // Aquí podrías actualizar las monedas del usuario
-      return true;
-    }
-    return false;
-  };
-
-  const handleOptionSelect = (optionId: string) => {
-    const currentCategoryData = categories.find(c => c.id === currentCategory);
+    const defaultOptions: Record<string, string> = {
+      backgroundColor: 'b6e3f4',
+      skinColor: '9e5622',
+      hair: 'short01',
+      hairColor: '0e0e0e',
+      eyes: 'variant01',
+      eyebrows: 'variant01',
+      mouth: 'variant02',
+      glasses: 'none',
+      earrings: 'none',
+      features: 'none'
+    };
     
-    if (currentCategoryData?.isLocked) {
-      setAnimatingOption(optionId);
-      setTimeout(() => setAnimatingOption(null), 600);
-      return;
-    }
+    setAvatarOptions(defaultOptions);
+  }, []);
 
-    setAnimatingOption(optionId);
+  const avatarUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    params.append('seed', seed);
+    params.append('size', '600');
     
-    setTimeout(() => {
-      setAvatar(prev => ({
-        ...prev,
-        [currentCategory]: optionId
-      }));
-      setAnimatingOption(null);
-    }, 200);
+    Object.entries(avatarOptions).forEach(([key, value]) => {
+      if (['features', 'glasses', 'earrings', 'hair'].includes(key)) {
+        if (value === 'none') {
+          params.append(`${key}Probability`, '0');
+        } else {
+          params.append(key, value);
+          params.append(`${key}Probability`, '100');
+        }
+      } else if (value && value !== 'none') {
+        params.append(key, value);
+      }
+    });
+    
+    return `https://api.dicebear.com/9.x/adventurer/svg?${params.toString()}`;
+  }, [avatarOptions, seed]);
+
+  const handleOptionChange = (category: string, value: string) => {
+    setIsLoading(true);
+    setAvatarOptions(prev => ({
+      ...prev,
+      [category]: value
+    }));
+    
+    // Efectos visuales divertidos
+    setShowConfetti(true);
+    setShowSparkles(true);
+    setTimeout(() => setShowConfetti(false), 800);
+    setTimeout(() => setShowSparkles(false), 1000);
+    setTimeout(() => setIsLoading(false), 300);
   };
 
   const handleSave = () => {
     setShowSaveAnimation(true);
     setTimeout(() => {
-      onSave(avatar);
+      const avatarData = {
+        style: 'adventurer',
+        options: avatarOptions,
+        seed: seed,
+        url: avatarUrl
+      };
+      onSave(avatarData);
       setShowSaveAnimation(false);
     }, 2000);
   };
 
-  const FloatingParticle = ({ delay, emoji, className = "" }: { delay: number; emoji: string; className?: string }) => (
-    <div
-      className={`absolute text-2xl opacity-60 pointer-events-none ${className}`}
-      style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        animation: `floatParticle ${3 + Math.random() * 2}s ease-in-out infinite`,
-        animationDelay: `${delay}s`,
-      }}
-    >
-      {emoji}
-    </div>
-  );
-
-  const renderBackground = () => {
-    const backgrounds = {
-      gradient1: 'bg-gradient-to-br from-red-200 via-yellow-200 via-green-200 via-blue-200 to-purple-200',
-      gradient2: 'bg-gradient-to-br from-orange-300 via-pink-300 to-purple-400',
-      space: 'bg-gradient-to-br from-indigo-900 to-purple-900',
-      forest: 'bg-gradient-to-br from-green-400 to-green-600',
-      ocean: 'bg-gradient-to-br from-blue-400 to-blue-600',
-      castle: 'bg-gradient-to-br from-gray-400 to-gray-600',
-      city: 'bg-gradient-to-br from-gray-600 to-slate-800',
-      clouds: 'bg-gradient-to-br from-sky-200 to-sky-400',
-      stars: 'bg-gradient-to-br from-indigo-800 to-purple-800'
-    };
-
-    return backgrounds[avatar.background as keyof typeof backgrounds] || backgrounds.gradient1;
+  const downloadAvatar = async () => {
+    try {
+      const response = await fetch(avatarUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `mi-avatar-${seed}.svg`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading avatar:', error);
+    }
   };
 
-  // Componente 2D del Avatar
-  const Avatar2D = () => (
-    <div 
-      ref={avatarRef}
-      className="relative w-48 h-60 mx-auto"
-      style={{ filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))' }}
-    >
-      {/* Cabeza */}
-      <div 
-        className="absolute top-8 left-1/2 transform -translate-x-1/2 w-24 h-28 rounded-full border-2 border-white/20"
-        style={{ 
-          backgroundColor: avatar.skinColor,
-          clipPath: 'ellipse(50% 55% at 50% 45%)'
-        }}
-      >
-        {/* Cabello */}
-        {avatar.hairType !== 'bald' && (
-          <div 
-            className="absolute -top-4 -left-4 -right-4 h-16 rounded-t-full"
-            style={{ 
-              backgroundColor: avatar.hairColor,
-              clipPath: avatar.hairType === 'curly' ? 'polygon(20% 80%, 80% 80%, 90% 40%, 70% 10%, 30% 10%, 10% 40%)' :
-                       avatar.hairType === 'long' ? 'polygon(0% 70%, 100% 70%, 90% 0%, 10% 0%)' :
-                       avatar.hairType === 'mohawk' ? 'polygon(40% 100%, 60% 100%, 55% 0%, 45% 0%)' :
-                       'ellipse(80% 60% at 50% 40%)'
-            }}
-          >
-            {/* Detalles del cabello */}
-            {avatar.hairType === 'braids' && (
-              <>
-                <div className="absolute -bottom-8 left-1 w-2 h-12 rounded-full" style={{ backgroundColor: avatar.hairColor }} />
-                <div className="absolute -bottom-8 right-1 w-2 h-12 rounded-full" style={{ backgroundColor: avatar.hairColor }} />
-              </>
-            )}
-            {avatar.hairType === 'ponytail' && (
-              <div className="absolute -bottom-6 right-0 w-3 h-10 rounded-full" style={{ backgroundColor: avatar.hairColor }} />
-            )}
-          </div>
-        )}
-
-        {/* Cejas */}
-        <div className="absolute top-4 left-3 w-4 h-1 rounded-full" style={{ backgroundColor: avatar.hairColor, opacity: 0.8 }} />
-        <div className="absolute top-4 right-3 w-4 h-1 rounded-full" style={{ backgroundColor: avatar.hairColor, opacity: 0.8 }} />
-
-        {/* Ojos */}
-        <div className="absolute top-6 left-4">
-          <div 
-            className="w-3 h-2 rounded-full bg-white border border-gray-300"
-            style={{ 
-              transform: avatar.eyes === 'big' ? 'scale(1.3)' : 
-                        avatar.eyes === 'small' ? 'scale(0.8)' :
-                        avatar.eyes === 'almond' ? 'scaleY(0.7)' : 'scale(1)'
-            }}
-          >
-            <div 
-              className="w-1.5 h-1.5 rounded-full absolute top-0.5 left-0.5"
-              style={{ backgroundColor: avatar.eyeColor }}
-            />
-          </div>
-        </div>
-        <div className="absolute top-6 right-4">
-          <div 
-            className="w-3 h-2 rounded-full bg-white border border-gray-300"
-            style={{ 
-              transform: avatar.eyes === 'big' ? 'scale(1.3)' : 
-                        avatar.eyes === 'small' ? 'scale(0.8)' :
-                        avatar.eyes === 'almond' ? 'scaleY(0.7)' : 'scale(1)'
-            }}
-          >
-            <div 
-              className="w-1.5 h-1.5 rounded-full absolute top-0.5 right-0.5"
-              style={{ backgroundColor: avatar.eyeColor }}
-            />
-          </div>
-        </div>
-
-        {/* Nariz */}
-        <div 
-          className="absolute top-10 left-1/2 transform -translate-x-1/2 w-1 h-2 rounded-full"
-          style={{ 
-            backgroundColor: avatar.skinColor,
-            filter: 'brightness(0.9)',
-            transform: `translateX(-50%) ${avatar.nose === 'big' ? 'scale(1.3)' : 
-                                          avatar.nose === 'small' ? 'scale(0.8)' : 'scale(1)'}`
-          }}
-        />
-
-        {/* Boca */}
-        <div 
-          className="absolute top-14 left-1/2 transform -translate-x-1/2"
-          style={{
-            width: avatar.mouth === 'big_smile' ? '12px' : 
-                   avatar.mouth === 'small' ? '6px' : '8px',
-            height: '4px',
-            backgroundColor: '#ff6b9d',
-            borderRadius: avatar.mouth === 'smile' || avatar.mouth === 'big_smile' ? '0 0 20px 20px' : '4px',
-            border: avatar.mouth === 'lips' ? '1px solid #ff1744' : 'none'
-          }}
-        />
-
-        {/* Orejas */}
-        <div 
-          className="absolute top-8 -left-2 w-3 h-4 rounded-full border border-white/20"
-          style={{ backgroundColor: avatar.skinColor }}
-        />
-        <div 
-          className="absolute top-8 -right-2 w-3 h-4 rounded-full border border-white/20"
-          style={{ backgroundColor: avatar.skinColor }}
-        />
-
-        {/* Vello facial */}
-        {avatar.facialHair !== 'none' && (
-          <div 
-            className="absolute top-16 left-1/2 transform -translate-x-1/2"
-            style={{
-              width: avatar.facialHair === 'mustache' ? '8px' : '12px',
-              height: avatar.facialHair === 'mustache' ? '2px' : '6px',
-              backgroundColor: avatar.hairColor,
-              borderRadius: '4px',
-              opacity: 0.8
-            }}
-          />
-        )}
-      </div>
-
-      {/* Cuerpo */}
-      <div className="absolute top-32 left-1/2 transform -translate-x-1/2 w-20 h-24">
-        {/* Torso */}
-        <div 
-          className="w-full h-16 rounded-t-lg"
-          style={{
-            backgroundColor: avatar.clothing === 'formal' ? '#1a365d' :
-                            avatar.clothing === 'sports' ? '#e53e3e' :
-                            avatar.clothing === 'hoodie' ? '#4a5568' :
-                            avatar.clothing === 'dress' ? '#d53f8c' :
-                            '#4299e1'
-          }}
-        />
-        
-        {/* Brazos */}
-        <div 
-          className="absolute top-2 -left-3 w-4 h-12 rounded-full"
-          style={{ backgroundColor: avatar.skinColor }}
-        />
-        <div 
-          className="absolute top-2 -right-3 w-4 h-12 rounded-full"
-          style={{ backgroundColor: avatar.skinColor }}
-        />
-      </div>
-
-      {/* Accesorios */}
-      {avatar.accessories !== 'none' && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
-          {avatar.accessories === 'glasses' && (
-            <div className="w-12 h-4 border-2 border-gray-800 rounded bg-transparent" />
-          )}
-          {avatar.accessories === 'hat' && (
-            <div className="w-16 h-8 bg-gray-800 rounded-t-full -mt-6" />
-          )}
-          {avatar.accessories === 'crown' && (
-            <div className="w-14 h-6 bg-yellow-400 rounded -mt-4 relative">
-              <div className="absolute -top-2 left-2 w-2 h-2 bg-yellow-400 transform rotate-45" />
-              <div className="absolute -top-2 left-1/2 w-2 h-2 bg-yellow-400 transform -translate-x-1/2 rotate-45" />
-              <div className="absolute -top-2 right-2 w-2 h-2 bg-yellow-400 transform rotate-45" />
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-
-  const AvatarPreview = () => (
-    <div className={`relative ${renderBackground()} rounded-3xl p-8 shadow-2xl border-4 border-white/50 backdrop-blur-sm overflow-hidden`}>
-      {/* Efectos de fondo especiales */}
-      {avatar.background === 'space' && (
-        <div className="absolute inset-0">
-          {[...Array(30)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
-      )}
-
-      {avatar.background === 'stars' && (
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute text-yellow-300 opacity-70"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `pulse ${2 + Math.random() * 2}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 2}s`
-              }}
-            >
-              ⭐
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Avatar 2D */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-64">
-        <Avatar2D />
-      </div>
-
-      {/* Efectos de brillo */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse rounded-3xl" />
-      
-      {/* Partículas flotantes */}
-      <div ref={particlesRef} className="absolute inset-0 pointer-events-none">
-        <FloatingParticle delay={0} emoji="✨" />
-        <FloatingParticle delay={1} emoji="🌟" />
-        <FloatingParticle delay={2} emoji="💫" />
-        <FloatingParticle delay={3} emoji="🎭" /></div>
-    </div>
-  );
+  const currentCategory = CATEGORIES.find(cat => cat.id === activeCategory);
+  const currentOptions = ADVENTURER_OPTIONS[activeCategory as keyof typeof ADVENTURER_OPTIONS] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 overflow-hidden">
-      {/* Partículas de fondo */}
+    <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 via-blue-200 to-cyan-200 relative overflow-hidden">
+      {/* Elementos decorativos animados - Optimizados para móvil */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `floatBackground ${10 + Math.random() * 10}s linear infinite`,
-              animationDelay: `${Math.random() * 10}s`
-            }}
-          />
-        ))}
+        <div className="absolute top-4 left-4 sm:top-10 sm:left-10 w-8 h-8 sm:w-16 sm:h-16 bg-yellow-300 rounded-full opacity-30 animate-bounce" style={{ animationDuration: '3s' }}></div>
+        <div className="absolute top-16 right-8 sm:top-32 sm:right-16 w-6 h-6 sm:w-12 sm:h-12 bg-pink-300 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s', animationDuration: '2s' }}></div>
+        <div className="absolute bottom-10 left-16 sm:bottom-20 sm:left-32 w-10 h-10 sm:w-20 sm:h-20 bg-blue-300 rounded-full opacity-25 animate-bounce" style={{ animationDelay: '2s', animationDuration: '4s' }}></div>
+        <div className="absolute bottom-20 right-4 sm:bottom-40 sm:right-8 w-4 h-4 sm:w-8 sm:h-8 bg-green-300 rounded-full opacity-35 animate-pulse" style={{ animationDelay: '0.5s', animationDuration: '3s' }}></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 hover:scale-105"
-          >
-            <ArrowLeft size={20} />
-            <span>Volver</span>
-          </button>
+      {/* Confetti Effect - Optimizado para móvil */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-bounce"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 0.5}s`,
+                animationDuration: '1s'
+              }}
+            >
+              <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${
+                ['bg-yellow-400', 'bg-pink-400', 'bg-blue-400', 'bg-green-400', 'bg-purple-400', 'bg-red-400', 'bg-orange-400'][Math.floor(Math.random() * 7)]
+              } opacity-80 shadow-lg`}></div>
+            </div>
+          ))}
+        </div>
+      )}
 
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-yellow-500/20 backdrop-blur-sm rounded-full text-yellow-300 border border-yellow-500/30">
-              <Coins size={20} />
-              <span className="font-bold">{userCoins}</span>
+      {/* Sparkles Effect - Optimizado para móvil */}
+      {showSparkles && (
+        <div className="fixed inset-0 pointer-events-none z-40">
+          {[...Array(10)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-ping"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 0.3}s`,
+                animationDuration: '0.8s'
+              }}
+            >
+              <Star className={`w-4 h-4 sm:w-6 sm:h-6 ${
+                ['text-yellow-400', 'text-pink-400', 'text-blue-400', 'text-green-400', 'text-purple-400'][Math.floor(Math.random() * 5)]
+              } opacity-70`} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Header - Totalmente responsive */}
+      <header className="sticky top-0 z-40 bg-gradient-to-r from-pink-400 via-purple-400 via-blue-400 to-cyan-400 shadow-2xl border-b-2 sm:border-b-4 border-white">
+        <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-5">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            {/* Botón Back - Responsive */}
+            <button
+              onClick={onBack}
+              className="flex items-center gap-1 sm:gap-3 bg-white text-purple-600 px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-sm sm:text-lg font-bold animate-pulse"
+              style={{ animationDuration: '3s' }}
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+              <span className="hidden xs:inline">🏠 Inicio</span>
+              <span className="xs:hidden">🏠</span>
+            </button>
+
+            {/* Título central - Responsive */}
+            <div className="flex items-center gap-2 sm:gap-4 flex-1 justify-center">
+              <div className="w-8 h-8 sm:w-16 sm:h-16 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 rounded-full flex items-center justify-center animate-spin shadow-xl" style={{ animation: 'spin 8s linear infinite' }}>
+                <Wand2 className="w-4 h-4 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <div className="text-center">
+                <h1 className="text-lg sm:text-3xl font-black text-white drop-shadow-lg animate-pulse leading-tight" style={{ animationDuration: '2s' }}>
+                  <span className="hidden sm:inline">✨🎨 AVATAR MÁGICO 🎨✨</span>
+                  <span className="sm:hidden">✨ AVATAR ✨</span>
+                </h1>
+                <p className="text-white/90 font-bold text-xs sm:text-lg animate-bounce hidden sm:block" style={{ animationDuration: '3s' }}>
+                  ¡Crea tu personaje favorito!
+                </p>
+              </div>
             </div>
 
+            {/* Botón Save - Responsive */}
             <button
               onClick={handleSave}
               disabled={showSaveAnimation}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-full hover:from-green-600 hover:to-emerald-600 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="flex items-center gap-1 sm:gap-3 bg-gradient-to-r from-green-400 to-blue-500 text-white px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-sm sm:text-lg font-bold disabled:opacity-50 animate-pulse"
+              style={{ animationDuration: '2.5s' }}
             >
-              {showSaveAnimation ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Guardando...</span>
-                </>
-              ) : (
-                <>
-                  <Save size={20} />
-                  <span>Guardar Avatar</span>
-                </>
-              )}
+              <Save className="w-4 h-4 sm:w-6 sm:h-6" />
+              <span className="hidden xs:inline">💾 Guardar</span>
+              <span className="xs:hidden">💾</span>
             </button>
           </div>
         </div>
+      </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Panel de Categorías */}
-          <div className="lg:col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
-              <h2 className="text-2xl font-bold text-white mb-6 text-center">
-                <Sparkles className="inline-block mr-2" size={24} />
-                Personalización
-              </h2>
+      {/* Main Content - Layout responsive */}
+      <main className="container mx-auto px-3 sm:px-6 py-4 sm:py-10">
+        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-4 sm:gap-10 max-w-7xl mx-auto">
+          
+          {/* Avatar Preview - Responsive */}
+          <div className="lg:col-span-2 order-1 lg:order-1">
+            <div className="bg-gradient-to-br from-white via-yellow-50 to-pink-50 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl lg:sticky lg:top-28 border-2 sm:border-4 border-gradient-to-r from-pink-400 to-purple-400 relative overflow-hidden">
+              {/* Elementos decorativos - Responsive */}
+              <div className="absolute top-3 right-3 sm:top-6 sm:right-6 animate-spin" style={{ animation: 'spin 10s linear infinite' }}>
+                <Star className="w-4 h-4 sm:w-8 sm:h-8 text-yellow-400 opacity-80 drop-shadow-lg" />
+              </div>
+              <div className="absolute bottom-3 left-3 sm:bottom-6 sm:left-6 animate-bounce" style={{ animationDuration: '2s' }}>
+                <Heart className="w-3 h-3 sm:w-6 sm:h-6 text-pink-400 opacity-80 drop-shadow-lg" />
+              </div>
               
-              <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                {categories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => {
-                      if (category.isLocked) {
-                        if (unlockCategory(category.id, category.cost)) {
-                          setCurrentCategory(category.id);
-                        }
-                      } else {
-                        setCurrentCategory(category.id);
-                      }
-                    }}
-                    className={`w-full p-4 rounded-xl transition-all duration-300 border-2 relative overflow-hidden group ${
-                      currentCategory === category.id
-                        ? 'bg-gradient-to-r from-pink-500 to-purple-500 border-white text-white scale-105 shadow-lg'
-                        : category.isLocked
-                        ? 'bg-gray-500/20 border-gray-500/30 text-gray-400 hover:bg-gray-500/30'
-                        : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{category.icon}</span>
-                        <span className="font-medium">{category.name}</span>
-                      </div>
-                      
-                      {category.isLocked && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Lock size={16} />
-                          <span>{category.cost}</span>
-                          <Coins size={16} />
+              <div className="text-center mb-4 sm:mb-8">
+                <h2 className="text-xl sm:text-3xl font-black text-purple-800 mb-2 sm:mb-3 flex items-center justify-center gap-2 sm:gap-4 animate-bounce" style={{ animationDuration: '2.5s' }}>
+                  <Camera className="w-5 h-5 sm:w-8 sm:h-8 text-pink-600 animate-pulse" style={{ animationDuration: '1.5s' }} />
+                  <span>🎭 TU AVATAR 🎭</span>
+                </h2>
+                <p className="text-purple-600 font-bold text-sm sm:text-xl animate-pulse" style={{ animationDuration: '3s' }}>
+                  ¡Mira qué genial se ve! 🌟
+                </p>
+              </div>
+              
+              <div className="flex justify-center mb-4 sm:mb-8">
+                <div className="relative group">
+                  <div className="absolute -inset-3 sm:-inset-6 bg-gradient-to-r from-pink-400 via-purple-400 via-blue-400 to-cyan-400 rounded-full opacity-30 group-hover:opacity-50 transition-opacity duration-500 blur-2xl sm:blur-3xl animate-pulse" style={{ animationDuration: '3s' }}></div>
+                  <div className="relative w-48 h-48 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 rounded-full flex items-center justify-center shadow-2xl overflow-hidden border-4 sm:border-8 border-white group-hover:scale-105 transition-transform duration-300">
+                    {isLoading && (
+                      <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-10">
+                        <div className="flex flex-col items-center gap-2 sm:gap-4">
+                          <div className="w-8 h-8 sm:w-16 sm:h-16 border-4 sm:border-8 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
+                          <p className="text-purple-600 font-black text-sm sm:text-xl animate-bounce">🎨 Creando magia...</p>
                         </div>
-                      )}
-                    </div>
-
-                    {!category.isLocked && currentCategory === category.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
+                      </div>
                     )}
-                  </button>
-                ))}
+                    
+                    <img 
+                      src={avatarUrl}
+                      alt="Tu avatar súper genial"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=b6e3f4`;
+                      }}
+                    />
+                    
+                    {showSaveAnimation && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-green-500/90 to-blue-500/90 rounded-full">
+                        <div className="bg-white text-green-600 px-4 py-3 sm:px-8 sm:py-6 rounded-xl sm:rounded-2xl animate-bounce text-lg sm:text-2xl font-black shadow-2xl">
+                          🎉✨ ¡GUARDADO! ✨🎉
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3 sm:space-y-4">
+                <button
+                  onClick={downloadAvatar}
+                  className="w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-sm sm:text-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 sm:gap-3 animate-pulse"
+                  style={{ animationDuration: '2s' }}
+                >
+                  <Download className="w-4 h-4 sm:w-6 sm:h-6" />
+                  <span>📥 ¡Descargar mi Avatar!</span>
+                </button>
               </div>
             </div>
           </div>
 
-          {/* Vista previa del Avatar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4">
-              <AvatarPreview />
+          {/* Customization Panel - Responsive */}
+          <div className="lg:col-span-3 order-2 lg:order-2">
+            <div className="bg-gradient-to-br from-white via-blue-50 to-purple-50 rounded-2xl sm:rounded-3xl p-4 sm:p-10 shadow-2xl border-2 sm:border-4 border-gradient-to-r from-blue-400 to-purple-400">
+              <div className="mb-4 sm:mb-8">
+                <h2 className="text-xl sm:text-3xl font-black text-blue-800 mb-3 sm:mb-6 flex items-center gap-2 sm:gap-4 animate-bounce" style={{ animationDuration: '2s' }}>
+                  <Settings className="w-5 h-5 sm:w-8 sm:h-8 text-purple-600 animate-spin" style={{ animation: 'spin 6s linear infinite' }} />
+                  <span>🎨 PERSONALIZACIÓN 🎨</span>
+                </h2>
+              </div>
               
-              {/* Efectos de guardado */}
-              {showSaveAnimation && (
-                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-emerald-400/20 rounded-3xl animate-pulse">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white/90 rounded-full p-4 animate-bounce">
-                      <Heart className="text-red-500" size={32} />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Panel de Opciones */}
-          <div className="lg:col-span-1">
-            <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
-              <h3 className="text-xl font-bold text-white mb-6 capitalize">
-                {categories.find(c => c.id === currentCategory)?.name || 'Opciones'}
-              </h3>
-              
-              <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto custom-scrollbar">
-                {options[currentCategory]?.map((option) => (
+              {/* Category Tabs - Responsive grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-10">
+                {CATEGORIES.map((category) => (
                   <button
-                    key={option.id}
-                    onClick={() => handleOptionSelect(option.id)}
-                    className={`p-4 rounded-xl transition-all duration-300 border-2 relative group ${
-                      avatar[currentCategory as keyof AvatarOptions] === option.id
-                        ? 'bg-gradient-to-r from-blue-500 to-cyan-500 border-white text-white scale-105 shadow-lg'
-                        : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:scale-105'
-                    } ${
-                      animatingOption === option.id ? 'animate-pulse' : ''
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`group relative overflow-hidden flex flex-col items-center gap-1 sm:gap-3 p-3 sm:p-6 rounded-xl sm:rounded-2xl font-black transition-all duration-300 text-xs sm:text-base border-2 sm:border-4 hover:scale-105 sm:hover:scale-110 ${
+                      activeCategory === category.id
+                        ? `bg-gradient-to-r ${category.color} text-white shadow-2xl scale-105 sm:scale-110 border-white animate-pulse`
+                        : `${category.bgColor} text-slate-700 hover:shadow-xl border-slate-300 hover:border-purple-400`
                     }`}
+                    style={{ animationDuration: activeCategory === category.id ? '2s' : undefined }}
                   >
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-2xl">
-                        {option.color ? (
-                          <div 
-                            className="w-8 h-8 rounded-full border-2 border-white/50 shadow-lg"
-                            style={{ backgroundColor: option.color }}
-                          />
-                        ) : (
-                          option.preview
-                        )}
-                      </span>
-                      <span className="text-sm font-medium text-center">{option.name}</span>
-                      {option.cost && (
-                        <div className="flex items-center gap-1 text-xs text-yellow-300">
-                          <Coins size={12} />
-                          <span>{option.cost}</span>
-                        </div>
-                      )}
+                    <div className={`text-2xl sm:text-4xl mb-1 sm:mb-2 transition-transform duration-300 ${activeCategory === category.id ? 'animate-bounce' : 'group-hover:scale-125 group-hover:animate-pulse'}`} style={{ animationDuration: '1.5s' }}>
+                      {category.emoji}
                     </div>
-
-                    {avatar[currentCategory as keyof AvatarOptions] === option.id && (
-                      <div className="absolute top-2 right-2">
-                        <Star className="text-yellow-300 fill-current" size={16} />
+                    <span className="text-center leading-tight">{category.name}</span>
+                    
+                    {activeCategory === category.id && (
+                      <div className="absolute top-1 right-1 sm:top-2 sm:right-2">
+                        <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center animate-ping">
+                          <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
+                        </div>
                       </div>
-                    )}
-
-                    {animatingOption === option.id && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer rounded-xl" />
                     )}
                   </button>
                 ))}
+              </div>
+
+              {/* Options - Responsive */}
+              <div>
+                {currentOptions.length > 0 ? (
+                  <>
+                    {/* Color pickers - Responsive grid */}
+                    {(activeCategory.includes('Color') || activeCategory === 'backgroundColor') && (
+                      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 sm:gap-4">
+                        {currentOptions.map((option) => {
+                          const isSelected = avatarOptions[activeCategory] === option;
+                          const bgColor = option === 'transparent' ? 'transparent' : `#${option}`;
+                          const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option] || `Color ${option}`;
+                          
+                          return (
+                            <button
+                              key={option}
+                              onClick={() => handleOptionChange(activeCategory, option)}
+                              className={`group relative w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 hover:scale-110 sm:hover:scale-125 hover:rotate-6 sm:hover:rotate-12 ${
+                                isSelected
+                                  ? 'border-white scale-110 sm:scale-125 shadow-2xl ring-4 sm:ring-8 ring-yellow-300 animate-pulse'
+                                  : 'border-slate-400 hover:border-white shadow-lg hover:shadow-2xl'
+                              } ${option === 'transparent' ? 'bg-white bg-opacity-70 border-dashed' : ''}`}
+                              style={{
+                                backgroundColor: bgColor,
+                                animationDuration: isSelected ? '1.5s' : undefined
+                              }}
+                              title={friendlyName}
+                            >
+                              {isSelected && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full shadow-xl flex items-center justify-center animate-bounce" style={{ animationDuration: '1s' }}>
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {option === 'transparent' && (
+                                <div className="absolute inset-1 sm:inset-2 bg-gradient-to-br from-red-400 to-pink-500 opacity-80 rounded-lg sm:rounded-xl flex items-center justify-center">
+                                  <span className="text-white font-black text-sm sm:text-lg">🚫</span>
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Opciones regulares - Responsive grid */}
+                    {!activeCategory.includes('Color') && activeCategory !== 'backgroundColor' && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                        {currentOptions.map((option, index) => {
+                          const isSelected = avatarOptions[activeCategory] === option;
+                          const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option] || `Opción ${index + 1}`;
+                          
+                          const previewOptions = { ...avatarOptions, [activeCategory]: option };
+                          const previewParams = new URLSearchParams();
+                          previewParams.append('seed', seed);
+                          previewParams.append('size', '120');
+                          
+                          Object.entries(previewOptions).forEach(([key, value]) => {
+                            if (['features', 'glasses', 'earrings', 'hair'].includes(key)) {
+                              if (value === 'none') {
+                                previewParams.append(`${key}Probability`, '0');
+                              } else {
+                                previewParams.append(key, value);
+                                previewParams.append(`${key}Probability`, '100');
+                              }
+                            } else if (value && value !== 'none') {
+                              previewParams.append(key, value);
+                            }
+                          });
+                          
+                          const previewUrl = `https://api.dicebear.com/9.x/adventurer/svg?${previewParams.toString()}`;
+                          
+                          return (
+                            <button
+                              key={option}
+                              onClick={() => handleOptionChange(activeCategory, option)}
+                              className={`group relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 text-left hover:scale-105 sm:hover:scale-110 hover:rotate-1 sm:hover:rotate-2 ${
+                                isSelected
+                                  ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 text-purple-800 shadow-2xl scale-105 sm:scale-110 ring-2 sm:ring-4 ring-yellow-300 animate-pulse'
+                                  : 'border-slate-300 bg-gradient-to-br from-white to-blue-50 text-slate-700 hover:border-purple-400 hover:shadow-xl'
+                              }`}
+                              style={{ animationDuration: isSelected ? '2s' : undefined }}
+                            >
+                              <div className="flex justify-center mb-2 sm:mb-4">
+                                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl">
+                                  <img 
+                                    src={previewUrl}
+                                    alt={`Preview ${friendlyName}`}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=b6e3f4`;
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                              
+                              <div className="text-center">
+                                {option === 'none' ? (
+                                  <div className="text-xs sm:text-sm font-black text-red-600 bg-red-100 rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 border-red-300">
+                                    🚫 {friendlyName}
+                                  </div>
+                                ) : (
+                                  <div className="text-xs sm:text-sm font-black text-purple-600 bg-purple-100 rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 border-purple-300">
+                                    ✨ Opción {index + 1}
+                                  </div>
+                                )}
+                              </div>
+                              
+                              {isSelected && (
+                                <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center animate-bounce shadow-xl" style={{ animationDuration: '1s' }}>
+                                    <div className="text-white font-black text-xs sm:text-sm">✓</div>
+                                  </div>
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-center py-8 sm:py-16">
+                    <div className="text-4xl sm:text-8xl mb-3 sm:mb-6 animate-bounce" style={{ animationDuration: '2s' }}>🎭</div>
+                    <p className="text-slate-600 font-black text-lg sm:text-2xl mb-2 sm:mb-3">
+                      ¡Ups! No hay opciones aquí
+                    </p>
+                    <p className="text-slate-500 font-bold text-sm sm:text-lg animate-pulse" style={{ animationDuration: '3s' }}>
+                      🔄 Prueba con otra categoría
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Estilos CSS personalizados */}
-      <style jsx>{`
-        @keyframes avatarFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(1deg); }
-        }
-
-        @keyframes floatParticle {
-          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
-          50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
-        }
-
-        @keyframes floatBackground {
-          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .animate-shimmer {
-          animation: shimmer 2s ease-in-out infinite;
-        }
-
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-      `}</style>
+      </main>
     </div>
   );
 };

@@ -70,7 +70,7 @@ const clasificaAgrupa = ()=>{
         backgroundGradient: "bg-gradient-to-br from-pink-50 to-purple-50",
         videoTitle: "¿Qué son los conjuntos?",
         videoDescription: "Aprende qué son los conjuntos antes de comenzar",
-        videoBackground: "bg-gradient-to-br from-yellow-100 to-orange-100",
+        videoBackground: "bg-gradient-to-br from-pink-50 to-purple-100",
         activities: [
             {
                 id: "clasificaAgrupa",

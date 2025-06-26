@@ -83,9 +83,10 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
     // Efecto de entrada progresiva basado en neurociencia cognitiva
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         setIsVisible(true);
-        // Crear elementos flotantes
+        // Crear elementos flotantes - menos en móvil
+        const shapesCount = window.innerWidth < 768 ? 4 : 8;
         const shapes = Array.from({
-            length: 8
+            length: shapesCount
         }, (_, i)=>({
                 id: i,
                 x: Math.random() * 100,
@@ -158,23 +159,23 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                     className: "flex gap-1",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                            className: "w-6 h-6 text-blue-500"
-                        }, void 0, false, {
-                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 122,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
-                            className: "w-6 h-6 text-red-500"
+                            className: "w-4 h-4 sm:w-6 sm:h-6 text-blue-500"
                         }, void 0, false, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                             lineNumber: 123,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
+                            className: "w-4 h-4 sm:w-6 sm:h-6 text-red-500"
+                        }, void 0, false, {
+                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                            lineNumber: 124,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                    lineNumber: 121,
+                    lineNumber: 122,
                     columnNumber: 11
                 }, this);
             case "selection":
@@ -182,30 +183,30 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                     className: "relative",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                            className: "w-8 h-8 text-green-500"
+                            className: "w-6 h-6 sm:w-8 sm:h-8 text-green-500"
                         }, void 0, false, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 129,
+                            lineNumber: 130,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "absolute inset-0 flex items-center justify-center",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "w-2 h-2 bg-green-500 rounded-full"
+                                className: "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"
                             }, void 0, false, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 131,
+                                lineNumber: 132,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 130,
+                            lineNumber: 131,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                    lineNumber: 128,
+                    lineNumber: 129,
                     columnNumber: 11
                 }, this);
             case "matching":
@@ -213,38 +214,38 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                     className: "flex items-center gap-1",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                            className: "w-4 h-4 text-purple-500"
-                        }, void 0, false, {
-                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 138,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "w-4 h-0.5 bg-purple-500"
+                            className: "w-3 h-3 sm:w-4 sm:h-4 text-purple-500"
                         }, void 0, false, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                             lineNumber: 139,
                             columnNumber: 13
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
-                            className: "w-4 h-4 text-purple-500"
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "w-3 sm:w-4 h-0.5 bg-purple-500"
                         }, void 0, false, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                             lineNumber: 140,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
+                            className: "w-3 h-3 sm:w-4 sm:h-4 text-purple-500"
+                        }, void 0, false, {
+                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                            lineNumber: 141,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                    lineNumber: 137,
+                    lineNumber: 138,
                     columnNumber: 11
                 }, this);
             default:
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                    className: "w-6 h-6 text-gray-500"
+                    className: "w-4 h-4 sm:w-6 sm:h-6 text-gray-500"
                 }, void 0, false, {
                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                    lineNumber: 144,
+                    lineNumber: 145,
                     columnNumber: 16
                 }, this);
         }
@@ -253,7 +254,7 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
         className: "jsx-f1648d4e8295b6c2" + " " + `min-h-screen ${config.backgroundGradient} relative overflow-hidden`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-0 pointer-events-none",
+                className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-0 pointer-events-none hidden xs:block",
                 children: floatingShapes.map((shape)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             left: `${shape.x}%`,
@@ -261,52 +262,42 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                             animationDelay: `${shape.id * 0.5}s`,
                             animationDuration: `${3 + shape.id * 0.2}s`
                         },
-                        className: "jsx-f1648d4e8295b6c2" + " " + `absolute w-8 h-8 ${shape.color} rounded-full opacity-20 animate-float`,
+                        className: "jsx-f1648d4e8295b6c2" + " " + `absolute w-6 h-6 sm:w-8 sm:h-8 ${shape.color} rounded-full opacity-20 animate-float`,
                         children: [
                             shape.type === "circle" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                                className: "w-full h-full p-1"
-                            }, void 0, false, {
-                                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 163,
-                                columnNumber: 41
-                            }, this),
-                            shape.type === "square" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
                                 className: "w-full h-full p-1"
                             }, void 0, false, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                 lineNumber: 164,
                                 columnNumber: 41
                             }, this),
-                            shape.type === "triangle" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Triangle$3e$__["Triangle"], {
+                            shape.type === "square" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
                                 className: "w-full h-full p-1"
                             }, void 0, false, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                 lineNumber: 165,
+                                columnNumber: 41
+                            }, this),
+                            shape.type === "triangle" && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$triangle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Triangle$3e$__["Triangle"], {
+                                className: "w-full h-full p-1"
+                            }, void 0, false, {
+                                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                lineNumber: 166,
                                 columnNumber: 43
                             }, this)
                         ]
                     }, shape.id, true, {
                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                        lineNumber: 153,
+                        lineNumber: 154,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                lineNumber: 151,
+                lineNumber: 152,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full opacity-30 animate-pulse"
-            }, void 0, false, {
-                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                lineNumber: 171,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                style: {
-                    animationDelay: "1s"
-                },
-                className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-40 right-20 w-24 h-24 bg-pink-100 rounded-full opacity-30 animate-pulse"
+                className: "jsx-f1648d4e8295b6c2" + " " + "hidden sm:block absolute top-20 left-4 sm:left-10 w-16 h-16 sm:w-32 sm:h-32 bg-blue-100 rounded-full opacity-30 animate-pulse"
             }, void 0, false, {
                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                 lineNumber: 172,
@@ -314,12 +305,22 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
-                    animationDelay: "2s"
+                    animationDelay: "1s"
                 },
-                className: "jsx-f1648d4e8295b6c2" + " " + "absolute bottom-40 left-20 w-28 h-28 bg-green-100 rounded-full opacity-30 animate-pulse"
+                className: "jsx-f1648d4e8295b6c2" + " " + "hidden sm:block absolute top-40 right-4 sm:right-20 w-12 h-12 sm:w-24 sm:h-24 bg-pink-100 rounded-full opacity-30 animate-pulse"
             }, void 0, false, {
                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                lineNumber: 176,
+                lineNumber: 173,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                style: {
+                    animationDelay: "2s"
+                },
+                className: "jsx-f1648d4e8295b6c2" + " " + "hidden sm:block absolute bottom-40 left-4 sm:left-20 w-14 h-14 sm:w-28 sm:h-28 bg-green-100 rounded-full opacity-30 animate-pulse"
+            }, void 0, false, {
+                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                lineNumber: 177,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -327,30 +328,37 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                 children: "@keyframes float{0%,to{transform:translateY(0)rotate(0)}50%{transform:translateY(-20px)rotate(180deg)}}@keyframes slideInFromLeft{0%{opacity:0;transform:translate(-100px)}to{opacity:1;transform:translate(0)}}@keyframes slideInFromRight{0%{opacity:0;transform:translate(100px)}to{opacity:1;transform:translate(0)}}@keyframes scaleIn{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes bounceIn{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.05)}70%{transform:scale(.9)}to{opacity:1;transform:scale(1)}}.animate-float.jsx-f1648d4e8295b6c2{animation:linear infinite float}.animate-slide-in-left.jsx-f1648d4e8295b6c2{animation:.6s ease-out forwards slideInFromLeft}.animate-slide-in-right.jsx-f1648d4e8295b6c2{animation:.6s ease-out forwards slideInFromRight}.animate-scale-in.jsx-f1648d4e8295b6c2{animation:.5s ease-out forwards scaleIn}.animate-bounce-in.jsx-f1648d4e8295b6c2{animation:.8s ease-out forwards bounceIn}"
             }, void 0, false, void 0, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-f1648d4e8295b6c2" + " " + `bg-white/90 backdrop-blur-sm shadow-sm border-b p-4 relative z-10 transition-all duration-700 ${isVisible ? "animate-slide-in-left" : "opacity-0"}`,
+                className: "jsx-f1648d4e8295b6c2" + " " + `bg-white/90 backdrop-blur-sm shadow-sm border-b p-3 sm:p-4 relative z-10 transition-all duration-700 ${isVisible ? "animate-slide-in-left" : "opacity-0"}`,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center justify-between max-w-6xl mx-auto",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-4",
+                            className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-2 sm:gap-4 flex-1 min-w-0",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$atoms$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                     onClick: handleBack,
                                     variant: "ghost",
                                     size: "sm",
                                     icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"],
-                                    className: "hover:scale-105 transition-transform duration-200",
-                                    children: "Volver"
+                                    className: "hover:scale-105 transition-transform duration-200 flex-shrink-0",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        className: "jsx-f1648d4e8295b6c2" + " " + "hidden sm:inline",
+                                        children: "Volver"
+                                    }, void 0, false, {
+                                        fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                        lineNumber: 227,
+                                        columnNumber: 15
+                                    }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 219,
+                                    lineNumber: 220,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-3",
+                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-2 sm:gap-3 min-w-0 flex-1",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "w-8 h-8 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer flex-shrink-0",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                                 src: config.iconPath,
                                                 alt: `Ícono de ${config.title}`,
@@ -358,187 +366,177 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                 className: "jsx-f1648d4e8295b6c2" + " " + "w-full h-full object-contain animate-bounce"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                lineNumber: 230,
+                                                lineNumber: 231,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 229,
+                                            lineNumber: 230,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "min-w-0 flex-1",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-2xl font-bold text-gray-800 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-sm sm:text-2xl font-bold text-gray-800 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent truncate",
                                                     children: config.title.toUpperCase()
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 238,
+                                                    lineNumber: 239,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-sm text-gray-600",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-xs sm:text-sm text-gray-600 truncate",
                                                     children: config.description
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 241,
+                                                    lineNumber: 242,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 237,
+                                            lineNumber: 238,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 228,
+                                    lineNumber: 229,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 218,
+                            lineNumber: 219,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-4",
+                            className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-2 sm:gap-4 flex-shrink-0",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     style: {
                                         animationDelay: "0.5s"
                                     },
-                                    className: "jsx-f1648d4e8295b6c2" + " " + `flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-full hover:bg-yellow-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`,
+                                    className: "jsx-f1648d4e8295b6c2" + " " + `flex items-center gap-1 sm:gap-2 bg-yellow-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-yellow-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`,
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"], {
-                                            className: "w-5 h-5 text-yellow-500 animate-pulse"
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 254,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "font-bold text-yellow-700",
-                                            children: userStars
+                                            className: "w-3 h-3 sm:w-5 sm:h-5 text-yellow-500 animate-pulse"
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                             lineNumber: 255,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "font-bold text-yellow-700 text-xs sm:text-base",
+                                            children: userStars
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                            lineNumber: 256,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 248,
+                                    lineNumber: 249,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     style: {
                                         animationDelay: "0.7s"
                                     },
-                                    className: "jsx-f1648d4e8295b6c2" + " " + `flex items-center gap-2 bg-amber-100 px-4 py-2 rounded-full hover:bg-amber-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`,
+                                    className: "jsx-f1648d4e8295b6c2" + " " + `flex items-center gap-1 sm:gap-2 bg-amber-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-amber-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`,
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
-                                            className: "w-5 h-5 text-amber-600 animate-pulse"
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 265,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "font-bold text-amber-700",
-                                            children: userCoins
+                                            className: "w-3 h-3 sm:w-5 sm:h-5 text-amber-600 animate-pulse"
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                             lineNumber: 266,
+                                            columnNumber: 15
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "font-bold text-amber-700 text-xs sm:text-base",
+                                            children: userCoins
+                                        }, void 0, false, {
+                                            fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                            lineNumber: 267,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 259,
+                                    lineNumber: 260,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 246,
+                            lineNumber: 247,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                    lineNumber: 217,
+                    lineNumber: 218,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                lineNumber: 212,
+                lineNumber: 213,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-f1648d4e8295b6c2" + " " + "max-w-6xl mx-auto p-6 relative z-10",
+                className: "jsx-f1648d4e8295b6c2" + " " + "max-w-6xl mx-auto p-3 sm:p-6 relative z-10",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
                             animationDelay: "0.3s"
                         },
-                        className: "jsx-f1648d4e8295b6c2" + " " + `mb-8 transition-all duration-700 ${isVisible ? "animate-scale-in" : "opacity-0 scale-75"}`,
+                        className: "jsx-f1648d4e8295b6c2" + " " + `mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? "animate-scale-in" : "opacity-0 scale-75"}`,
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "jsx-f1648d4e8295b6c2" + " " + "bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100 hover:shadow-xl transition-all duration-500 group",
+                            className: "jsx-f1648d4e8295b6c2" + " " + "bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-blue-100 hover:shadow-xl transition-all duration-500 group",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-center mb-6",
+                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-center mb-4 sm:mb-6",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "text-2xl font-bold text-gray-800 mb-2 group-hover:scale-105 transition-transform duration-300",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "text-lg sm:text-2xl font-bold text-gray-800 mb-2 group-hover:scale-105 transition-transform duration-300",
                                             children: "VIDEO EXPLICATIVO"
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 283,
+                                            lineNumber: 284,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "text-gray-600",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "text-sm sm:text-base text-gray-600",
                                             children: config.videoDescription
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 286,
+                                            lineNumber: 287,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 283,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     onClick: handleVideoPlay,
-                                    className: "jsx-f1648d4e8295b6c2" + " " + `relative ${config.videoBackground} rounded-3xl border-4 border-gray-800 p-8 flex flex-col items-center justify-center min-h-[300px] cursor-pointer group hover:scale-[1.02] transition-all duration-300`,
+                                    className: "jsx-f1648d4e8295b6c2" + " " + `relative ${config.videoBackground} rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-gray-800 p-4 sm:p-8 flex flex-col items-center justify-center min-h-[200px] sm:min-h-[300px] cursor-pointer group hover:scale-[1.02] transition-all duration-300`,
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-4 border-2 border-dashed border-gray-400 rounded-2xl group-hover:border-gray-600 transition-colors duration-300"
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-2 sm:inset-4 border-2 border-dashed border-gray-400 rounded-xl sm:rounded-2xl group-hover:border-gray-600 transition-colors duration-300"
                                         }, void 0, false, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 293,
+                                            lineNumber: 294,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-6 left-6 flex gap-2",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-3 sm:top-6 left-3 sm:left-6 flex gap-1 sm:gap-2",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-4 h-4 bg-red-300 rounded-full animate-pulse"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 297,
-                                                    columnNumber: 17
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    style: {
-                                                        animationDelay: "0.5s"
-                                                    },
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-4 h-4 bg-blue-300 rounded-full animate-pulse"
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 sm:w-4 sm:h-4 bg-red-300 rounded-full animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                                     lineNumber: 298,
@@ -546,91 +544,101 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
-                                                        animationDelay: "1s"
+                                                        animationDelay: "0.5s"
                                                     },
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-4 h-4 bg-green-300 rounded-full animate-pulse"
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 sm:w-4 sm:h-4 bg-blue-300 rounded-full animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                                     lineNumber: 299,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    style: {
+                                                        animationDelay: "1s"
+                                                    },
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 sm:w-4 sm:h-4 bg-green-300 rounded-full animate-pulse"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                                    lineNumber: 300,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 296,
+                                            lineNumber: 297,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-6 right-6 flex gap-2",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-3 sm:top-6 right-3 sm:right-6 flex gap-1 sm:gap-2",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
                                                         animationDelay: "1.5s"
                                                     },
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-4 h-4 bg-purple-300 rounded-full animate-pulse"
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 sm:w-4 sm:h-4 bg-purple-300 rounded-full animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 303,
+                                                    lineNumber: 304,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     style: {
                                                         animationDelay: "2s"
                                                     },
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-4 h-4 bg-pink-300 rounded-full animate-pulse"
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 sm:w-4 sm:h-4 bg-pink-300 rounded-full animate-pulse"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 304,
+                                                    lineNumber: 305,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 302,
+                                            lineNumber: 303,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "relative z-10 flex flex-col items-center gap-4",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "relative z-10 flex flex-col items-center gap-3 sm:gap-4",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-16 h-16 bg-white/80 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 hover:rotate-12",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "w-12 h-12 sm:w-16 sm:h-16 bg-white/80 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 hover:rotate-12",
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$play$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Play$3e$__["Play"], {
-                                                        className: "w-8 h-8 text-gray-700 ml-1 group-hover:text-blue-600 transition-colors duration-300"
+                                                        className: "w-6 h-6 sm:w-8 sm:h-8 text-gray-700 ml-1 group-hover:text-blue-600 transition-colors duration-300"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                        lineNumber: 309,
+                                                        lineNumber: 310,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 308,
+                                                    lineNumber: 309,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-xl font-bold text-gray-800 text-center group-hover:text-blue-800 transition-colors duration-300",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-base sm:text-xl font-bold text-gray-800 text-center group-hover:text-blue-800 transition-colors duration-300 px-2",
                                                     children: config.videoTitle
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 311,
+                                                    lineNumber: 312,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 307,
+                                            lineNumber: 308,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-4",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-1 bg-white/50 rounded-full px-3 py-1",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-1 bg-white/50 rounded-full px-2 py-1 sm:px-3",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Circle$3e$__["Circle"], {
-                                                            className: "w-3 h-3 text-blue-500"
+                                                            className: "w-2 h-2 sm:w-3 sm:h-3 text-blue-500"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 318,
+                                                            lineNumber: 319,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -638,23 +646,23 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                             children: "A"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 319,
+                                                            lineNumber: 320,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 317,
+                                                    lineNumber: 318,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-1 bg-white/50 rounded-full px-3 py-1",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-1 bg-white/50 rounded-full px-2 py-1 sm:px-3",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$square$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Square$3e$__["Square"], {
-                                                            className: "w-3 h-3 text-red-500"
+                                                            className: "w-2 h-2 sm:w-3 sm:h-3 text-red-500"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 322,
+                                                            lineNumber: 323,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -662,61 +670,51 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                             children: "B"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 323,
+                                                            lineNumber: 324,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 321,
+                                                    lineNumber: 322,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 316,
+                                            lineNumber: 317,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 289,
+                                    lineNumber: 290,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                            lineNumber: 281,
+                            lineNumber: 282,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                        lineNumber: 275,
+                        lineNumber: 276,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-f1648d4e8295b6c2" + " " + "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+                        className: "jsx-f1648d4e8295b6c2" + " " + "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6",
                         children: activities.map((activity, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 style: {
                                     animationDelay: `${index * 0.2}s`
                                 },
-                                className: "jsx-f1648d4e8295b6c2" + " " + `bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden ${animatedElements.has(index) ? "animate-bounce-in" : "opacity-0"}`,
+                                className: "jsx-f1648d4e8295b6c2" + " " + `bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden ${animatedElements.has(index) ? "animate-bounce-in" : "opacity-0"}`,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-2 right-2 flex gap-1 opacity-30 group-hover:opacity-60 transition-opacity duration-300",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 bg-pink-400 rounded-full animate-ping"
-                                            }, void 0, false, {
-                                                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                lineNumber: 342,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                style: {
-                                                    animationDelay: "0.5s"
-                                                },
-                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 bg-blue-400 rounded-full animate-ping"
+                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-pink-400 rounded-full animate-ping"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                                 lineNumber: 343,
@@ -724,86 +722,96 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 style: {
-                                                    animationDelay: "1s"
+                                                    animationDelay: "0.5s"
                                                 },
-                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-2 h-2 bg-green-400 rounded-full animate-ping"
+                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-400 rounded-full animate-ping"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
                                                 lineNumber: 344,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                style: {
+                                                    animationDelay: "1s"
+                                                },
+                                                className: "jsx-f1648d4e8295b6c2" + " " + "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-ping"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
+                                                lineNumber: 345,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                        lineNumber: 341,
+                                        lineNumber: 342,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-4 left-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300",
+                                        className: "jsx-f1648d4e8295b6c2" + " " + "absolute top-3 sm:top-4 left-3 sm:left-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300",
                                         children: renderActivityIcon(activity.type)
                                     }, void 0, false, {
                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                        lineNumber: 348,
+                                        lineNumber: 349,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "jsx-f1648d4e8295b6c2" + " " + "flex items-start justify-between mb-4 relative z-10",
+                                        className: "jsx-f1648d4e8295b6c2" + " " + "flex items-start justify-between mb-3 sm:mb-4 relative z-10",
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "jsx-f1648d4e8295b6c2" + " " + "flex-1",
+                                            className: "jsx-f1648d4e8295b6c2" + " " + "flex-1 min-w-0",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex items-center gap-2 mb-2",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "jsx-f1648d4e8295b6c2" + " " + "bg-pink-100 text-pink-800 text-xs font-semibold px-2 py-1 rounded-full group-hover:bg-pink-200 transition-colors duration-300",
+                                                            className: "jsx-f1648d4e8295b6c2" + " " + "bg-pink-100 text-pink-800 text-xs font-semibold px-2 py-1 rounded-full group-hover:bg-pink-200 transition-colors duration-300 w-fit",
                                                             children: [
                                                                 "ACTIVIDAD ",
                                                                 index + 1
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 355,
+                                                            lineNumber: 356,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                            className: "jsx-f1648d4e8295b6c2" + " " + `text-xs px-2 py-1 rounded-full transition-all duration-300 ${getDifficultyStyles(activity.difficulty)}`,
+                                                            className: "jsx-f1648d4e8295b6c2" + " " + `text-xs px-2 py-1 rounded-full transition-all duration-300 w-fit ${getDifficultyStyles(activity.difficulty)}`,
                                                             children: getDifficultyText(activity.difficulty)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                            lineNumber: 358,
+                                                            lineNumber: 359,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 354,
+                                                    lineNumber: 355,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-800 transition-colors duration-300",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-base sm:text-lg font-bold text-gray-800 mb-1 group-hover:text-blue-800 transition-colors duration-300 break-words",
                                                     children: activity.title
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 362,
+                                                    lineNumber: 363,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300",
+                                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-sm text-gray-600 group-hover:text-gray-700 transition-colors duration-300 break-words",
                                                     children: activity.description
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                    lineNumber: 365,
+                                                    lineNumber: 366,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                            lineNumber: 353,
+                                            lineNumber: 354,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                        lineNumber: 352,
+                                        lineNumber: 353,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -814,15 +822,15 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                 children: [
                                                     ...Array(3)
                                                 ].map((_, i)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"], {
-                                                        className: `w-4 h-4 transition-all duration-300 hover:scale-125 ${i < activity.stars ? "text-yellow-400 fill-current animate-pulse" : "text-gray-300 group-hover:text-yellow-200"}`
+                                                        className: `w-3 h-3 sm:w-4 sm:h-4 transition-all duration-300 hover:scale-125 ${i < activity.stars ? "text-yellow-400 fill-current animate-pulse" : "text-gray-300 group-hover:text-yellow-200"}`
                                                     }, i, false, {
                                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                        lineNumber: 374,
+                                                        lineNumber: 375,
                                                         columnNumber: 21
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                lineNumber: 372,
+                                                lineNumber: 373,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$atoms$2f$Button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -830,72 +838,72 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                                 variant: "primary",
                                                 size: "sm",
                                                 icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$play$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Play$3e$__["Play"],
-                                                className: "hover:scale-105 transition-transform duration-200 hover:shadow-lg",
+                                                className: "hover:scale-105 transition-transform duration-200 hover:shadow-lg text-xs sm:text-sm",
                                                 children: activity.completed ? "Repetir" : "Jugar"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                                lineNumber: 384,
+                                                lineNumber: 385,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                        lineNumber: 371,
+                                        lineNumber: 372,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "jsx-f1648d4e8295b6c2" + " " + "absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 group-hover:translate-x-full transition-all duration-700"
                                     }, void 0, false, {
                                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                        lineNumber: 396,
+                                        lineNumber: 397,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, activity.id, true, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 333,
+                                lineNumber: 334,
                                 columnNumber: 13
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                        lineNumber: 331,
+                        lineNumber: 332,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-f1648d4e8295b6c2" + " " + "mt-12 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg",
+                        className: "jsx-f1648d4e8295b6c2" + " " + "mt-8 sm:mt-12 bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "jsx-f1648d4e8295b6c2" + " " + "text-xl font-bold text-gray-800 mb-4 text-center",
+                                className: "jsx-f1648d4e8295b6c2" + " " + "text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 text-center break-words",
                                 children: [
                                     "Tu Progreso en ",
                                     config.title
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 403,
+                                lineNumber: 404,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-f1648d4e8295b6c2" + " " + "w-full bg-gray-200 rounded-full h-3 mb-4",
+                                className: "jsx-f1648d4e8295b6c2" + " " + "w-full bg-gray-200 rounded-full h-2 sm:h-3 mb-3 sm:mb-4",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     style: {
                                         width: `${progressPercentage}%`
                                     },
-                                    className: "jsx-f1648d4e8295b6c2" + " " + "bg-gradient-to-r from-pink-400 to-purple-500 h-3 rounded-full transition-all duration-500"
+                                    className: "jsx-f1648d4e8295b6c2" + " " + "bg-gradient-to-r from-pink-400 to-purple-500 h-2 sm:h-3 rounded-full transition-all duration-500"
                                 }, void 0, false, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 407,
+                                    lineNumber: 408,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 406,
+                                lineNumber: 407,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "jsx-f1648d4e8295b6c2" + " " + "text-center",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-gray-600",
+                                    className: "jsx-f1648d4e8295b6c2" + " " + "text-sm sm:text-base text-gray-600",
                                     children: [
                                         completedActivities,
                                         " de ",
@@ -904,30 +912,30 @@ const ConjuntosTemplate = ({ config, userStars = 0, userCoins = 0 })=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                    lineNumber: 413,
+                                    lineNumber: 414,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                                lineNumber: 412,
+                                lineNumber: 413,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                        lineNumber: 402,
+                        lineNumber: 403,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-                lineNumber: 273,
+                lineNumber: 274,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/templates/conjuntos/ConjuntosTemplate.tsx",
-        lineNumber: 149,
+        lineNumber: 150,
         columnNumber: 5
     }, this);
 };

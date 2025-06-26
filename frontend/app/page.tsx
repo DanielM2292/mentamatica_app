@@ -75,19 +75,20 @@ export default function Page() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F5F0E1" }}>
-      {/* Header */}
-      <header className="flex justify-between items-center p-6">
-        <div className="flex items-center gap-3">
+      {/* Header - Responsive */}
+      <header className="flex justify-between items-center p-4 sm:p-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="relative">
             <img
               src="/images/logo.png"
               alt="MentaMática Logo"
-              width={50}
-              height={50}
-              className="object-contain"
+              width={40}
+              height={40}
+              className="object-contain sm:w-[50px] sm:h-[50px]"
             />
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: "#2C3E50" }}>
+          {/* Título solo visible en pantallas medianas y grandes */}
+          <h1 className="hidden sm:block text-xl sm:text-2xl font-bold" style={{ color: "#2C3E50" }}>
             MentaMática
           </h1>
         </div>
@@ -95,20 +96,20 @@ export default function Page() {
         <SignedOut>
           <SignInButton 
             mode="modal"
-            // Configurar redirect después del login
             afterSignInUrl="/"
             afterSignUpUrl="/"
           >
             <div className="flex justify-center">
               <Button
-                className="font-bold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="font-bold px-3 py-2 sm:px-6 sm:py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-xs sm:text-sm"
                 style={{
                   backgroundColor: "#F7DC6F",
                   color: "#2C3E50",
                   border: "2px solid #F4D03F",
                 }}
               >
-                INICIAR SESIÓN
+                <span className="hidden sm:inline">INICIAR SESIÓN</span>
+                <span className="sm:hidden">ENTRAR</span>
               </Button>
             </div>
           </SignInButton>
@@ -119,88 +120,121 @@ export default function Page() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-5xl font-bold mb-6 animate-fade-in" style={{ color: "#2C3E50" }}>
+      <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        {/* Hero Section - Responsive */}
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 animate-fade-in" style={{ color: "#2C3E50" }}>
             Piensa, juega y resuelve
           </h2>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-12 animate-fade-in-delay">
+          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto mb-8 sm:mb-12 animate-fade-in-delay px-4">
             MentaMática es una aplicación donde encontrarás una forma inteligente y divertida de aprender matemáticas.
           </p>
         </div>
 
-        {/* Interactive Section with Animations */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {/* Left Animation */}
-          <div className="flex justify-center">
-            <SmoothCountingBox />
+        {/* Interactive Section - Mobile Optimized */}
+        <div className="mb-12 sm:mb-16">
+          {/* En móvil: layout vertical */}
+          <div className="block lg:hidden space-y-8">
+            {/* Botón de registro prominente en móvil */}
+            <SignedOut>
+              <SignUpButton 
+                mode="modal"
+                afterSignUpUrl="/"
+              >
+                <div className="flex justify-center">
+                  <Button
+                    size="lg"
+                    className="font-bold px-8 py-4 sm:px-12 sm:py-6 rounded-full text-lg sm:text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
+                    style={{
+                      backgroundColor: "#D2B48C",
+                      color: "white",
+                      border: "3px solid #C19A6B",
+                    }}
+                  >
+                    <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
+                    REGISTRARSE
+                  </Button>
+                </div>
+              </SignUpButton>
+            </SignedOut>
+
+            {/* Animaciones en grid 2x1 para móvil */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-items-center">
+              <SmoothCountingBox />
+              <SmoothOperationsBox />
+            </div>
           </div>
 
-          {/* Center Registration */}
-          <SignedOut>
-            <SignUpButton 
-              mode="modal"
-              afterSignUpUrl="/"
-            >
-              <div className="flex flex-col items-center justify-center">
-                <Button
-                  size="lg"
-                  className="font-bold px-12 py-6 rounded-full text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
-                  style={{
-                    backgroundColor: "#D2B48C",
-                    color: "white",
-                    border: "3px solid #C19A6B",
-                  }}
-                >
-                  <Sparkles className="w-6 h-6 mr-2" />
-                  REGISTRARSE
-                </Button>
-              </div>
-            </SignUpButton>
-          </SignedOut>
+          {/* En desktop: layout original */}
+          <div className="hidden lg:grid lg:grid-cols-3 gap-8">
+            <div className="flex justify-center">
+              <SmoothCountingBox />
+            </div>
 
-          {/* Right Animation */}
-          <div className="flex justify-center">
-            <SmoothOperationsBox />
+            <SignedOut>
+              <SignUpButton 
+                mode="modal"
+                afterSignUpUrl="/"
+              >
+                <div className="flex flex-col items-center justify-center">
+                  <Button
+                    size="lg"
+                    className="font-bold px-12 py-6 rounded-full text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
+                    style={{
+                      backgroundColor: "#D2B48C",
+                      color: "white",
+                      border: "3px solid #C19A6B",
+                    }}
+                  >
+                    <Sparkles className="w-6 h-6 mr-2" />
+                    REGISTRARSE
+                  </Button>
+                </div>
+              </SignUpButton>
+            </SignedOut>
+
+            <div className="flex justify-center">
+              <SmoothOperationsBox />
+            </div>
           </div>
         </div>
 
-        {/* Learning Modules */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-center mb-8" style={{ color: "#2C3E50" }}>
+        {/* Learning Modules - Responsive Grid */}
+        <div className="mb-12 sm:mb-16">
+          <h3 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 px-4" style={{ color: "#2C3E50" }}>
             Que aprenderás aquí:
           </h3>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+          {/* Grid responsivo: 2 columnas en móvil, más en pantallas grandes */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 sm:gap-6">
             {modules.map((module, index) => (
               <div
                 key={module.name}
                 className="text-center cursor-pointer group hover:-translate-y-2 transition-transform duration-300"
               >
-                <div className="mb-3 flex justify-center">
-                  <div className="w-16 h-16 relative">
+                <div className="mb-2 sm:mb-3 flex justify-center">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 relative">
                     <img
                       src={module.icon || "/placeholder.svg?height=64&width=64"}
                       alt={module.name}
                       width={64}
                       height={64}
-                      className="object-contain"
+                      className="object-contain w-full h-full"
                     />
                   </div>
                 </div>
-                <h4 className="font-bold text-sm mb-1" style={{ color: "#2C3E50" }}>
+                <h4 className="font-bold text-xs sm:text-sm mb-1" style={{ color: "#2C3E50" }}>
                   {module.name}
                 </h4>
-                <p className="text-xs text-gray-600">{module.description}</p>
+                <p className="text-xs text-gray-600 hidden sm:block">{module.description}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Email Subscription */}
-        <div className="max-w-md mx-auto text-center animate-fade-in-up">
-          <p className="text-gray-700 mb-4">Si deseas más información escribe tu correo electrónico</p>
+        {/* Email Subscription - Mobile Optimized */}
+        <div className="max-w-md mx-auto text-center animate-fade-in-up px-4">
+          <p className="text-gray-700 mb-4 text-sm sm:text-base">Si deseas más información escribe tu correo electrónico</p>
           <div className="relative">
             <div className="flex items-center">
               <Input
@@ -208,7 +242,7 @@ export default function Page() {
                 placeholder="example@hotmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-l-full border-2 text-center transition-all duration-300 focus:scale-105"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-l-full border-2 text-center transition-all duration-300 focus:scale-105 text-sm sm:text-base"
                 style={{
                   backgroundColor: "#D2B48C",
                   borderColor: "#C19A6B",
@@ -217,14 +251,14 @@ export default function Page() {
               />
               <Button
                 onClick={handleSubmitEmail}
-                className="rounded-r-full px-4 py-3 h-full hover:scale-110 transition-all duration-300"
+                className="rounded-r-full px-3 sm:px-4 py-2 sm:py-3 h-full hover:scale-110 transition-all duration-300"
                 style={{
                   backgroundColor: "#C19A6B",
                   borderColor: "#C19A6B",
                   color: "white",
                 }}
               >
-                <Send className="w-5 h-5" />
+                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </div>
           </div>
@@ -282,7 +316,7 @@ export default function Page() {
   )
 }
 
-// Componente de conteo mejorado con animaciones suaves
+// Componente de conteo optimizado para móvil
 function SmoothCountingBox() {
   const [currentCount, setCurrentCount] = useState(1)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -303,16 +337,16 @@ function SmoothCountingBox() {
   const dots = Array.from({ length: currentCount }, (_, i) => i)
 
   return (
-    <div className="w-64 h-64 bg-gradient-to-br from-purple-100 to-blue-100 rounded-3xl border-4 border-purple-200 flex flex-col items-center justify-center shadow-xl backdrop-blur-sm relative overflow-hidden">
+    <div className="w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-br from-purple-100 to-blue-100 rounded-3xl border-4 border-purple-200 flex flex-col items-center justify-center shadow-xl backdrop-blur-sm relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-200/20 to-blue-200/20 animate-pulse"></div>
 
-      <h4 className="text-lg font-bold text-purple-600 mb-6 z-10">¡Contemos juntos!</h4>
+      <h4 className="text-sm sm:text-lg font-bold text-purple-600 mb-4 sm:mb-6 z-10">¡Contemos juntos!</h4>
 
-      <div className={`grid grid-cols-3 gap-3 mb-6 transition-all duration-500 ${isTransitioning ? 'scale-90 opacity-50' : 'scale-100 opacity-100'}`}>
+      <div className={`grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6 transition-all duration-500 ${isTransitioning ? 'scale-90 opacity-50' : 'scale-100 opacity-100'}`}>
         {dots.map((_, index) => (
           <div
             key={`${currentCount}-${index}`}
-            className="w-8 h-8 bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 rounded-full shadow-lg animate-slide-in-scale relative"
+            className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 rounded-full shadow-lg animate-slide-in-scale relative"
             style={{
               animationDelay: `${index * 0.1}s`,
               boxShadow: '0 4px 15px rgba(147, 51, 234, 0.3)'
@@ -323,15 +357,15 @@ function SmoothCountingBox() {
         ))}
       </div>
 
-      <div className={`text-4xl font-bold text-gray-700 bg-gradient-to-br from-yellow-300 to-orange-300 rounded-full w-16 h-16 flex items-center justify-center shadow-lg z-10 transition-all duration-500 ${isTransitioning ? 'scale-110 rotate-12' : 'scale-100 rotate-0'}`}>
+      <div className={`text-2xl sm:text-4xl font-bold text-gray-700 bg-gradient-to-br from-yellow-300 to-orange-300 rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg z-10 transition-all duration-500 ${isTransitioning ? 'scale-110 rotate-12' : 'scale-100 rotate-0'}`}>
         {currentCount}
       </div>
 
-      <div className="absolute bottom-4 flex gap-1">
+      <div className="absolute bottom-2 sm:bottom-4 flex gap-1">
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${i + 1 === currentCount ? 'bg-purple-500 scale-125' : 'bg-purple-200'
+            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i + 1 === currentCount ? 'bg-purple-500 scale-125' : 'bg-purple-200'
               }`}
           />
         ))}
@@ -340,7 +374,7 @@ function SmoothCountingBox() {
   )
 }
 
-// Componente de operaciones mejorado con símbolos animados
+// Componente de operaciones optimizado para móvil
 function SmoothOperationsBox() {
   const [currentStep, setCurrentStep] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -366,8 +400,8 @@ function SmoothOperationsBox() {
       bgGradient: "from-green-50 to-emerald-50",
       symbol: (
         <div className="relative">
-          <div className="text-6xl font-bold text-green-500 animate-pulse">+</div>
-          <div className="absolute inset-0 text-6xl font-bold text-green-300 animate-ping opacity-50">+</div>
+          <div className="text-4xl sm:text-6xl font-bold text-green-500 animate-pulse">+</div>
+          <div className="absolute inset-0 text-4xl sm:text-6xl font-bold text-green-300 animate-ping opacity-50">+</div>
         </div>
       )
     },
@@ -378,7 +412,7 @@ function SmoothOperationsBox() {
       bgGradient: "from-orange-50 to-red-50",
       symbol: (
         <div className="relative">
-          <div className="text-6xl font-bold text-orange-500 animate-bounce">−</div>
+          <div className="text-4xl sm:text-6xl font-bold text-orange-500 animate-bounce">−</div>
           <div className="absolute -inset-2 bg-orange-200 rounded-full opacity-30 animate-pulse"></div>
         </div>
       )
@@ -390,8 +424,8 @@ function SmoothOperationsBox() {
       bgGradient: "from-blue-50 to-purple-50",
       symbol: (
         <div className="relative">
-          <div className="text-6xl font-bold text-blue-500 animate-spin" style={{ animationDuration: '2s' }}>×</div>
-          <div className="absolute inset-0 text-6xl font-bold text-purple-400 animate-ping opacity-40">×</div>
+          <div className="text-4xl sm:text-6xl font-bold text-blue-500 animate-spin" style={{ animationDuration: '2s' }}>×</div>
+          <div className="absolute inset-0 text-4xl sm:text-6xl font-bold text-purple-400 animate-ping opacity-40">×</div>
         </div>
       )
     },
@@ -402,11 +436,11 @@ function SmoothOperationsBox() {
       bgGradient: "from-yellow-50 to-amber-50",
       symbol: (
         <div className="relative">
-          <div className="text-6xl font-bold text-yellow-600">
+          <div className="text-4xl sm:text-6xl font-bold text-yellow-600">
             <div className="flex flex-col items-center animate-bounce">
-              <div className="w-2 h-2 bg-yellow-600 rounded-full mb-1"></div>
-              <div className="w-8 h-1 bg-yellow-600 rounded-full"></div>
-              <div className="w-2 h-2 bg-yellow-600 rounded-full mt-1"></div>
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-yellow-600 rounded-full mb-1"></div>
+              <div className="w-6 h-0.5 sm:w-8 sm:h-1 bg-yellow-600 rounded-full"></div>
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-yellow-600 rounded-full mt-1"></div>
             </div>
           </div>
           <div className="absolute -inset-3 bg-yellow-200 rounded-full opacity-30 animate-pulse"></div>
@@ -418,36 +452,36 @@ function SmoothOperationsBox() {
   const currentOp = operations[currentStep]
 
   return (
-    <div className={`w-64 h-64 bg-gradient-to-br ${currentOp.bgGradient} rounded-3xl border-4 border-blue-200 flex flex-col items-center justify-center shadow-xl backdrop-blur-sm relative overflow-hidden transition-all duration-500`}>
+    <div className={`w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-br ${currentOp.bgGradient} rounded-3xl border-4 border-blue-200 flex flex-col items-center justify-center shadow-xl backdrop-blur-sm relative overflow-hidden transition-all duration-500`}>
       <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent animate-pulse"></div>
 
-      <h4 className="text-lg font-bold text-blue-600 mb-4 z-10">¡Resolvamos!</h4>
+      <h4 className="text-sm sm:text-lg font-bold text-blue-600 mb-3 sm:mb-4 z-10">¡Resolvamos!</h4>
 
-      <div className={`mb-4 transition-all duration-500 ${isTransitioning ? 'scale-75 opacity-30 rotate-180' : 'scale-100 opacity-100 rotate-0'}`}>
+      <div className={`mb-3 sm:mb-4 transition-all duration-500 ${isTransitioning ? 'scale-75 opacity-30 rotate-180' : 'scale-100 opacity-100 rotate-0'}`}>
         {currentOp.symbol}
       </div>
 
       <div className={`text-center z-10 transition-all duration-500 ${isTransitioning ? 'scale-90 opacity-50' : 'scale-100 opacity-100'}`}>
-        <div className="text-xl font-semibold text-gray-700 mb-2">{currentOp.problem}</div>
-        <div className={`text-3xl font-bold bg-gradient-to-r ${currentOp.gradient} bg-clip-text text-transparent flex items-center gap-2 justify-center`}>
+        <div className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">{currentOp.problem}</div>
+        <div className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r ${currentOp.gradient} bg-clip-text text-transparent flex items-center gap-2 justify-center`}>
           = {currentOp.result}
-          <span className="text-2xl animate-bounce">⭐</span>
+          <span className="text-xl sm:text-2xl animate-bounce">⭐</span>
         </div>
       </div>
 
-      <div className="absolute bottom-4 flex gap-1">
+      <div className="absolute bottom-2 sm:bottom-4 flex gap-1">
         {operations.map((_, i) => (
           <div
             key={i}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentStep ? 'bg-blue-500 scale-125' : 'bg-blue-200'
+            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i === currentStep ? 'bg-blue-500 scale-125' : 'bg-blue-200'
               }`}
           />
         ))}
       </div>
 
       {/* Partículas decorativas */}
-      <div className="absolute top-2 right-2 text-sm animate-bounce" style={{ animationDelay: '0.5s' }}>✨</div>
-      <div className="absolute bottom-2 left-2 text-sm animate-bounce" style={{ animationDelay: '1s' }}>🌟</div>
+      <div className="absolute top-2 right-2 text-xs sm:text-sm animate-bounce" style={{ animationDelay: '0.5s' }}>✨</div>
+      <div className="absolute bottom-2 left-2 text-xs sm:text-sm animate-bounce" style={{ animationDelay: '1s' }}>🌟</div>
     </div>
   )
 }

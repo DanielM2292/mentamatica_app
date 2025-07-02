@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Brain, Star, Trophy, Clock, Settings, User, Volume2, Play, Pause } from "lucide-react";
-import { UserButton, useUser } from "@clerk/nextjs"; 
-import { useRouter } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 interface Module {
   id: string;
@@ -34,180 +34,14 @@ interface CognitiveAudio {
   audioUrl: string;
 }
 
-// Componente de partículas optimizado
-const FloatingParticle = React.memo(({ delay }: { delay: number }) => (
-  <div
-    className="absolute w-1 h-1 sm:w-2 sm:h-2 bg-yellow-300 rounded-full opacity-60 animate-bounce"
-    style={{
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      animationDelay: `${delay}s`,
-      animationDuration: `${2 + Math.random() * 2}s`,
-    }}
-  />
-));
-
-FloatingParticle.displayName = 'FloatingParticle';
-
-// Componente de tarjeta de estadísticas optimizado
-const StatsCard = React.memo(({ icon, title, value, gradient }: {
-  icon: React.ReactNode;
-  title: string;
-  value: string | number;
-  gradient: string;
-}) => (
-  <div className="bg-white/90 backdrop-blur-sm rounded-lg sm:rounded-xl lg:rounded-2xl p-2 sm:p-3 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-    <div className="flex items-center gap-1 sm:gap-2 lg:gap-3">
-      <div className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 bg-gradient-to-br ${gradient} rounded-full flex items-center justify-center flex-shrink-0`}>
-        {React.cloneElement(icon as React.ReactElement, {
-          className: "w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 text-white"
-        })}
-      </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-xs sm:text-sm text-gray-600 truncate">{title}</p>
-        <p className="text-sm sm:text-lg lg:text-2xl font-bold text-gray-800 truncate">{value}</p>
-      </div>
-    </div>
-  </div>
-));
-
-StatsCard.displayName = 'StatsCard';
-
-// Componente de módulo optimizado para móviles
-const ModuleCard = React.memo(({ 
-  module, 
-  index, 
-  animatingModule, 
-  onModuleClick,
-  isMobile,
-  isSmallMobile
-}: {
-  module: Module;
-  index: number;
-  animatingModule: string | null;
-  onModuleClick: (id: string) => void;
-  isMobile: boolean;
-  isSmallMobile: boolean;
-}) => (
-  <div
-    onClick={() => onModuleClick(module.id)}
-    className={`
-      relative group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95
-      ${animatingModule === module.id ? "animate-shake" : ""}
-      ${!module.isUnlocked ? "opacity-60" : ""}
-    `}
-    style={{ animationDelay: `${index * 0.1}s` }}
-  >
-    <div
-      className={`
-        bg-gradient-to-br ${module.bgColor} rounded-lg sm:rounded-xl lg:rounded-2xl 
-        p-2 sm:p-3 lg:p-4 shadow-xl hover:shadow-2xl transition-all duration-300 
-        relative overflow-hidden
-        ${module.isUnlocked ? "hover:-translate-y-1 sm:hover:-translate-y-2" : ""}
-        ${isSmallMobile ? 'min-h-[100px]' : isMobile ? 'min-h-[110px]' : 'min-h-[140px] lg:min-h-[180px]'}
-        flex flex-col items-center justify-center
-      `}
-    >
-      {/* Efecto de brillo */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-      {/* Lock overlay para módulos bloqueados */}
-      {!module.isUnlocked && (
-        <div className="absolute inset-0 bg-black/20 rounded-lg sm:rounded-xl lg:rounded-2xl flex items-center justify-center">
-          <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-gray-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs sm:text-sm lg:text-lg">🔒</span>
-          </div>
-        </div>
-      )}
-
-      {/* Icono del módulo - Mejorado para móviles */}
-      <div className={`${isSmallMobile ? 'text-lg mb-1' : isMobile ? 'text-xl mb-1' : 'text-2xl lg:text-4xl mb-2 lg:mb-3'} animate-bounce-gentle`}>
-        {module.icon.startsWith("./") || module.icon.startsWith("/") ? (
-          <img
-            src={module.icon}
-            alt={module.name}
-            className={`${isSmallMobile ? 'w-5 h-5' : isMobile ? 'w-6 h-6' : 'w-8 h-8 lg:w-12 lg:h-12'} object-contain mx-auto`}
-            draggable={false}
-            loading="lazy"
-            onError={(e) => {
-              // Fallback si la imagen no carga
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const parent = target.parentElement;
-              if (parent) {
-                parent.innerHTML = '📚';
-              }
-            }}
-          />
-        ) : (
-          <span>{module.icon}</span>
-        )}
-      </div>
-
-      {/* Nombre del módulo - Optimizado para móviles */}
-      <h3 className={`
-        ${isSmallMobile ? 'text-xs' : isMobile ? 'text-xs' : 'text-sm lg:text-lg'} 
-        font-bold text-gray-800 text-center mb-1 px-1 leading-tight
-        ${isSmallMobile ? 'line-clamp-1' : 'line-clamp-2'}
-      `}>
-        {module.name}
-      </h3>
-
-      {/* Descripción - Solo en pantallas grandes */}
-      {!isMobile && (
-        <p className="hidden lg:block text-sm text-gray-600 text-center mb-3">
-          {module.description}
-        </p>
-      )}
-
-      {/* Progreso y estrellas - Compacto para móviles */}
-      {module.isUnlocked && (
-        <div className="flex items-center gap-0.5 sm:gap-1">
-          {[...Array(3)].map((_, i) => (
-            <Star
-              key={i}
-              className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} ${
-                i < module.stars
-                  ? "text-yellow-400 fill-current"
-                  : "text-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Efectos de partículas para módulos desbloqueados - Reducidos en móviles */}
-      {module.isUnlocked && !isSmallMobile && (
-        <>
-          <div
-            className="absolute top-1 right-1 sm:top-2 sm:right-2 text-xs animate-bounce"
-            style={{ animationDelay: "0.5s" }}
-          >
-            ✨
-          </div>
-          <div
-            className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 text-xs animate-bounce"
-            style={{ animationDelay: "1s" }}
-          >
-            🌟
-          </div>
-        </>
-      )}
-    </div>
-  </div>
-));
-
-ModuleCard.displayName = 'ModuleCard';
-
 export default function DashboardPage() {
   const { user } = useUser();
-  const router = useRouter();
   const [currentAudio, setCurrentAudio] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isSmallMobile, setIsSmallMobile] = useState(false);
-  
+
   const [userStats, setUserStats] = useState<UserStats>({
     name: "Nombre/Apodo",
     totalStars: 0,
@@ -335,6 +169,161 @@ export default function DashboardPage() {
   const [animatingModule, setAnimatingModule] = useState<string | null>(null);
   const [showCognitivePanel, setShowCognitivePanel] = useState(false);
 
+  // Componente de tarjeta de estadísticas optimizado
+  const StatsCard = React.memo(({ icon, title, value, gradient }: {
+    icon: React.ReactNode;
+    title: string;
+    value: string | number;
+    gradient: string;
+  }) => (
+    <div className="bg-white/90 backdrop-blur-sm rounded-lg sm:rounded-xl lg:rounded-2xl p-2 sm:p-3 lg:p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+        <div className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 bg-gradient-to-br ${gradient} rounded-full flex items-center justify-center flex-shrink-0`}>
+          {React.cloneElement(icon as React.ReactElement, {
+            className: "w-3 h-3 sm:w-4 sm:h-4 lg:w-6 lg:h-6 text-white"
+          })}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-xs sm:text-sm text-gray-600 truncate">{title}</p>
+          <p className="text-sm sm:text-lg lg:text-2xl font-bold text-gray-800 truncate">{value}</p>
+        </div>
+      </div>
+    </div>
+  ));
+
+  StatsCard.displayName = 'StatsCard';
+
+  // Componente de módulo optimizado para móviles
+  const ModuleCard = React.memo(({
+    module,
+    index,
+    animatingModule,
+    isMobile,
+    isSmallMobile
+  }: {
+    module: Module;
+    index: number;
+    animatingModule: string | null;
+    isMobile: boolean;
+    isSmallMobile: boolean;
+  }) => (
+    <Link
+      href={module.isUnlocked ? `/modules/${module.id}` : "#"}
+      className={`relative group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95
+        ${animatingModule === module.id ? "animate-shake" : ""}
+        ${!module.isUnlocked ? "opacity-60" : ""}
+      `}
+      onClick={(e) => {
+        if (!module.isUnlocked) {
+          e.preventDefault();
+          setAnimatingModule(module.id);
+          setTimeout(() => setAnimatingModule(null), 600);
+        } else {
+          const focusAudio = cognitiveAudios.find(audio => audio.id === "focus-breathing");
+          if (focusAudio) {
+            playAudio(focusAudio.id);
+          }
+        }
+      }}
+    >
+      <div
+         className={`bg-gradient-to-br ${module.bgColor} rounded-lg sm:rounded-xl lg:rounded-2xl 
+          p-2 sm:p-3 lg:p-4 shadow-xl hover:shadow-2xl transition-all duration-300 
+          relative overflow-hidden
+          ${module.isUnlocked ? "hover:-translate-y-1 sm:hover:-translate-y-2" : ""}
+          ${isSmallMobile ? 'min-h-[100px]' : isMobile ? 'min-h-[110px]' : 'min-h-[140px] lg:min-h-[180px]'}
+          flex flex-col items-center justify-center`}
+      >
+        {/* Efecto de brillo */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+        {/* Lock overlay para módulos bloqueados */}
+        {!module.isUnlocked && (
+          <div className="absolute inset-0 bg-black/20 rounded-lg sm:rounded-xl lg:rounded-2xl flex items-center justify-center">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-gray-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs sm:text-sm lg:text-lg">🔒</span>
+            </div>
+          </div>
+        )}
+
+        {/* Icono del módulo - Mejorado para móviles */}
+        <div className={`${isSmallMobile ? 'text-lg mb-1' : isMobile ? 'text-xl mb-1' : 'text-2xl lg:text-4xl mb-2 lg:mb-3'} animate-bounce-gentle`}>
+          {module.icon.startsWith("./") || module.icon.startsWith("/") ? (
+            <img
+              src={module.icon}
+              alt={module.name}
+              className={`${isSmallMobile ? 'w-5 h-5' : isMobile ? 'w-6 h-6' : 'w-8 h-8 lg:w-12 lg:h-12'} object-contain mx-auto`}
+              draggable={false}
+              loading="lazy"
+              onError={(e) => {
+                // Fallback si la imagen no carga
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = '📚';
+                }
+              }}
+            />
+          ) : (
+            <span>{module.icon}</span>
+          )}
+        </div>
+
+        {/* Nombre del módulo - Optimizado para móviles */}
+        <h3 className={`
+        ${isSmallMobile ? 'text-xs' : isMobile ? 'text-xs' : 'text-sm lg:text-lg'} 
+        font-bold text-gray-800 text-center mb-1 px-1 leading-tight
+        ${isSmallMobile ? 'line-clamp-1' : 'line-clamp-2'}
+      `}>
+          {module.name}
+        </h3>
+
+        {/* Descripción - Solo en pantallas grandes */}
+        {!isMobile && (
+          <p className="hidden lg:block text-sm text-gray-600 text-center mb-3">
+            {module.description}
+          </p>
+        )}
+
+        {/* Progreso y estrellas - Compacto para móviles */}
+        {module.isUnlocked && (
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            {[...Array(3)].map((_, i) => (
+              <Star
+                key={i}
+                className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} ${i < module.stars
+                    ? "text-yellow-400 fill-current"
+                    : "text-gray-300"
+                  }`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Efectos de partículas para módulos desbloqueados - Reducidos en móviles */}
+        {module.isUnlocked && !isSmallMobile && (
+          <>
+            <div
+              className="absolute top-1 right-1 sm:top-2 sm:right-2 text-xs animate-bounce"
+              style={{ animationDelay: "0.5s" }}
+            >
+              ✨
+            </div>
+            <div
+              className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 text-xs animate-bounce"
+              style={{ animationDelay: "1s" }}
+            >
+              🌟
+            </div>
+          </>
+        )}
+      </div>
+    </Link>
+  ));
+
+  ModuleCard.displayName = 'ModuleCard';
+
   // Detectar tamaños de pantalla
   useEffect(() => {
     const checkScreenSize = () => {
@@ -342,7 +331,7 @@ export default function DashboardPage() {
       setIsMobile(width < 768);
       setIsSmallMobile(width < 480);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
     return () => window.removeEventListener('resize', checkScreenSize);
@@ -387,17 +376,17 @@ export default function DashboardPage() {
     // Crear nuevo audio
     audioRef.current = new Audio(audio.audioUrl);
     audioRef.current.volume = 0.7;
-    
+
     audioRef.current.onplay = () => {
       setCurrentAudio(audioId);
       setIsPlaying(true);
     };
-    
+
     audioRef.current.onended = () => {
       setCurrentAudio(null);
       setIsPlaying(false);
     };
-    
+
     audioRef.current.onerror = () => {
       console.log(`Audio ${audio.title} no encontrado, continuando sin audio`);
       setCurrentAudio(null);
@@ -418,30 +407,6 @@ export default function DashboardPage() {
       setIsPlaying(false);
     }
   }, []);
-
-  const handleModuleClick = useCallback((moduleId: string) => {
-    const module = modules.find((m) => m.id === moduleId);
-    if (!module?.isUnlocked) {
-      setAnimatingModule(moduleId);
-      setTimeout(() => setAnimatingModule(null), 600);
-      return;
-    }
-
-    // Reproducir audio de concentración antes de navegar
-    const focusAudio = cognitiveAudios.find(audio => audio.id === "focus-breathing");
-    if (focusAudio) {
-      playAudio(focusAudio.id);
-    }
-
-    // Navegar al módulo específico
-    setTimeout(() => {
-      router.push(`/modules/${moduleId}`);
-    }, 1000);
-  }, [modules, cognitiveAudios, playAudio, router]);
-
-  const handleConfigClick = useCallback(() => {
-    router.push('/settings');
-  }, [router]);
 
   const CognitiveAudioPanel = useMemo(() => () => (
     <div className={`
@@ -464,7 +429,7 @@ export default function DashboardPage() {
           ×
         </button>
       </div>
-      
+
       <div className={`space-y-1 sm:space-y-2 ${isSmallMobile ? 'max-h-48' : 'max-h-60 sm:max-h-80'} overflow-y-auto`}>
         {cognitiveAudios.map((audio) => (
           <div key={audio.id} className={`${isSmallMobile ? 'p-2' : 'p-2 sm:p-3'} rounded-lg sm:rounded-xl border transition-all duration-200 ${currentAudio === audio.id ? 'bg-purple-50 border-purple-300' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}`}>
@@ -478,8 +443,8 @@ export default function DashboardPage() {
                 onClick={() => currentAudio === audio.id ? stopAudio() : playAudio(audio.id)}
                 className={`${isSmallMobile ? 'w-6 h-6' : 'w-8 h-8'} rounded-full flex items-center justify-center transition-all duration-200 flex-shrink-0 ${currentAudio === audio.id ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-600 hover:bg-purple-200'}`}
               >
-                {currentAudio === audio.id && isPlaying ? 
-                  <Pause className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'}`} /> : 
+                {currentAudio === audio.id && isPlaying ?
+                  <Pause className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'}`} /> :
                   <Play className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'}`} />
                 }
               </button>
@@ -496,48 +461,16 @@ export default function DashboardPage() {
     </div>
   ), [showCognitivePanel, cognitiveAudios, currentAudio, isPlaying, playAudio, stopAudio, isSmallMobile]);
 
-  // Partículas optimizadas para móviles
-  const particles = useMemo(() => 
-    [...Array(isSmallMobile ? 4 : isMobile ? 6 : 20)].map((_, i) => (
-      <FloatingParticle key={i} delay={i * 0.2} />
-    )), [isMobile, isSmallMobile]
-  );
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 relative overflow-hidden">
-      {/* Partículas flotantes de fondo */}
-      <div className="fixed inset-0 pointer-events-none">
-        {particles}
-      </div>
-
-      {/* Elementos decorativos de fondo - Muy reducidos en móviles */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div className={`absolute top-5 sm:top-10 lg:top-20 left-5 sm:left-10 lg:left-20 ${isSmallMobile ? 'w-8 h-8' : 'w-12 h-12 sm:w-16 sm:h-16 lg:w-32 lg:h-32'} bg-yellow-200 rounded-full opacity-20 blur-2xl animate-pulse`}></div>
-        <div
-          className={`absolute bottom-5 sm:bottom-10 lg:bottom-20 right-5 sm:right-10 lg:right-20 ${isSmallMobile ? 'w-10 h-10' : 'w-16 h-16 sm:w-20 sm:h-20 lg:w-40 lg:h-40'} bg-blue-200 rounded-full opacity-20 blur-2xl animate-pulse`}
-          style={{ animationDelay: "1s" }}
-        ></div>
-        {!isSmallMobile && (
-          <>
-            <div
-              className={`absolute top-1/2 left-1/4 ${isMobile ? 'w-6 h-6' : 'w-8 h-8 sm:w-12 sm:h-12 lg:w-24 lg:h-24'} bg-pink-200 rounded-full opacity-15 blur-xl animate-pulse`}
-              style={{ animationDelay: "2s" }}
-            ></div>
-            <div
-              className={`absolute bottom-1/3 left-3/4 ${isMobile ? 'w-7 h-7' : 'w-10 h-10 sm:w-14 sm:h-14 lg:w-28 lg:h-28'} bg-green-200 rounded-full opacity-15 blur-xl animate-pulse`}
-              style={{ animationDelay: "0.5s" }}
-            ></div>
-          </>
-        )}
-      </div>
 
       {/* Header - Ultra optimizado para móviles */}
       <header className="relative z-10 flex justify-between items-center p-2 sm:p-4 lg:p-6 bg-white/80 backdrop-blur-sm shadow-lg">
         <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-1 min-w-0">
           <div className="relative flex-shrink-0">
-            <img 
-              src="/images/logo.png" 
-              alt="Logo MentaMática" 
+            <img
+              src="/images/logo.png"
+              alt="Logo MentaMática"
               className={`${isSmallMobile ? 'w-6 h-6' : 'w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12'} animate-pulse`}
               loading="eager"
             />
@@ -561,13 +494,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Botón de Configuración */}
-          <button
-            onClick={handleConfigClick}
-            className={`bg-gradient-to-br from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white ${isSmallMobile ? 'p-1.5' : 'p-2 sm:p-3'} rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50`}
-            title="Configuración"
-          >
-            <Settings className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'}`} />
-          </button>
+          <Link href="/settings">
+            <button
+              type="button"
+              className={`bg-gradient-to-br from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white ${isSmallMobile ? 'p-1.5' : 'p-2 sm:p-3'} rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50`}
+              title="Configuración"
+            >
+              <Settings className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'}`} />
+            </button>
+          </Link>
 
           {/* Botón de Audio Cognitivo */}
           <button
@@ -581,10 +516,10 @@ export default function DashboardPage() {
               <Brain className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'}`} />
             )}
           </button>
-          
+
           {/* UserButton de Clerk para cerrar sesión */}
           <div className={`${isSmallMobile ? 'scale-75' : 'scale-90 sm:scale-100 lg:scale-110'}`}>
-            <UserButton 
+            <UserButton
               afterSignOutUrl="/"
               appearance={{
                 elements: {
@@ -661,7 +596,6 @@ export default function DashboardPage() {
               module={module}
               index={index}
               animatingModule={animatingModule}
-              onModuleClick={handleModuleClick}
               isMobile={isMobile}
               isSmallMobile={isSmallMobile}
             />
@@ -695,7 +629,7 @@ export default function DashboardPage() {
                 <span className="text-blue-400 animate-twinkle-fast text-sm sm:text-base" style={{ animationDelay: "0.6s" }}>🌟</span>
               </div>
             )}
-            
+
             <h3 className={`${isSmallMobile ? 'text-base' : 'text-lg sm:text-xl'} font-bold text-gray-800 ${isSmallMobile ? 'mb-2' : 'mb-4'} flex items-center gap-1 sm:gap-2 animate-bounce-soft`}>
               <div className="relative">
                 <Trophy className={`${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5 sm:w-6 sm:h-6'} text-yellow-500 animate-trophy-shine`} />
@@ -706,12 +640,12 @@ export default function DashboardPage() {
               </span>
               <span className={`${isSmallMobile ? 'text-base' : 'text-lg sm:text-xl'} animate-celebration`}>🎉</span>
             </h3>
-            
+
             {/* Barra de progreso general animada */}
             <div className={`${isSmallMobile ? 'mb-3' : 'mb-6'} bg-gray-200 rounded-full ${isSmallMobile ? 'h-2' : 'h-3 sm:h-4'} overflow-hidden shadow-inner`}>
-              <div 
+              <div
                 className={`${isSmallMobile ? 'h-2' : 'h-3 sm:h-4'} bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-full animate-progress-fill relative`}
-                style={{ 
+                style={{
                   width: `${Math.round((modules.filter(m => m.isUnlocked).reduce((acc, m) => acc + m.progress, 0) / modules.filter(m => m.isUnlocked).length) || 0)}%`,
                   animationDelay: "0.5s"
                 }}
@@ -720,11 +654,11 @@ export default function DashboardPage() {
                 <div className={`absolute right-1 top-1/2 transform -translate-y-1/2 ${isSmallMobile ? 'w-1 h-1' : 'w-2 h-2'} bg-white rounded-full animate-bounce-tiny`}></div>
               </div>
             </div>
-            
+
             <div className={`grid grid-cols-1 sm:grid-cols-2 ${isSmallMobile ? 'gap-2' : 'gap-3 sm:gap-4'}`}>
               {modules.filter(m => m.isUnlocked).map((module, index) => (
-                <div 
-                  key={module.id} 
+                <div
+                  key={module.id}
                   className={`flex items-center ${isSmallMobile ? 'gap-2 p-2' : 'gap-3 p-3 sm:p-4'} bg-gradient-to-r from-gray-50 to-white rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 animate-module-entry transform hover:scale-102 relative overflow-hidden`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
@@ -732,7 +666,7 @@ export default function DashboardPage() {
                   {!isMobile && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-rainbow-shimmer to-transparent opacity-0 animate-random-shimmer"></div>
                   )}
-                  
+
                   {/* Icono del módulo con efectos */}
                   <div className={`relative ${isSmallMobile ? 'w-8 h-8' : 'w-10 h-10 sm:w-12 sm:h-12'} bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 rounded-full flex items-center justify-center animate-icon-float shadow-lg`}>
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-300 to-purple-300 rounded-full animate-pulse-color opacity-50"></div>
@@ -755,22 +689,21 @@ export default function DashboardPage() {
                       </>
                     )}
                   </div>
-                  
+
                   <div className="flex-1 min-w-0">
                     <h4 className={`font-semibold text-gray-800 ${isSmallMobile ? 'text-xs mb-1' : 'text-sm sm:text-base mb-1'} truncate animate-text-wave`}>
                       {module.name}
                     </h4>
-                    
+
                     {/* Estrellas con animaciones mejoradas */}
                     <div className={`flex items-center ${isSmallMobile ? 'gap-0.5 mb-1' : 'gap-1 mb-2'}`}>
                       {[...Array(3)].map((_, i) => (
                         <div key={i} className="relative">
                           <Star
-                            className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} transition-all duration-300 ${
-                              i < module.stars
+                            className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} transition-all duration-300 ${i < module.stars
                                 ? "text-yellow-500 fill-yellow-500 drop-shadow-md animate-star-earned"
                                 : "text-gray-400 fill-gray-200 opacity-60 animate-star-waiting"
-                            }`}
+                              }`}
                             style={{ animationDelay: `${i * 0.2}s` }}
                           />
                           {i < module.stars && !isSmallMobile && (
@@ -782,13 +715,13 @@ export default function DashboardPage() {
                         </div>
                       ))}
                     </div>
-                    
+
                     {/* Barra de progreso individual con animaciones */}
                     <div className={`flex items-center ${isSmallMobile ? 'gap-1' : 'gap-2'}`}>
                       <div className={`flex-1 bg-gray-200 rounded-full ${isSmallMobile ? 'h-1.5' : 'h-2'} overflow-hidden shadow-inner`}>
-                        <div 
+                        <div
                           className={`${isSmallMobile ? 'h-1.5' : 'h-2'} bg-gradient-to-r from-green-400 to-blue-500 rounded-full transition-all duration-1000 ease-out animate-progress-fill-individual relative`}
-                          style={{ 
+                          style={{
                             width: `${module.progress}%`,
                             animationDelay: `${index * 0.2 + 0.5}s`
                           }}
@@ -800,7 +733,7 @@ export default function DashboardPage() {
                         {module.progress}%
                       </span>
                     </div>
-                    
+
                     {/* Indicador de completado */}
                     {module.progress === 100 && (
                       <div className="absolute top-1 right-1 animate-completion-celebration">
@@ -812,7 +745,7 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-            
+
             {/* Mensaje motivacional animado */}
             <div className={`${isSmallMobile ? 'mt-2' : 'mt-4'} text-center`}>
               <div className={`inline-flex items-center ${isSmallMobile ? 'gap-1 px-2 py-1' : 'gap-2 px-4 py-2'} bg-gradient-to-r from-green-100 to-blue-100 rounded-full shadow-sm animate-message-float`}>
@@ -837,12 +770,12 @@ export default function DashboardPage() {
                 <div className="absolute top-1/2 left-1/4 w-8 h-8 bg-gradient-to-br from-green-200/30 to-blue-200/30 rounded-full animate-bubble-3"></div>
               </>
             )}
-            
+
             {/* Efecto de brillo que se desliza - Solo en desktop */}
             {!isMobile && (
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full animate-shine-slow"></div>
             )}
-            
+
             <h3 className={`${isSmallMobile ? 'text-base' : 'text-lg sm:text-xl'} font-bold text-gray-800 ${isSmallMobile ? 'mb-2' : 'mb-4'} flex items-center gap-1 sm:gap-2 animate-bounce-soft relative z-10`}>
               <span className={`${isSmallMobile ? 'text-lg' : 'text-xl sm:text-2xl'} animate-glow`}>💡</span>
               <span className={isSmallMobile ? 'text-sm' : ''}>
@@ -850,7 +783,7 @@ export default function DashboardPage() {
               </span>
               <span className={`${isSmallMobile ? 'text-base' : 'text-lg sm:text-xl'} animate-celebration`}>🧠</span>
             </h3>
-            
+
             <div className={`grid grid-cols-1 sm:grid-cols-2 ${isSmallMobile ? 'gap-2 text-xs' : 'gap-3 sm:gap-4 text-sm sm:text-base'} text-gray-700 relative z-10`}>
               <div className={`bg-white/70 ${isSmallMobile ? 'p-2' : 'p-3 sm:p-4'} rounded-lg sm:rounded-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl animate-slide-in-left backdrop-blur-sm border border-white/30 relative overflow-hidden`}>
                 <div className="absolute top-0 right-0 w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
@@ -860,7 +793,7 @@ export default function DashboardPage() {
                 </h4>
                 <p className="leading-relaxed">Los audios cognitivos ayudan a crear nuevas conexiones neuronales que facilitan el aprendizaje matemático.</p>
               </div>
-              
+
               <div className={`bg-white/70 ${isSmallMobile ? 'p-2' : 'p-3 sm:p-4'} rounded-lg sm:rounded-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl animate-slide-in-right backdrop-blur-sm border border-white/30 relative overflow-hidden`} style={{ animationDelay: "0.1s" }}>
                 <div className="absolute top-0 right-0 w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: "0.5s" }}></div>
                 <h4 className={`font-semibold ${isSmallMobile ? 'mb-1' : 'mb-2'} flex items-center gap-1 sm:gap-2`}>
@@ -869,7 +802,7 @@ export default function DashboardPage() {
                 </h4>
                 <p className="leading-relaxed">15-20 minutos diarios son ideales. La consistencia es más importante que la duración.</p>
               </div>
-              
+
               <div className={`bg-white/70 ${isSmallMobile ? 'p-2' : 'p-3 sm:p-4'} rounded-lg sm:rounded-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl animate-slide-in-left backdrop-blur-sm border border-white/30 relative overflow-hidden`} style={{ animationDelay: "0.2s" }}>
                 <div className="absolute top-0 right-0 w-2 h-2 bg-green-400 rounded-full animate-ping" style={{ animationDelay: "1s" }}></div>
                 <h4 className={`font-semibold ${isSmallMobile ? 'mb-1' : 'mb-2'} flex items-center gap-1 sm:gap-2`}>
@@ -878,7 +811,7 @@ export default function DashboardPage() {
                 </h4>
                 <p className="leading-relaxed">Celebra cada logro, por pequeño que sea. Esto fortalece la motivación intrínseca.</p>
               </div>
-              
+
               <div className={`bg-white/70 ${isSmallMobile ? 'p-2' : 'p-3 sm:p-4'} rounded-lg sm:rounded-xl transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 hover:shadow-xl animate-slide-in-right backdrop-blur-sm border border-white/30 relative overflow-hidden`} style={{ animationDelay: "0.3s" }}>
                 <div className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{ animationDelay: "1.5s" }}></div>
                 <h4 className={`font-semibold ${isSmallMobile ? 'mb-1' : 'mb-2'} flex items-center gap-1 sm:gap-2`}>

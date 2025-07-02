@@ -1,14 +1,15 @@
 import { Trophy } from 'lucide-react';
+import ConfettiCanvas from '../molecules/ConfettiCanvas';
 
 interface GameCompleteScreenProps {
-  totalScore: number;
-  score: number;
+  aciertos: number;
   onRestart: () => void;
 }
 
-const JuegoCompletado = ({ totalScore, score, onRestart }: GameCompleteScreenProps) => {
+const JuegoCompletado = ({ aciertos, onRestart }: GameCompleteScreenProps) => {
   return (
     <div className="text-center py-16">
+      <ConfettiCanvas/>
       <div className="bg-white rounded-3xl p-8 shadow-2xl border border-green-200">
         <div className="text-6xl mb-4">🏆🧠✨</div>
         <h2 className="text-4xl font-bold text-green-600 mb-4">¡Felicitaciones!</h2>
@@ -16,7 +17,7 @@ const JuegoCompletado = ({ totalScore, score, onRestart }: GameCompleteScreenPro
           Has completado todos los niveles del juego Clasifica y Agrupa
         </p>
         <div className="text-3xl font-bold text-blue-600 mb-6">
-          Puntuación Total: {totalScore + score} puntos
+          Puntuación Total: {aciertos} puntos
         </div>
         <button
           onClick={onRestart}

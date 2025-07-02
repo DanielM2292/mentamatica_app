@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
 import { usuarios } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export const usuarioQueries = {
 
@@ -39,4 +39,25 @@ export const usuarioQueries = {
       .where(eq(usuarios.usuario_id, usuario_id));
     return { success: true, message: "Usuario actualizado correctamente" };
   },
+
+  async obtenerMonedas(usuario_id: string) {
+    console.log("Usuario id para obtener monedas", usuario_id);
+    const resultado = await db
+      .select({ monedas: usuarios.monedas })
+      .from(usuarios)
+      .where(eq(usuarios.usuario_id, usuario_id));
+    const monedas = resultado?.[0]?.monedas ?? 0;
+    return monedas;
+  },
+
+  async agregarMonedas(usuario_id: string, monedas: number) {
+    await db
+      .update(usuarios)
+      .set({
+        monedas: sql`${usuarios.monedas} + ${monedas}`
+      })
+      .where(eq(usuarios.usuario_id, usuario_id));
+
+    return { success: true, message: "Monedas sumadas correctamente" };
+  }
 };

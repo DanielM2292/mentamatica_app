@@ -19,6 +19,23 @@ const AreaJuego = ({
 }: GamePlayAreaProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Área de conjuntos */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          🎯
+          Conjuntos del Nivel
+        </h2>
+        {currentGameLevel.sets.map((set) => (
+          <DropZone
+            key={set.id}
+            set={set}
+            onDrop={onDrop}
+            isCompleted={completedSets.includes(set.id)}
+            itemCount={items.filter(item => item.category === set.id).length}
+          />
+        ))}
+      </div>
+      
       {/* Área de elementos arrastrables */}
       <div className="space-y-6">
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
@@ -38,23 +55,6 @@ const AreaJuego = ({
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Área de conjuntos */}
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          🎯
-          Conjuntos del Nivel
-        </h2>
-        {currentGameLevel.sets.map((set) => (
-          <DropZone
-            key={set.id}
-            set={set}
-            onDrop={onDrop}
-            isCompleted={completedSets.includes(set.id)}
-            itemCount={items.filter(item => item.category === set.id).length}
-          />
-        ))}
       </div>
     </div>
   );

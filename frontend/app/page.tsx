@@ -137,25 +137,7 @@ export default function Page() {
           <div className="block lg:hidden space-y-8">
             {/* Botón de registro prominente en móvil */}
             <SignedOut>
-              <SignUpButton 
-                mode="modal"
-                afterSignUpUrl="/"
-              >
-                <div className="flex justify-center">
-                  <Button
-                    size="lg"
-                    className="font-bold px-8 py-4 sm:px-12 sm:py-6 rounded-full text-lg sm:text-xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 animate-bounce-gentle"
-                    style={{
-                      backgroundColor: "#D2B48C",
-                      color: "white",
-                      border: "3px solid #C19A6B",
-                    }}
-                  >
-                    <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
-                    REGISTRARSE
-                  </Button>
-                </div>
-              </SignUpButton>
+              
             </SignedOut>
 
             {/* Animaciones en grid 2x1 para móvil */}

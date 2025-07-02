@@ -46,7 +46,6 @@ const clasificaAgrupa: React.FC = () => {
     <ConjuntosTemplate
       config={conjuntosConfig}
       userStars={0}
-      userCoins={0}
     />
   );
 };

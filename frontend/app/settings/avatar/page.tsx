@@ -1,5 +1,8 @@
+"use client";
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Heart, Star, Save, Settings, Download, User, Sparkles, Palette, Eye, Smile, Glasses as GlassesIcon, Crown, Zap, Camera, Wand2, Rainbow } from 'lucide-react';
+import Button from '../../../components/atoms/Button';
+import Link from 'next/link';
 
 const ADVENTURER_OPTIONS = {
   backgroundColor: [
@@ -115,7 +118,7 @@ const CATEGORIES = [
   },
   { 
     id: 'hairColor', 
-    name: 'Color', 
+    name: 'Color de Cabello', 
     icon: <Palette className="w-4 h-4 sm:w-5 sm:h-5" />, 
     color: 'from-rose-400 via-pink-400 to-purple-400',
     emoji: '🎨',
@@ -180,12 +183,10 @@ const CATEGORIES = [
 ];
 
 interface AvatarCustomizerProps {
-  onBack?: () => void;
   onSave?: (avatar: any) => void;
 }
 
-const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({ 
-  onBack = () => console.log('Back'), 
+const Page: React.FC<AvatarCustomizerProps> = ({ 
   onSave = (avatar) => console.log('Save', avatar)
 }) => {
   const [avatarOptions, setAvatarOptions] = useState<Record<string, string>>({});
@@ -340,15 +341,13 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({
         <div className="container mx-auto px-3 sm:px-6 py-3 sm:py-5">
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Botón Back - Responsive */}
-            <button
-              onClick={onBack}
-              className="flex items-center gap-1 sm:gap-3 bg-white text-purple-600 px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-sm sm:text-lg font-bold animate-pulse"
-              style={{ animationDuration: '3s' }}
-            >
+            <Link href="/settings">
+              <Button>
               <ArrowLeft className="w-4 h-4 sm:w-6 sm:h-6" />
               <span className="hidden xs:inline">🏠 Inicio</span>
               <span className="xs:hidden">🏠</span>
-            </button>
+            </Button>
+            </Link>
 
             {/* Título central - Responsive */}
             <div className="flex items-center gap-2 sm:gap-4 flex-1 justify-center">
@@ -633,4 +632,4 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({
   );
 };
 
-export default AvatarCustomizer;
+export default Page;

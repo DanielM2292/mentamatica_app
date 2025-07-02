@@ -73,43 +73,43 @@ export async function POST(request: Request) {
           throw error;
         }
         break;
-        case "user.deleted":
-          try {
-            if(!userData) {
-              console.log("Error: datos del evento no definidos")
-            }
-
-            const usuarioId = userData.id;
-            const usuarioExistente = await usuarioQueries.eliminarUsuario(usuarioId);
-            if(usuarioExistente){
-              console.log("Usuario eliminado desde route: ", usuarioId, userData.username)
-            }
-            
-          } catch (error) {
-            console.log("Error borrando usuario:", error)
-            throw error;
+      case "user.deleted":
+        try {
+          if (!userData) {
+            console.log("Error: datos del evento no definidos")
           }
-          break;
-        case "user.updated":
-          console.log("datos del usuario",userData)
-          try {
-            if(!userData) {
-              console.log("Error: datos del evento no definidos")
-            }
 
-            const usuarioId = userData.id;
-            const nameUser = userData.username || "Sin nombre";
-            const usuarioExistente = await usuarioQueries.actualizarUsuario(usuarioId,{nombre: nameUser});
-
-            if(usuarioExistente) {
-              console.log("Usuario existente actualizado desde route:", usuarioId, nameUser);
-            }
-
-          } catch (error) {
-            console.log("Error actualizando datos del usuario usuario:", error)
-            throw error;
+          const usuarioId = userData.id;
+          const usuarioExistente = await usuarioQueries.eliminarUsuario(usuarioId);
+          if (usuarioExistente) {
+            console.log("Usuario eliminado desde route: ", usuarioId, userData.username)
           }
-          break;
+
+        } catch (error) {
+          console.log("Error borrando usuario:", error)
+          throw error;
+        }
+        break;
+      case "user.updated":
+        console.log("datos del usuario", userData)
+        try {
+          if (!userData) {
+            console.log("Error: datos del evento no definidos")
+          }
+
+          const usuarioId = userData.id;
+          const nameUser = userData.username || "Sin nombre";
+          const usuarioExistente = await usuarioQueries.actualizarUsuario(usuarioId, { nombre: nameUser });
+
+          if (usuarioExistente) {
+            console.log("Usuario existente actualizado desde route:", usuarioId, nameUser);
+          }
+
+        } catch (error) {
+          console.log("Error actualizando datos del usuario usuario:", error)
+          throw error;
+        }
+        break;
       default:
         console.log(`Evento no manejado: ${event.type}`);
     }
@@ -125,12 +125,44 @@ export async function POST(request: Request) {
   }
 }
 
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const usuarioId = searchParams.get("usuario_id");
+
+  if (!usuarioId) {
+    return NextResponse.json({ error: "Se requiere usuario" }, { status: 400 })
+  }
+
+  try {
+    const monedas = await usuarioQueries.obtenerMonedas(usuarioId);
+    
+    const payload = {
+      success: true,
+      monedas
+    };
+
+    if (!monedas) {
+      return NextResponse.json({ error: "No se encontraron monedas para el usuario" }, { status: 404 })
+    }
+    return new NextResponse(JSON.stringify(payload), {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.log("Error al obtener las monedas del usuario", error);
+    return NextResponse.json({ error: "Error al obtener la edad del usuario" }, { status: 500 });
+  }
+}
+
 export async function OPTIONS() {
   return new Response(null, {
     status: 200,
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, svix-signature, svix-id, svix-timestamp",
     },
   });

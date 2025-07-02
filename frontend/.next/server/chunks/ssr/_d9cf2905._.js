@@ -15,145 +15,92 @@ __turbopack_context__.n(__turbopack_context__.i("[project]/app/layout.tsx [app-r
 
 var { g: global, __dirname, m: module, e: exports } = __turbopack_context__;
 {
-// "use client"
-// import { useState, useRef, useEffect } from 'react';
-// import { DraggableItem } from '@/components/atoms/DraggableItem';
-// import DropZone from '@/components/atoms/DropZone';
-// import GameHeader from '@/components/molecules/GameHeader';
-// import { Brain, Target, Zap } from 'lucide-react';
-// import { useToast } from "@/hooks/use-toast";
-// import BackgroundTemplate from '@/components/templates/conjuntos/GamesTemplate';
-// interface GameItem {
-//   id: string;
-//   name: string;
-//   category: string;
-//   icon: string;
-//   color: string;
-// }
-// interface GameSet {
-//   id: string;
-//   name: string;
-//   color: string;
-//   description: string;
-//   icon: any;
-// }
-// export default function Page() {
-//   const { toast } = useToast();
-//   const [items, setItems] = useState<GameItem[]>([]);
-//   const [sets, setSets] = useState<GameSet[]>([]);
-//   const [score, setScore] = useState(0);
-//   const [completedSets, setCompletedSets] = useState<string[]>([]);
-//   const dragItem = useRef<GameItem | null>(null);
-//   useEffect(() => {
-//     fetch("/data/conjuntos/data.json")
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setItems(data.gameItems);
-//         setSets(data.gameSets);
-//       })
-//       .catch((err) => console.error("Error al cargar datos:", err));
-//   }, []);
-//   const handleDragStart = (item: GameItem) => {
-//     dragItem.current = item;
-//     console.log('Iniciando arrastre:', item.name);
-//   };
-//   const handleDrop = (setId: string) => {
-//     if (!dragItem.current) return;
-//     const item = dragItem.current;
-//     console.log('Soltando:', item.name, 'en conjunto:', setId);
-//     if (item.category === setId) {
-//       // Clasificación correcta
-//       setItems(prev => prev.filter(i => i.id !== item.id));
-//       setScore(prev => prev + 10);
-//       toast({
-//         title: "¡Excelente conexión neural! 🧠",
-//         description: `${item.name} pertenece a ${sets.find(s => s.id === setId)?.name}`,
-//         duration: 2000,
-//       });
-//       // Verificar si el conjunto está completo
-//       const remainingItemsInSet = items.filter(i => i.category === setId && i.id !== item.id);
-//       if (remainingItemsInSet.length === 0) {
-//         setCompletedSets(prev => [...prev, setId]);
-//         toast({
-//           title: "¡Conjunto completado! 🎉",
-//           description: "Has activado todas las conexiones sinápticas",
-//           duration: 3000,
-//         });
-//       }
-//     } else {
-//       // Clasificación incorrecta
-//       toast({
-//         title: "Conexión sináptica interrumpida",
-//         description: "Intenta con otro conjunto neural",
-//         duration: 2000,
-//         variant: "destructive"
-//       });
-//     }
-//     dragItem.current = null;
-//   };
-//   const isGameComplete = completedSets.length === sets.length;
-//   return (
-//     <BackgroundTemplate>
-//       <div className="max-w-6xl mx-auto pt-4">
-//         <GameHeader score={score} completedSets={completedSets.length} totalSets={sets.length} />
-//         {isGameComplete ? (
-//           <div className="text-center py-16 gentle-float">
-//             <div className="bg-white rounded-3xl p-8 shadow-2xl border border-green-200">
-//               <div className="text-6xl mb-4">🧠✨</div>
-//               <h2 className="text-4xl font-bold text-green-600 mb-4">¡Red Neural Completada!</h2>
-//               <p className="text-xl text-gray-600 mb-6">
-//                 Has establecido todas las conexiones sinápticas correctamente
-//               </p>
-//               <div className="text-3xl font-bold text-blue-600">
-//                 Puntuación Final: {score} puntos
-//               </div>
-//             </div>
-//           </div>
-//         ) : (
-//           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-//             {/* Área de elementos arrastrables */}
-//             <div className="space-y-6">
-//               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-//                 <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-//                   <Brain className="text-blue-500" />
-//                   Elementos Neurocientíficos
-//                 </h2>
-//                 <p className="text-gray-600 mb-6">
-//                   Arrastra cada elemento al conjunto correspondiente para activar las conexiones sinápticas
-//                 </p>
-//                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-//                   {items.map((item) => (
-//                     <DraggableItem
-//                       key={item.id}
-//                       item={item}
-//                       onDragStart={handleDragStart}
-//                     />
-//                   ))}
-//                 </div>
-//               </div>
-//             </div>
-//             {/* Área de conjuntos */}
-//             <div className="space-y-4">
-//               <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-//                 <Target className="text-green-500" />
-//                 Conjuntos Neuronales
-//               </h2>
-//               {sets.map((set) => (
-//                 <DropZone
-//                   key={set.id}
-//                   set={set}
-//                   onDrop={handleDrop}
-//                   isCompleted={completedSets.includes(set.id)}
-//                   itemCount={items.filter(item => item.category === set.id).length}
-//                 />
-//               ))}
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </BackgroundTemplate>
-//   );
-// };
+const { jsxDEV: _jsxDEV } = __turbopack_context__.r("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js [app-rsc] (ecmascript)");
+const Page = ()=>{
+    return /*#__PURE__*/ _jsxDEV(TimerProvider, {
+        children: /*#__PURE__*/ _jsxDEV(GameWrapper, {}, void 0, false, {
+            fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+            lineNumber: 4,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+        lineNumber: 3,
+        columnNumber: 5
+    }, this);
+};
+const GameWrapper = ()=>{
+    const { currentLevel, items, aciertos, errores, completedSets, totalAciertos, currentGameLevel, isLastLevel, isLevelComplete, isGameComplete, handleDragStart, handleDrop, handleNextLevel, handleRestart, handleTiempoFinalizado } = useGameLogic();
+    return /*#__PURE__*/ _jsxDEV(GamesTemplate, {
+        children: /*#__PURE__*/ _jsxDEV("div", {
+            className: "max-w-6xl mx-auto pt-4",
+            children: [
+                /*#__PURE__*/ _jsxDEV(GameHeader, {
+                    aciertos: aciertos,
+                    errores: errores,
+                    completedSets: completedSets.length,
+                    totalSets: currentGameLevel.sets.length,
+                    level: currentLevel + 1,
+                    totalAciertos: totalAciertos + aciertos
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 31,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDEV(TiempoJuego, {
+                    position: "top-right",
+                    formato: "minutos"
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 40,
+                    columnNumber: 9
+                }, this),
+                /*#__PURE__*/ _jsxDEV(InformacionNivel, {
+                    currentLevel: currentLevel,
+                    gameLevel: currentGameLevel
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 41,
+                    columnNumber: 9
+                }, this),
+                isGameComplete ? /*#__PURE__*/ _jsxDEV(JuegoCompletado, {
+                    aciertos: aciertos,
+                    onRestart: handleRestart
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 44,
+                    columnNumber: 11
+                }, this) : isLevelComplete ? /*#__PURE__*/ _jsxDEV(NivelCompletado, {
+                    aciertos: aciertos,
+                    isLastLevel: isLastLevel,
+                    onNextLevel: handleNextLevel
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 46,
+                    columnNumber: 11
+                }, this) : /*#__PURE__*/ _jsxDEV(AreaJuego, {
+                    items: items,
+                    currentGameLevel: currentGameLevel,
+                    completedSets: completedSets,
+                    onDragStart: handleDragStart,
+                    onDrop: handleDrop
+                }, void 0, false, {
+                    fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+                    lineNumber: 48,
+                    columnNumber: 11
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+            lineNumber: 30,
+            columnNumber: 7
+        }, this)
+    }, void 0, false, {
+        fileName: "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx",
+        lineNumber: 29,
+        columnNumber: 5
+    }, this);
+};
 }}),
 "[project]/app/modules/conjuntos/clasificaAgrupa/page.tsx [app-rsc] (ecmascript, Next.js server component)": ((__turbopack_context__) => {
 

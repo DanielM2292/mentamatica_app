@@ -10,7 +10,6 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/arrow-left.js [app-client] (ecmascript) <export default as ArrowLeft>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$heart$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Heart$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/heart.js [app-client] (ecmascript) <export default as Heart>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.js [app-client] (ecmascript) <export default as Star>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$save$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Save$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/save.js [app-client] (ecmascript) <export default as Save>");
@@ -27,8 +26,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$camera$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Camera$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/camera.js [app-client] (ecmascript) <export default as Camera>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$wand$2d$2$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Wand2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/wand-2.js [app-client] (ecmascript) <export default as Wand2>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$rainbow$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Rainbow$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/rainbow.js [app-client] (ecmascript) <export default as Rainbow>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
+;
 ;
 ;
 const ADVENTURER_OPTIONS = {
@@ -309,7 +310,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 103,
+            lineNumber: 105,
             columnNumber: 11
         }, this),
         color: 'from-orange-400 via-amber-400 to-yellow-400',
@@ -323,7 +324,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 111,
+            lineNumber: 113,
             columnNumber: 11
         }, this),
         color: 'from-amber-400 via-yellow-400 to-lime-400',
@@ -337,7 +338,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 119,
+            lineNumber: 121,
             columnNumber: 11
         }, this),
         color: 'from-rose-400 via-pink-400 to-purple-400',
@@ -351,7 +352,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 127,
+            lineNumber: 129,
             columnNumber: 11
         }, this),
         color: 'from-blue-400 via-cyan-400 to-teal-400',
@@ -365,7 +366,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 135,
+            lineNumber: 137,
             columnNumber: 11
         }, this),
         color: 'from-green-400 via-emerald-400 to-teal-400',
@@ -379,7 +380,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 143,
+            lineNumber: 145,
             columnNumber: 11
         }, this),
         color: 'from-pink-400 via-rose-400 to-red-400',
@@ -393,7 +394,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 151,
+            lineNumber: 153,
             columnNumber: 11
         }, this),
         color: 'from-indigo-400 via-purple-400 to-pink-400',
@@ -407,7 +408,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 159,
+            lineNumber: 161,
             columnNumber: 11
         }, this),
         color: 'from-yellow-400 via-orange-400 to-red-400',
@@ -421,7 +422,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 167,
+            lineNumber: 169,
             columnNumber: 11
         }, this),
         color: 'from-red-400 via-pink-400 to-purple-400',
@@ -435,7 +436,7 @@ const CATEGORIES = [
             className: "w-4 h-4 sm:w-5 sm:h-5"
         }, void 0, false, {
             fileName: "[project]/components/AvatarCustomizer.tsx",
-            lineNumber: 175,
+            lineNumber: 177,
             columnNumber: 11
         }, this),
         color: 'from-purple-400 via-pink-400 to-red-400',
@@ -554,7 +555,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                         }
                     }, void 0, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 288,
+                        lineNumber: 290,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -565,7 +566,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                         }
                     }, void 0, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 289,
+                        lineNumber: 291,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -576,7 +577,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                         }
                     }, void 0, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 290,
+                        lineNumber: 292,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -587,13 +588,13 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                         }
                     }, void 0, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 291,
+                        lineNumber: 293,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                lineNumber: 287,
+                lineNumber: 289,
                 columnNumber: 7
             }, this),
             showConfetti && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -620,17 +621,17 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                             ][Math.floor(Math.random() * 7)]} opacity-80 shadow-lg`
                         }, void 0, false, {
                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                            lineNumber: 308,
+                            lineNumber: 310,
                             columnNumber: 15
                         }, this)
                     }, i, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 298,
+                        lineNumber: 300,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                lineNumber: 296,
+                lineNumber: 298,
                 columnNumber: 9
             }, this),
             showSparkles && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -655,17 +656,17 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                             ][Math.floor(Math.random() * 5)]} opacity-70`
                         }, void 0, false, {
                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                            lineNumber: 330,
+                            lineNumber: 332,
                             columnNumber: 15
                         }, this)
                     }, i, false, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 320,
+                        lineNumber: 322,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                lineNumber: 318,
+                lineNumber: 320,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
@@ -675,40 +676,9 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex items-center justify-between gap-2 sm:gap-4",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: onBack,
-                                className: "flex items-center gap-1 sm:gap-3 bg-white text-purple-600 px-3 py-2 sm:px-6 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-sm sm:text-lg font-bold animate-pulse",
-                                style: {
-                                    animationDuration: '3s'
-                                },
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"], {
-                                        className: "w-4 h-4 sm:w-6 sm:h-6"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 348,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "hidden xs:inline",
-                                        children: "🏠 Inicio"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 349,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "xs:hidden",
-                                        children: "🏠"
-                                    }, void 0, false, {
-                                        fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 350,
-                                        columnNumber: 15
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                lineNumber: 343,
+                                lineNumber: 345,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -723,12 +693,12 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                             className: "w-4 h-4 sm:w-8 sm:h-8 text-white"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 356,
+                                            lineNumber: 353,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 355,
+                                        lineNumber: 352,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -745,7 +715,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                         children: "✨🎨 AVATAR MÁGICO 🎨✨"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 360,
+                                                        lineNumber: 357,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -753,13 +723,13 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                         children: "✨ AVATAR ✨"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 361,
+                                                        lineNumber: 358,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                lineNumber: 359,
+                                                lineNumber: 356,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -770,19 +740,19 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                 children: "¡Crea tu personaje favorito!"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                lineNumber: 363,
+                                                lineNumber: 360,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 358,
+                                        lineNumber: 355,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                lineNumber: 354,
+                                lineNumber: 351,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -797,7 +767,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                         className: "w-4 h-4 sm:w-6 sm:h-6"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 376,
+                                        lineNumber: 373,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -805,7 +775,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                         children: "💾 Guardar"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 377,
+                                        lineNumber: 374,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -813,29 +783,29 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                         children: "💾"
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 378,
+                                        lineNumber: 375,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                lineNumber: 370,
+                                lineNumber: 367,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                        lineNumber: 341,
+                        lineNumber: 343,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                    lineNumber: 340,
+                    lineNumber: 342,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                lineNumber: 339,
+                lineNumber: 341,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -857,12 +827,12 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                             className: "w-4 h-4 sm:w-8 sm:h-8 text-yellow-400 opacity-80 drop-shadow-lg"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 393,
+                                            lineNumber: 390,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 392,
+                                        lineNumber: 389,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -874,12 +844,12 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                             className: "w-3 h-3 sm:w-6 sm:h-6 text-pink-400 opacity-80 drop-shadow-lg"
                                         }, void 0, false, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 396,
+                                            lineNumber: 393,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 395,
+                                        lineNumber: 392,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -898,20 +868,20 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 401,
+                                                        lineNumber: 398,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "🎭 TU AVATAR 🎭"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 402,
+                                                        lineNumber: 399,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                lineNumber: 400,
+                                                lineNumber: 397,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -922,13 +892,13 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                 children: "¡Mira qué genial se ve! 🌟"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                lineNumber: 404,
+                                                lineNumber: 401,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 399,
+                                        lineNumber: 396,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -943,7 +913,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 411,
+                                                    lineNumber: 408,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -958,7 +928,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                         className: "w-8 h-8 sm:w-16 sm:h-16 border-4 sm:border-8 border-purple-400 border-t-transparent rounded-full animate-spin"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 416,
+                                                                        lineNumber: 413,
                                                                         columnNumber: 27
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -966,18 +936,18 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                         children: "🎨 Creando magia..."
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 417,
+                                                                        lineNumber: 414,
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                lineNumber: 415,
+                                                                lineNumber: 412,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 414,
+                                                            lineNumber: 411,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -989,7 +959,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                             }
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 422,
+                                                            lineNumber: 419,
                                                             columnNumber: 21
                                                         }, this),
                                                         showSaveAnimation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -999,29 +969,29 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                 children: "🎉✨ ¡GUARDADO! ✨🎉"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                lineNumber: 433,
+                                                                lineNumber: 430,
                                                                 columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 432,
+                                                            lineNumber: 429,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 412,
+                                                    lineNumber: 409,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 410,
+                                            lineNumber: 407,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 409,
+                                        lineNumber: 406,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1037,36 +1007,36 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     className: "w-4 h-4 sm:w-6 sm:h-6"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 445,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: "📥 ¡Descargar mi Avatar!"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 449,
+                                                    lineNumber: 446,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 443,
+                                            lineNumber: 440,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 442,
+                                        lineNumber: 439,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                lineNumber: 390,
+                                lineNumber: 387,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                            lineNumber: 389,
+                            lineNumber: 386,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1089,25 +1059,25 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     }
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 460,
+                                                    lineNumber: 457,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     children: "🎨 PERSONALIZACIÓN 🎨"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 461,
+                                                    lineNumber: 458,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 459,
+                                            lineNumber: 456,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 458,
+                                        lineNumber: 455,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1127,7 +1097,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                         children: category.emoji
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 478,
+                                                        lineNumber: 475,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1135,7 +1105,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                         children: category.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 481,
+                                                        lineNumber: 478,
                                                         columnNumber: 21
                                                     }, this),
                                                     activeCategory === category.id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1146,28 +1116,28 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                 className: "w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                lineNumber: 486,
+                                                                lineNumber: 483,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 485,
+                                                            lineNumber: 482,
                                                             columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                        lineNumber: 484,
+                                                        lineNumber: 481,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, category.id, true, {
                                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                lineNumber: 468,
+                                                lineNumber: 465,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 466,
+                                        lineNumber: 463,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1199,17 +1169,17 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                             className: "w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                            lineNumber: 524,
+                                                                            lineNumber: 521,
                                                                             columnNumber: 37
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 523,
+                                                                        lineNumber: 520,
                                                                         columnNumber: 35
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                    lineNumber: 522,
+                                                                    lineNumber: 519,
                                                                     columnNumber: 33
                                                                 }, this),
                                                                 option === 'transparent' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1219,24 +1189,24 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                         children: "🚫"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 531,
+                                                                        lineNumber: 528,
                                                                         columnNumber: 35
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                    lineNumber: 530,
+                                                                    lineNumber: 527,
                                                                     columnNumber: 33
                                                                 }, this)
                                                             ]
                                                         }, option, true, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 507,
+                                                            lineNumber: 504,
                                                             columnNumber: 29
                                                         }, this);
                                                     })
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 500,
+                                                    lineNumber: 497,
                                                     columnNumber: 23
                                                 }, this),
                                                 !activeCategory.includes('Color') && activeCategory !== 'backgroundColor' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1289,17 +1259,17 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                             }
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                            lineNumber: 580,
+                                                                            lineNumber: 577,
                                                                             columnNumber: 35
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 579,
+                                                                        lineNumber: 576,
                                                                         columnNumber: 33
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                    lineNumber: 578,
+                                                                    lineNumber: 575,
                                                                     columnNumber: 31
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1312,7 +1282,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 593,
+                                                                        lineNumber: 590,
                                                                         columnNumber: 35
                                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "text-xs sm:text-sm font-black text-purple-600 bg-purple-100 rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 border-purple-300",
@@ -1322,12 +1292,12 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 597,
+                                                                        lineNumber: 594,
                                                                         columnNumber: 35
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                    lineNumber: 591,
+                                                                    lineNumber: 588,
                                                                     columnNumber: 31
                                                                 }, this),
                                                                 isSelected && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1342,29 +1312,29 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                                             children: "✓"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                            lineNumber: 606,
+                                                                            lineNumber: 603,
                                                                             columnNumber: 37
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                        lineNumber: 605,
+                                                                        lineNumber: 602,
                                                                         columnNumber: 35
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                                    lineNumber: 604,
+                                                                    lineNumber: 601,
                                                                     columnNumber: 33
                                                                 }, this)
                                                             ]
                                                         }, option, true, {
                                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                            lineNumber: 568,
+                                                            lineNumber: 565,
                                                             columnNumber: 29
                                                         }, this);
                                                     })
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 542,
+                                                    lineNumber: 539,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
@@ -1379,7 +1349,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     children: "🎭"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 618,
+                                                    lineNumber: 615,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1387,7 +1357,7 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     children: "¡Ups! No hay opciones aquí"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 619,
+                                                    lineNumber: 616,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1398,46 +1368,46 @@ const AvatarCustomizer = ({ onBack = ()=>console.log('Back'), onSave = (avatar)=
                                                     children: "🔄 Prueba con otra categoría"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                                                    lineNumber: 622,
+                                                    lineNumber: 619,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                                            lineNumber: 617,
+                                            lineNumber: 614,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/components/AvatarCustomizer.tsx",
-                                        lineNumber: 495,
+                                        lineNumber: 492,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                                lineNumber: 457,
+                                lineNumber: 454,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/AvatarCustomizer.tsx",
-                            lineNumber: 456,
+                            lineNumber: 453,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/AvatarCustomizer.tsx",
-                    lineNumber: 386,
+                    lineNumber: 383,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/AvatarCustomizer.tsx",
-                lineNumber: 385,
+                lineNumber: 382,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/AvatarCustomizer.tsx",
-        lineNumber: 285,
+        lineNumber: 287,
         columnNumber: 5
     }, this);
 };

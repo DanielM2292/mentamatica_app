@@ -40,7 +40,7 @@ export const resultado_actividad = pgTable("resultado_actividad", {
     resultado_id: varchar("resultado_id", {length:10}).primaryKey(),
     usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     actividad_id: varchar("actividad_id", {length:10}).references(() => actividades.actividad_id, {onDelete: "cascade"}),
-    fecha: timestamp("fecha"),
+    fecha: timestamp("fecha").defaultNow().notNull(),
     estrellas: integer("estrellas"),
     intentos: integer("intentos"),
     errores: integer("errores"),

@@ -1,9 +1,11 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, Play, Star, Circle, Square, Triangle, Coins } from "lucide-react";
 import Button from "@/components/atoms/Button";
+import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
+import Monedas from "@/components/molecules/Monedas";
+
 
 interface Activity {
   id: string;
@@ -44,13 +46,12 @@ interface ModuleTemplateProps {
 const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
   config,
   userStars = 0,
-  userCoins = 0,
 }) => {
-  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [animatedElements, setAnimatedElements] = useState<Set<number>>(new Set());
   const [floatingShapes, setFloatingShapes] = useState<FloatingShape[]>([]);
   const [activities, setActivities] = useState<Activity[]>(config.activities);
+  const { user } = useUser();
 
   // Efecto de entrada progresiva basado en neurociencia cognitiva
   useEffect(() => {
@@ -76,14 +77,6 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
       }, index * 200);
     });
   }, [activities]);
-
-  const handleBack = () => {
-    router.push("/dashboard");
-  };
-
-  const handleActivityStart = (activityId: string) => {
-    router.push(`/modules/${config.id}/${activityId}`);
-  };
 
   const handleVideoPlay = () => {
     // Implementar reproducción de video
@@ -211,21 +204,22 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
 
       {/* Header - Mejorado para móvil */}
       <div
-        className={`bg-white/90 backdrop-blur-sm shadow-sm border-b p-3 sm:p-4 relative z-10 transition-all duration-700 ${
-          isVisible ? "animate-slide-in-left" : "opacity-0"
-        }`}
+        className={`bg-white/90 backdrop-blur-sm shadow-sm border-b p-3 sm:p-4 relative z-10 transition-all duration-700 ${isVisible ? "animate-slide-in-left" : "opacity-0"
+          }`}
       >
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-            <Button
-              onClick={handleBack}
-              variant="ghost"
-              size="sm"
-              icon={ArrowLeft}
-              className="hover:scale-105 transition-transform duration-200 flex-shrink-0"
-            >
-              <span className="hidden sm:inline">Volver</span>
-            </Button>
+            <Link href="/dashboard">
+              <Button
+                icon={ArrowLeft}
+                variant="ghost"
+                size="sm"
+                className="hover:scale-105 transition-transform duration-200 flex-shrink-0"
+              >
+                <span className="hidden sm:inline">Volver</span>
+              </Button>
+            </Link>
+
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="w-8 h-8 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer flex-shrink-0">
                 <img
@@ -247,9 +241,8 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             {/* Estrellas */}
             <div
-              className={`flex items-center gap-1 sm:gap-2 bg-yellow-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-yellow-200 transition-colors duration-300 ${
-                isVisible ? "animate-bounce-in" : "opacity-0"
-              }`}
+              className={`flex items-center gap-1 sm:gap-2 bg-yellow-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-yellow-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"
+                }`}
               style={{ animationDelay: "0.5s" }}
             >
               <Star className="w-3 h-3 sm:w-5 sm:h-5 text-yellow-500 animate-pulse" />
@@ -257,15 +250,7 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
             </div>
 
             {/* Monedas */}
-            <div
-              className={`flex items-center gap-1 sm:gap-2 bg-amber-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-amber-200 transition-colors duration-300 ${
-                isVisible ? "animate-bounce-in" : "opacity-0"
-              }`}
-              style={{ animationDelay: "0.7s" }}
-            >
-              <Coins className="w-3 h-3 sm:w-5 sm:h-5 text-amber-600 animate-pulse" />
-              <span className="font-bold text-amber-700 text-xs sm:text-base">{userCoins}</span>
-            </div>
+            {user && <Monedas userId={user.id} isVisible={true}/>}
           </div>
         </div>
       </div>
@@ -274,9 +259,8 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
       <div className="max-w-6xl mx-auto p-3 sm:p-6 relative z-10">
         {/* Video Section - Optimizado para móvil */}
         <div
-          className={`mb-6 sm:mb-8 transition-all duration-700 ${
-            isVisible ? "animate-scale-in" : "opacity-0 scale-75"
-          }`}
+          className={`mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? "animate-scale-in" : "opacity-0 scale-75"
+            }`}
           style={{ animationDelay: "0.3s" }}
         >
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-blue-100 hover:shadow-xl transition-all duration-500 group">
@@ -333,9 +317,8 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
           {activities.map((activity, index) => (
             <div
               key={activity.id}
-              className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden ${
-                animatedElements.has(index) ? "animate-bounce-in" : "opacity-0"
-              }`}
+              className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden ${animatedElements.has(index) ? "animate-bounce-in" : "opacity-0"
+                }`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Elementos decorativos - simplificados en móvil */}
@@ -374,23 +357,23 @@ const ConjuntosTemplate: React.FC<ModuleTemplateProps> = ({
                   {[...Array(3)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-3 h-3 sm:w-4 sm:h-4 transition-all duration-300 hover:scale-125 ${
-                        i < activity.stars
-                          ? "text-yellow-400 fill-current animate-pulse"
-                          : "text-gray-300 group-hover:text-yellow-200"
-                      }`}
+                      className={`w-3 h-3 sm:w-4 sm:h-4 transition-all duration-300 hover:scale-125 ${i < activity.stars
+                        ? "text-yellow-400 fill-current animate-pulse"
+                        : "text-gray-300 group-hover:text-yellow-200"
+                        }`}
                     />
                   ))}
                 </div>
-                <Button
-                  onClick={() => handleActivityStart(activity.id)}
-                  variant="primary"
-                  size="sm"
-                  icon={Play}
-                  className="hover:scale-105 transition-transform duration-200 hover:shadow-lg text-xs sm:text-sm"
-                >
-                  {activity.completed ? "Repetir" : "Jugar"}
-                </Button>
+                <Link href={`/modules/${config.id}/${activity.id}`}>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    icon={Play}
+                    className="hover:scale-105 transition-transform duration-200 hover:shadow-lg text-xs sm:text-sm"
+                  >
+                    {activity.completed ? "Repetir" : "Jugar"}
+                  </Button>
+                </Link>
               </div>
 
               {/* Efecto de brillo en hover */}

@@ -6,14 +6,25 @@ import NivelCompletado from '@/components/organisms/NivelCompletado';
 import AreaJuego from '@/components/organisms/AreaJuego';
 import { useGameLogic } from '@/hooks/useGameLogic';
 import GamesTemplate from '@/components/templates/conjuntos/GamesTemplate';
+import TiempoJuego from '@/components/molecules/TiempoJuego';
+import { TimerProvider } from "@/context/timer-context"
 
 const Page = () => {
+  return (
+    <TimerProvider>
+      <GameWrapper />
+    </TimerProvider>
+  );
+};
+
+const GameWrapper = () => {
   const {
     currentLevel,
     items,
-    score,
+    aciertos,
+    errores,
     completedSets,
-    totalScore,
+    totalAciertos,
     currentGameLevel,
     isLastLevel,
     isLevelComplete,
@@ -21,37 +32,29 @@ const Page = () => {
     handleDragStart,
     handleDrop,
     handleNextLevel,
-    handleRestart
+    handleRestart,
+    handleTiempoFinalizado
   } = useGameLogic();
 
   return (
     <GamesTemplate>
       <div className="max-w-6xl mx-auto pt-4">
         <GameHeader
-          score={score}
+          aciertos={aciertos}
+          errores={errores}
           completedSets={completedSets.length}
           totalSets={currentGameLevel.sets.length}
           level={currentLevel + 1}
-          totalScore={totalScore + score}
+          totalAciertos={totalAciertos + aciertos}
         />
 
-        <InformacionNivel
-          currentLevel={currentLevel}
-          gameLevel={currentGameLevel}
-        />
+        <TiempoJuego position="top-right" formato="minutos" />
+        <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel} />
 
         {isGameComplete ? (
-          <JuegoCompletado
-            totalScore={totalScore}
-            score={score}
-            onRestart={handleRestart}
-          />
+          <JuegoCompletado aciertos={aciertos} onRestart={handleRestart} />
         ) : isLevelComplete ? (
-          <NivelCompletado
-            score={score}
-            isLastLevel={isLastLevel}
-            onNextLevel={handleNextLevel}
-          />
+          <NivelCompletado aciertos={aciertos} isLastLevel={isLastLevel} onNextLevel={handleNextLevel} />
         ) : (
           <AreaJuego
             items={items}
@@ -65,5 +68,6 @@ const Page = () => {
     </GamesTemplate>
   );
 };
+
 
 export default Page;

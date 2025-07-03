@@ -23,6 +23,7 @@ const GameWrapper = () => {
     items,
     aciertos,
     errores,
+    estrellas,
     completedSets,
     totalAciertos,
     currentGameLevel,
@@ -33,7 +34,6 @@ const GameWrapper = () => {
     handleDrop,
     handleNextLevel,
     handleRestart,
-    handleTiempoFinalizado
   } = useGameLogic();
 
   return (
@@ -52,7 +52,7 @@ const GameWrapper = () => {
         <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel} />
 
         {isGameComplete ? (
-          <JuegoCompletado aciertos={aciertos} onRestart={handleRestart} />
+          <JuegoCompletado aciertos={aciertos} estrellas={estrellas} onRestart={handleRestart} />
         ) : isLevelComplete ? (
           <NivelCompletado aciertos={aciertos} isLastLevel={isLastLevel} onNextLevel={handleNextLevel} />
         ) : (

@@ -92,45 +92,7 @@ export const useGameLogic = () => {
     }
   };
 
-  const handleRestart = async () => {
-    const usuario_id = user?.id;
-    const urlParts = window.location.pathname.split('/');
-    const actividad = urlParts[urlParts.length - 1];
-    const estrellas = convertirErrores(errores);
-    const intentos = aciertos + errores;
-    const tiempoAEnviar = tiempoFinal ?? tiempo;
-    console.log("Enviando datos:", {
-      usuario_id,
-      actividad,
-      estrellas,
-      intentos,
-      errores,
-      tiempo: tiempoAEnviar
-    });
-
-    try {
-      const res = await fetch(`http://localhost:3001/api/conjuntos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          usuario_id,
-          actividad,
-          estrellas,
-          intentos,
-          errores,
-          tiempo: tiempoFinal,
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error('Error al guardar resultados');
-      }
-    } catch (error) {
-      console.error('Error al guardar resultados:', error);
-    }
-
+  const handleRestart = () => {
     setCurrentLevel(0);
     setItems(gameLevels[0].items);
     setScore(0);
@@ -152,12 +114,48 @@ export const useGameLogic = () => {
     setTiempoFinal(tiempo);
   };
 
+  const estrellas = convertirErrores(errores);
+
   useEffect(() => {
+    const enviarResultados = async () => {
+      const usuario_id = user?.id;
+      const urlParts = window.location.pathname.split('/');
+      const actividad = urlParts[urlParts.length - 1];
+      const intentos = aciertos + errores;
+      const tiempoAEnviar = tiempo;
+
+      try {
+        const res = await fetch(`http://localhost:3001/api/conjuntos`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            usuario_id,
+            actividad,
+            estrellas,
+            intentos,
+            errores,
+            tiempo: tiempoAEnviar,
+          }),
+        });
+
+        if (!res.ok) {
+          throw new Error('Error al guardar resultados');
+        }
+
+        setTiempoFinal(tiempoAEnviar); // Guardamos el tiempo final solo si se envió correctamente
+      } catch (error) {
+        console.error('Error al guardar resultados:', error);
+      }
+    };
+
     if (isGameComplete && tiempoFinal === null) {
       detener();
-      setTiempoFinal(tiempo);
+      enviarResultados();
     }
   }, [isGameComplete, tiempoFinal]);
+
 
 
   return {
@@ -168,6 +166,7 @@ export const useGameLogic = () => {
     totalAciertos,
     aciertos,
     errores,
+    estrellas,
     currentGameLevel,
     isLastLevel,
     isLevelComplete,

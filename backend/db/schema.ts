@@ -24,7 +24,7 @@ export const transacciones_puntos = pgTable("transacciones_puntos", {
     transaccion_id: varchar("transaccion_id", {length:10}).primaryKey(),
     usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     monedas: integer("monedas"),
-    fecha: timestamp("fecha"),
+    fecha: timestamp("fecha").defaultNow().notNull(),
     tipo: varchar("tipo", {length: 20}),
 })
 

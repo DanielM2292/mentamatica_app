@@ -1,5 +1,6 @@
-import { primerModuloQueries } from "@/db/queries/queries-modulo1";
 import { usuarioQueries } from "@/db/queries/queries-usuarios";
+import { resultadosQueries } from "@/db/queries/resultados";
+import { transaccionesQueries } from "@/db/queries/transacciones";
 import { convertirEstrellas, obtenerActividad } from "@/db/utils/queries";
 import { NextResponse } from "next/server";
 
@@ -18,10 +19,18 @@ export async function POST(request: Request) {
             tiempo_total: data.tiempo
         }
 
-        await primerModuloQueries.registarActividad(resultado)
+        await resultadosQueries.registarActividad(resultado)
 
         const monedas = await convertirEstrellas(data.estrellas)
         await usuarioQueries.agregarMonedas(resultado.usuario_id, monedas)
+
+        const transacciones = {
+            usuario_id: data.usuario_id,
+            monedas: monedas,
+            tipo: "Ganadas"
+        }
+
+        await transaccionesQueries.registarTransaccion(transacciones);
 
         return NextResponse.json({ success: true }, {
             headers: { "Access-Control-Allow-Origin": "*" }

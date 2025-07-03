@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///D:/10.%20PROYECTO%20DE%20GRADO/Repositorio%20Proyecto%20de%20grado/mentamatica_app/frontend/app/modules/conjuntos/unionInterseccion/page.tsx"],"sourcesContent":["\"use client\";\r\nimport ModulePage from '@/components/pages/ModulePage'\r\nimport React from 'react'\r\nimport { BrowserRouter } from 'react-router-dom'\r\n\r\nexport default function Page() {\r\n  return (\r\n    <div>\r\n        Desde union interseccion\r\n        <BrowserRouter/>\r\n        aqui\r\n    </div>\r\n  )\r\n}\r\n"],"names":[],"mappings":";;;;AAGA;AAHA;;;AAKe,SAAS;IACtB,qBACE,6LAAC;;YAAI;0BAED,6LAAC,+KAAA,CAAA,gBAAa;;;;;YAAE;;;;;;;AAIxB;KARwB","debugId":null}}]
-}

@@ -1,0 +1,34 @@
+# Instalar Next.js para el backend
+npx create-next-app@latest . --typescript --tailwind --eslint --app
+√ What is your project named? ... backend
+√ Would you like to use TypeScript? ... Yes
+√ Would you like to use ESLint? ... Yes
+√ Would you like to use Tailwind CSS? ... Yes
+√ Would you like your code inside a `src/` directory? ... No
+√ Would you like to use App Router? (recommended) ... Yes
+√ Would you like to use Turbopack for `next dev`? ... Yes
+√ Would you like to customize the import alias (`@/*` by default)? ... No
+
+# Drizzle ORM y adaptador para Neon
+npm i drizzle-orm @neondatabase/serverless
+
+# Drizzle Kit para migraciones y utilidades
+npm i -D drizzle-kit
+
+# Dotenv para manejar variables de entorno
+npm i dotenv
+
+# Dependencias adicionales para desarrollo
+npm i -D tsx pg @types/pg
+
+# Para el manejo de las queries hay que instalar clerk
+npm install @clerk/nextjs
+
+# Hay que ubicarse en la carpeta backend y ejecutar el siguiente codigo para crear las tablas en la
+# base de datos
+npm run db:push
+#Luego una vez creada se ejecuta el siguiente codigo para poblar con los datos iniciales necesarios
+npx tsx scripts/seed.ts
+
+# En las api para la validacion de los esquemas, datos que recibo desde el frontend
+npm install zod

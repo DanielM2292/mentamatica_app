@@ -11,6 +11,31 @@ export default function EstrellasFinales({ estrellas, onFinish }: EstrellasFinal
   const estrellasRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
+    // Crear monedas cayendo
+    const createCoins = () => {
+      for (let i = 0; i < 10; i++) {
+        const coin = document.createElement('span');
+        coin.innerHTML = '🪙';
+        coin.style.position = 'absolute';
+        coin.style.fontSize = '1.5rem';
+        coin.style.left = Math.random() * 100 + '%';
+        coin.style.top = '-50px';
+        coin.style.zIndex = '40';
+        coin.style.pointerEvents = 'none';
+        
+        containerRef.current?.appendChild(coin);
+        
+        gsap.to(coin, {
+          y: window.innerHeight + 100,
+          rotation: 720,
+          duration: 2 + Math.random() * 2,
+          ease: "power2.in",
+          delay: Math.random() * 0.5,
+          onComplete: () => coin.remove()
+        });
+      }
+    };
+
     // Animación de entrada del fondo
     gsap.fromTo(
       containerRef.current,
@@ -42,8 +67,13 @@ export default function EstrellasFinales({ estrellas, onFinish }: EstrellasFinal
       }
     });
 
+    // Iniciar monedas
+    createCoins();
+    const coinInterval = setInterval(createCoins, 800);
+
     // Ocultar después de 3.5 segundos
     const timer = setTimeout(() => {
+      clearInterval(coinInterval);
       gsap.to(containerRef.current, {
         opacity: 0,
         duration: 0.5,
@@ -51,7 +81,10 @@ export default function EstrellasFinales({ estrellas, onFinish }: EstrellasFinal
       });
     }, 3500);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(coinInterval);
+    };
   }, []);
 
   return (

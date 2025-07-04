@@ -6,22 +6,20 @@
 |   |-- README.md
 |   |-- app/
 |   |   `-- api/
-|   |       `-- clerk/
-|   |           `-- webhook/
-|   |               `-- route.ts
+|   |       |-- conjuntos/
+|   |       |   `-- route.ts
+|   |       `-- usuarios/
+|   |           `-- route.ts
 |   |-- comandos.txt
 |   |-- db/
 |   |   |-- drizzle.ts
 |   |   |-- queries/
-|   |   |   |-- queries-modulo1.ts
-|   |   |   |-- queries-modulo2.ts
-|   |   |   |-- queries-modulo3.ts
-|   |   |   |-- queries-modulo4.ts
-|   |   |   |-- queries-modulo5.ts
-|   |   |   |-- queries-modulo6.ts
-|   |   |   |-- queries-modulo7.ts
-|   |   |   `-- queries-usuarios.ts
-|   |   `-- schema.ts
+|   |   |   |-- queries-usuarios.ts
+|   |   |   |-- resultados.ts
+|   |   |   `-- transacciones.ts
+|   |   |-- schema.ts
+|   |   `-- utils/
+|   |       `-- queries.ts
 |   |-- drizzle.config.ts
 |   |-- eslint.config.mjs
 |   |-- next-env.d.ts
@@ -43,10 +41,13 @@
 |   |   |-- layout.tsx
 |   |   |-- modules/
 |   |   |   |-- conjuntos/
-|   |   |   |   |-- Game1.tsx
-|   |   |   |   |-- data.json
+|   |   |   |   |-- PruebaJuegos/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- clasificaAgrupa/
+|   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- page.tsx
-|   |   |   |   `-- styles.module.css
+|   |   |   |   `-- unionInterseccion/
+|   |   |   |       `-- page.tsx
 |   |   |   |-- division/
 |   |   |   |   `-- page.tsx
 |   |   |   |-- geometria/
@@ -54,14 +55,19 @@
 |   |   |   |-- multiplicacion/
 |   |   |   |   `-- page.tsx
 |   |   |   |-- numeracion/
+|   |   |   |   |-- NumeroCorrecto/
+|   |   |   |   |   `-- page.tsx
 |   |   |   |   `-- page.tsx
 |   |   |   |-- resta/
 |   |   |   |   `-- page.tsx
 |   |   |   `-- suma/
 |   |   |       `-- page.tsx
-|   |   `-- page.tsx
+|   |   |-- page.tsx
+|   |   `-- settings/
+|   |       |-- avatar/
+|   |       |   `-- page.tsx
+|   |       `-- page.tsx
 |   |-- components/
-|   |   |-- AvatarCustomizer.tsx
 |   |   |-- atoms/
 |   |   |   |-- Button.tsx
 |   |   |   |-- CoinCounter.tsx
@@ -79,29 +85,40 @@
 |   |   |-- module-card.tsx
 |   |   |-- module-icon.tsx
 |   |   |-- molecules/
+|   |   |   |-- ArrastrarItem.tsx
+|   |   |   |-- ConfettiCanvas.tsx
+|   |   |   |-- DropZone.tsx
+|   |   |   |-- EstrellasCanvas.tsx
+|   |   |   |-- EstrellasFinales.tsx
+|   |   |   |-- GameHeader.tsx
+|   |   |   |-- InformacionNivel.tsx
 |   |   |   |-- LevelCard.tsx
 |   |   |   |-- ModuleCard.tsx
 |   |   |   |-- ModuleContent.tsx
 |   |   |   |-- ModuleHeader.tsx
 |   |   |   |-- ModuleNavItem.tsx
 |   |   |   |-- ModuleSidebar.tsx
+|   |   |   |-- Monedas.tsx
+|   |   |   |-- TiempoJuego.tsx
 |   |   |   |-- UserStats.tsx
 |   |   |   `-- index.ts
 |   |   |-- organisms/
-|   |   |   |-- ActivitySection.tsx
+|   |   |   |-- AreaJuego.tsx
+|   |   |   |-- AreaJuegoGlobos.tsx
 |   |   |   |-- CognitiveAudioPanel.tsx
-|   |   |   |-- FeedbackModal.tsx
+|   |   |   |-- JuegoCompletado.tsx
 |   |   |   |-- ModulePageTemplate.tsx
+|   |   |   |-- NivelCompletado.tsx
 |   |   |   `-- index.ts
 |   |   |-- pages/
 |   |   |   |-- Dashboard.tsx
-|   |   |   |-- HomePage.tsx
 |   |   |   |-- LevelPage.tsx
 |   |   |   |-- ModulePage.tsx
-|   |   |   |-- ProgressPage.tsx
 |   |   |   `-- SettingsPage.tsx
 |   |   |-- templates/
-|   |   |   `-- GameLayout.tsx
+|   |   |   `-- conjuntos/
+|   |   |       |-- ConjuntosTemplate.tsx
+|   |   |       `-- GamesTemplate.tsx
 |   |   |-- theme-provider.tsx
 |   |   `-- ui/
 |   |       |-- avatar.tsx
@@ -119,10 +136,14 @@
 |   |-- context/
 |   |   |-- AuthContext.tsx
 |   |   |-- AvatarContext.tsx
-|   |   `-- UserContext.tsx
+|   |   |-- UserContext.tsx
+|   |   `-- timer-context.tsx
 |   |-- hooks/
 |   |   |-- use-toast.ts
 |   |   |-- useApi.ts
+|   |   |-- useCognitiveAudio.ts
+|   |   |-- useGameLogic.ts
+|   |   |-- useNumeroCorrect.ts
 |   |   |-- useProgress.ts
 |   |   `-- useTimer.ts
 |   |-- lib/
@@ -141,6 +162,40 @@
 |   |   |   `-- lottie/
 |   |   |       |-- counting-animation.json
 |   |   |       `-- math-operations.json
+|   |   |-- data/
+|   |   |   |-- conjuntos/
+|   |   |   |   |-- gameLevels.ts
+|   |   |   |   `-- icons/
+|   |   |   |       `-- clasificaAgrupa/
+|   |   |   |           |-- amarillo1.png
+|   |   |   |           |-- amarillo2.png
+|   |   |   |           |-- amarillo3.png
+|   |   |   |           |-- animal1.png
+|   |   |   |           |-- animal2.png
+|   |   |   |           |-- animal3.png
+|   |   |   |           |-- circulo1.png
+|   |   |   |           |-- circulo2.png
+|   |   |   |           |-- circulo3.png
+|   |   |   |           |-- cosa1.png
+|   |   |   |           |-- cosa2.png
+|   |   |   |           |-- cosa3.png
+|   |   |   |           |-- cuadrado1.png
+|   |   |   |           |-- cuadrado2.png
+|   |   |   |           |-- cuadrado3.png
+|   |   |   |           |-- planta1.png
+|   |   |   |           |-- planta2.png
+|   |   |   |           |-- planta3.png
+|   |   |   |           |-- rojo1.png
+|   |   |   |           |-- rojo2.png
+|   |   |   |           |-- rojo3.png
+|   |   |   |           |-- triangulo1.png
+|   |   |   |           |-- triangulo2.png
+|   |   |   |           |-- triangulo3.png
+|   |   |   |           |-- verde1.png
+|   |   |   |           |-- verde2.png
+|   |   |   |           `-- verde3.png
+|   |   |   `-- numeracion/
+|   |   |       `-- numeroCorrect.ts
 |   |   |-- images/
 |   |   |   |-- icons/
 |   |   |   |   |-- conjuntos.png
@@ -153,14 +208,14 @@
 |   |   |   `-- logo.png
 |   |   `-- sounds/
 |   |-- services/
-|   |   |-- api.ts
-|   |   |-- auth.service.ts
-|   |   `-- progress.service.ts
+|   |   `-- convertidorEstrellas.ts
 |   |-- tailwind.config.js
 |   |-- tsconfig.json
 |   |-- types/
 |   |   |-- activity.ts
 |   |   |-- api.ts
+|   |   |-- game.ts
+|   |   |-- module.ts
 |   |   `-- user.ts
 |   `-- utils/
 |       |-- calculateStars.ts
@@ -169,4 +224,4 @@
 |-- package-lock.json
 `-- package.json
 
-38 directories, 131 files
+51 directories, 173 files

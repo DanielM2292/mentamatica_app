@@ -2,7 +2,7 @@ import { usuarioQueries } from "@/db/queries/queries-usuarios";
 import { resultadosQueries } from "@/db/queries/resultados";
 import { transaccionesQueries } from "@/db/queries/transacciones";
 import { convertirEstrellas, obtenerActividad } from "@/db/utils/queries";
-import { NextResponse } from "next/server";
+import { withCors } from "@/utils/withCors";
 
 export async function POST(request: Request) {
     try {
@@ -32,12 +32,10 @@ export async function POST(request: Request) {
 
         await transaccionesQueries.registarTransaccion(transacciones);
 
-        return NextResponse.json({ success: true }, {
-            headers: { "Access-Control-Allow-Origin": "*" }
-        })
+        return withCors({ success: true }, 200);
     } catch (error) {
         console.log("Error guardando datos:", error);
-        return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
+        return withCors({ error: "Error interno del servidor" }, 500);
     }
 }
 

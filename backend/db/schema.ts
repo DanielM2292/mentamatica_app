@@ -28,14 +28,6 @@ export const transacciones_puntos = pgTable("transacciones_puntos", {
     tipo: varchar("tipo", {length: 20}),
 })
 
-export const respuestas = pgTable("respuestas", {
-    respuesta_id: varchar("respuesta_id", {length:10}).primaryKey(),
-    resultado_id: varchar("resultado_id", {length:10}).references(() => resultado_actividad.resultado_id, {onDelete: "cascade"}),
-    pregunta_texto: text("pregunta_texto"),
-    tiempo_respuesta: integer("tiempo_respuesta"),
-    completada: boolean("completada"),
-})
-
 export const resultado_actividad = pgTable("resultado_actividad", {
     resultado_id: varchar("resultado_id", {length:10}).primaryKey(),
     usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
@@ -63,7 +55,7 @@ export const avatar_personalizado = pgTable("avatar_personalizado", {
     usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     categoria_id: varchar("categoria_id", {length:10}).references(() => avatar_categoria.categoria_id, {onDelete: "cascade"}),
     opcion_id: varchar("opcion_id", {length: 10}).references(() => avatar_opcion.opcion_id, {onDelete: "cascade"}),
-    fecha_desbloqueo: timestamp("fecha_desbloqueo"),
+    fecha_desbloqueo: timestamp("fecha_desbloqueo").defaultNow().notNull(),
 }, (table) => ({
     pk: primaryKey({ columns: [table.usuario_id, table.categoria_id] })
 }))
@@ -71,12 +63,14 @@ export const avatar_personalizado = pgTable("avatar_personalizado", {
 export const avatar_categoria = pgTable("avatar_categoria", {
     categoria_id: varchar("categoria_id", {length:10}).primaryKey(),
     nombre_categoria: varchar("nombre_categoria", {length: 50}),
+    orden: integer("orden").notNull(),
+    emoji: varchar("emoji", { length: 10 }),
 })
 
 export const avatar_opcion = pgTable("avatar_opcion", {
     opcion_id: varchar("opcion_id", {length:10}).primaryKey(),
     categoria_id: varchar("categoria_id", {length:10}).references(() => avatar_categoria.categoria_id, {onDelete: "cascade"}),
-    nombre_opcion: varchar("nombre_opcion", {length: 50}),
+    valor: varchar("valor", { length: 50 }).notNull(), // El valor real usado en la API (ej: "9e5622")
     costo: integer("costo").notNull(),
 })
 
@@ -86,16 +80,37 @@ export const usuariosRelations = relations(usuarios, ({ many }) => ({
     avatarPersonalizado: many(avatar_personalizado),
 }));
 
-export const actividadesRelations = relations(actividades, ({ many }) => ({
+export const actividadesRelations = relations(actividades, ({ many, one }) => ({
+    modulo: one(modulos, {
+        fields: [actividades.modulo_id],
+        references: [modulos.modulo_id]
+    }),
     resultados: many(resultado_actividad),
 }));
 
-export const resultadoActividadRelations = relations(resultado_actividad, ({ one, many }) => ({
-    usuario: one(usuarios, { fields: [resultado_actividad.usuario_id], references: [usuarios.usuario_id] }),
-    actividad: one(actividades, { fields: [resultado_actividad.actividad_id], references: [actividades.actividad_id] }),
-    respuestas: many(respuestas),
+export const avatarPersonalizadoRelations = relations(avatar_personalizado, ({ one }) => ({
+    usuario: one(usuarios, {
+        fields: [avatar_personalizado.usuario_id],
+        references: [usuarios.usuario_id]
+    }),
+    categoria: one(avatar_categoria, {
+        fields: [avatar_personalizado.categoria_id],
+        references: [avatar_categoria.categoria_id]
+    }),
+    opcion: one(avatar_opcion, {
+        fields: [avatar_personalizado.opcion_id],
+        references: [avatar_opcion.opcion_id]
+    }),
 }));
 
-export const avatarPersonalizadoRelations = relations(avatar_personalizado, ({ one }) => ({
-    usuario: one(usuarios, { fields: [avatar_personalizado.usuario_id], references: [usuarios.usuario_id] }),
+export const avatarOpcionRelations = relations(avatar_opcion, ({ one, many }) => ({
+    categoria: one(avatar_categoria, {
+        fields: [avatar_opcion.categoria_id],
+        references: [avatar_categoria.categoria_id]
+    }),
+    seleccionadaPor: many(avatar_personalizado),
+}));
+
+export const avatarCategoriaRelations = relations(avatar_categoria, ({ many }) => ({
+    opciones: many(avatar_opcion),
 }));

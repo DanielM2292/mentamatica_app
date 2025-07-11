@@ -10,12 +10,14 @@ interface GameHeaderProps {
   aciertos: number;
   errores: number;
   completedSets: number;
+  imagen: string;
+  name: string;
   totalSets: number;
   level?: number;
   totalAciertos?: number;
 }
 
-export default function GameHeader({ aciertos, errores, completedSets, totalSets, level = 1 }: GameHeaderProps) {
+export default function GameHeader({ aciertos, errores, completedSets, imagen, name, totalSets, level = 1 }: GameHeaderProps) {
   const progress = (completedSets / totalSets) * 100;
   const headerRef = useRef<HTMLDivElement>(null);
   const brainRef = useRef<SVGSVGElement>(null);
@@ -120,7 +122,7 @@ export default function GameHeader({ aciertos, errores, completedSets, totalSets
 
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-pink-100 rounded-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer flex-shrink-0">
             <img
-              src="/images/icons/conjuntos.png"
+              src={imagen}
               alt="Icono Modulo de Conjuntos"
               className="w-full h-full object-contain animate-bounce"
               draggable={false}
@@ -129,7 +131,7 @@ export default function GameHeader({ aciertos, errores, completedSets, totalSets
 
           <div className="flex-1 min-w-[180px] sm:min-w-[220px]">
             <h1 className="text-lg sm:text-2xl font-bold text-gray-800 leading-snug">
-              Clasifica y Agrupa - Nivel {level}
+              {name} - Nivel {level}
             </h1>
           </div>
         </div>

@@ -1,10 +1,13 @@
+"use client";
+
 import { ArrastrarItem } from '../molecules/ArrastrarItem';
 import DropZone from '../molecules/DropZone';
 import { GameItem, GameLevel } from '@/public/data/conjuntos/gameLevels';
+import { UnifiedGameLevel, UnifiedGameItem } from '@/types/gameTypes';
 
 interface GamePlayAreaProps {
   items: GameItem[];
-  currentGameLevel: GameLevel;
+  currentGameLevel: GameLevel | UnifiedGameLevel;
   completedSets: string[];
   onDragStart: (item: GameItem) => void;
   onDrop: (setId: string) => void;
@@ -22,8 +25,7 @@ const AreaJuego = ({
       {/* Área de conjuntos */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          🎯
-          Conjuntos del Nivel
+          🎯 Conjuntos del Nivel
         </h2>
         {currentGameLevel.sets.map((set) => (
           <DropZone
@@ -31,7 +33,12 @@ const AreaJuego = ({
             set={set}
             onDrop={onDrop}
             isCompleted={completedSets.includes(set.id)}
-            itemCount={items.filter(item => item.category === set.id).length}
+            itemCount={items.filter(item => {
+              const categories = Array.isArray(item.category) ? item.category : [item.category];
+              return set.id === 'interseccion'
+                ? categories.length > 1
+                : categories.includes(set.id);
+            }).length}
           />
         ))}
       </div>

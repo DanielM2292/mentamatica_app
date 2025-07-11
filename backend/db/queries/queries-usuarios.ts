@@ -32,7 +32,6 @@ export const usuarioQueries = {
   },
 
   async actualizarUsuario(usuario_id: string, data: Partial<typeof usuarios.$inferInsert>) {
-    console.log("Datos antes de actualizar:", data);
     await db
       .update(usuarios)
       .set(data)
@@ -59,5 +58,16 @@ export const usuarioQueries = {
       .where(eq(usuarios.usuario_id, usuario_id));
 
     return { success: true, message: "Monedas sumadas correctamente" };
+  },
+
+  async restarMonedas(usuario_id: string, monedas: number) {
+    await db
+      .update(usuarios)
+      .set({
+        monedas: sql`${usuarios.monedas} - ${monedas}`
+      })
+      .where(eq(usuarios.usuario_id, usuario_id));
+    return { success: true, message: "Monedas restadas correctamente" };
   }
+
 };

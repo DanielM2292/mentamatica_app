@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle";
-import { usuarios } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { avatar_personalizado, usuarios } from "@/db/schema";
+import { eq, sql, and } from "drizzle-orm";
 
 export const usuarioQueries = {
 
@@ -23,7 +23,6 @@ export const usuarioQueries = {
   },
 
   async eliminarUsuario(usuario_id: string) {
-    console.log("Envia id del usuario a eliminar:", usuario_id);
     await db
       .delete(usuarios)
       .where(eq(usuarios.usuario_id, usuario_id));
@@ -32,7 +31,6 @@ export const usuarioQueries = {
   },
 
   async actualizarUsuario(usuario_id: string, data: Partial<typeof usuarios.$inferInsert>) {
-    console.log("Datos antes de actualizar:", data);
     await db
       .update(usuarios)
       .set(data)
@@ -41,7 +39,6 @@ export const usuarioQueries = {
   },
 
   async obtenerMonedas(usuario_id: string) {
-    console.log("Usuario id para obtener monedas", usuario_id);
     const resultado = await db
       .select({ monedas: usuarios.monedas })
       .from(usuarios)
@@ -49,6 +46,29 @@ export const usuarioQueries = {
     const monedas = resultado?.[0]?.monedas ?? 0;
     return monedas;
   },
+
+  async obtenerOpcionesDesbloqueadas(usuario_id: string) {
+    const resultado = await db
+      .select()
+      .from(avatar_personalizado)
+      .where(eq(avatar_personalizado.usuario_id, usuario_id));
+    return resultado;
+  },
+
+  async validarOpcion(usuario_id: string, opcion_id: string): Promise<boolean> {
+    const resultado = await db
+      .select()
+      .from(avatar_personalizado)
+      .where(
+        and(
+          eq(avatar_personalizado.usuario_id, usuario_id),
+          eq(avatar_personalizado.opcion_id, opcion_id)
+        )
+      );
+    const desbloqueada = resultado.length > 0;
+    return desbloqueada;
+  },
+
 
   async agregarMonedas(usuario_id: string, monedas: number) {
     await db
@@ -59,5 +79,16 @@ export const usuarioQueries = {
       .where(eq(usuarios.usuario_id, usuario_id));
 
     return { success: true, message: "Monedas sumadas correctamente" };
+  },
+
+  async restarMonedas(usuario_id: string, monedas: number) {
+    await db
+      .update(usuarios)
+      .set({
+        monedas: sql`${usuarios.monedas} - ${monedas}`
+      })
+      .where(eq(usuarios.usuario_id, usuario_id));
+    return { success: true, message: "Monedas restadas correctamente" };
   }
+
 };

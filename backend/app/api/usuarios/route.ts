@@ -1,6 +1,7 @@
 import { usuarioQueries } from "@/db/queries/queries-usuarios";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
+import { withCors } from "@/utils/withCors";
 
 // Configuración importante
 export const dynamic = "force-dynamic";
@@ -26,10 +27,7 @@ export async function POST(request: Request) {
 
     if (!CLERK_WEBHOOK_SECRET) {
       console.error("CLERK_WEBHOOK_SECRET not configured");
-      return NextResponse.json(
-        { error: "CLERK_WEBHOOK_SECRET not configured" },
-        { status: 500 }
-      );
+      return withCors({ error: "CLERK_WEBHOOK_SECRET not configured" }, 500 );
     }
 
     // 3. Verificar usando la biblioteca Svix
@@ -41,10 +39,7 @@ export async function POST(request: Request) {
       console.log("Webhook verificado exitosamente");
     } catch (err) {
       console.error("Error verificando webhook:", err);
-      return NextResponse.json(
-        { error: "Invalid signature" },
-        { status: 403 }
-      );
+      return withCors({ error: "Invalid signature" }, 403 );
     }
 
     // 4. Procesar el evento según su tipo
@@ -114,14 +109,11 @@ export async function POST(request: Request) {
         console.log(`Evento no manejado: ${event.type}`);
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return withCors({ success: true }, 200 );
 
   } catch (error) {
     console.error("Error procesando webhook:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return withCors({ error: "Internal server error" }, 500 );
   }
 }
 
@@ -130,30 +122,16 @@ export async function GET(request: Request) {
   const usuarioId = searchParams.get("usuario_id");
 
   if (!usuarioId) {
-    return NextResponse.json({ error: "Se requiere usuario" }, { status: 400 })
+    return withCors({ error: "Se requiere usuario" }, 400 )
   }
 
   try {
     const monedas = await usuarioQueries.obtenerMonedas(usuarioId);
-    
-    const payload = {
-      success: true,
-      monedas
-    };
 
-    if (!monedas) {
-      return NextResponse.json({ error: "No se encontraron monedas para el usuario" }, { status: 404 })
-    }
-    return new NextResponse(JSON.stringify(payload), {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-    });
+    return withCors({ success: true, monedas });
   } catch (error) {
-    console.log("Error al obtener las monedas del usuario", error);
-    return NextResponse.json({ error: "Error al obtener la edad del usuario" }, { status: 500 });
+    console.log("Error al obtener monedas del usuario:", error);
+    return withCors({ error: "Error interno al obtener monedas" }, 500);
   }
 }
 

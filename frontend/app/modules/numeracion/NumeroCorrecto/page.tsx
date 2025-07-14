@@ -4,7 +4,7 @@ import InformacionNivel from "@/components/molecules/InformacionNivel"
 import JuegoCompletado from "@/components/organisms/JuegoCompletado"
 import NivelCompletado from "@/components/organisms/NivelCompletado"
 import AreaJuegoGlobos from "@/components/organisms/AreaJuegoGlobos"
-import { useNumeroCorrect } from "@/hooks/useNumeroCorrect"
+import { useNumeroCorrect } from "@/hooks/numeracion/useNumeroCorrect"
 import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Sparkles } from "lucide-react"
@@ -46,6 +46,8 @@ const GameWrapper = () => {
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}
+          imagen="/images/icons/numeracion.png"
+            name="Numero Correcto"
           totalSets={currentGameLevel?.sets?.length || 1}
           level={currentLevel + 1}
           totalAciertos={totalAciertos + aciertos}

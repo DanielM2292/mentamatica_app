@@ -6,6 +6,7 @@ import { gameLevels, GameItem } from '@/public/data/conjuntos/gameLevels';
 import { useUser } from '@clerk/nextjs';
 import { convertirErrores } from '@/services/convertidorEstrellas';
 import { useTimer } from '@/context/timer-context';
+import { useEnviarResultados } from '../useEnviarResultados';
 
 
 export const useGameLogic = () => {
@@ -116,47 +117,17 @@ export const useGameLogic = () => {
 
   const estrellas = convertirErrores(errores);
 
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id;
-      const urlParts = window.location.pathname.split('/');
-      const actividad = urlParts[urlParts.length - 1];
-      const intentos = aciertos + errores;
-      const tiempoAEnviar = tiempo;
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/conjuntos`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos,
-            errores,
-            tiempo: tiempoAEnviar,
-          }),
-        });
-
-        if (!res.ok) {
-          throw new Error('Error al guardar resultados');
-        }
-
-        setTiempoFinal(tiempoAEnviar); // Guardamos el tiempo final solo si se envió correctamente
-      } catch (error) {
-        console.error('Error al guardar resultados:', error);
-      }
-    };
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener();
-      enviarResultados();
-    }
-  }, [isGameComplete, tiempoFinal]);
-
-
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   return {
     currentLevel,

@@ -1,22 +1,16 @@
-"use client"
+"use client";
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import Image from 'next/image';
-
-interface GameItem {
-  id: string;
-  name: string;
-  category: string;
-  icon: string;
-  color: string;
-}
+import { GameItem } from '@/public/data/conjuntos/gameLevels';
+import { UnifiedGameItem } from '@/types/gameTypes';
 
 interface DraggableItemProps {
   item: GameItem;
   onDragStart: (item: GameItem) => void;
 }
 
-export function ArrastrarItem ({ item, onDragStart }: DraggableItemProps){
+export function ArrastrarItem({ item, onDragStart }: DraggableItemProps) {
   const [isDragging, setIsDragging] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
@@ -24,24 +18,13 @@ export function ArrastrarItem ({ item, onDragStart }: DraggableItemProps){
   useEffect(() => {
     if (!itemRef.current || !iconRef.current) return;
 
-    // Animación de entrada con GSAP
-    gsap.fromTo(itemRef.current, 
-      { 
-        scale: 0, 
-        opacity: 0, 
-        rotation: -180 
-      },
-      { 
-        scale: 1, 
-        opacity: 1, 
-        rotation: 0, 
-        duration: 0.8, 
-        ease: "back.out(1.7)",
-        delay: Math.random() * 0.5
-      }
+    // Animación inicial del contenedor
+    gsap.fromTo(itemRef.current,
+      { scale: 0, opacity: 0, rotation: -180 },
+      { scale: 1, opacity: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)", delay: Math.random() * 0.5 }
     );
 
-    // Animación de pulso neural para el ícono
+    // Pulso continuo en el ícono
     gsap.to(iconRef.current, {
       scale: 1.1,
       duration: 2,
@@ -65,35 +48,32 @@ export function ArrastrarItem ({ item, onDragStart }: DraggableItemProps){
     onDragStart(item);
     setIsDragging(true);
     e.dataTransfer.effectAllowed = 'move';
-    
-    // Animación de arrastre con GSAP
-    if (itemRef.current) {
-      gsap.to(itemRef.current, {
-        scale: 1.2,
-        rotation: 15,
-        opacity: 0.8,
-        duration: 0.3,
-        ease: "power2.out"
-      });
-    }
-    
+    e.dataTransfer.setData('application/json', JSON.stringify(item));
+
+    // Animación durante el arrastre
+    gsap.to(itemRef.current, {
+      scale: 1.2,
+      rotation: 15,
+      opacity: 0.8,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+
     console.log('DragStart en DraggableItem:', item.name);
   };
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    
-    // Restaurar estado normal con GSAP
-    if (itemRef.current) {
-      gsap.to(itemRef.current, {
-        scale: 1,
-        rotation: 0,
-        opacity: 1,
-        duration: 0.4,
-        ease: "elastic.out(1, 0.5)"
-      });
-    }
-    
+
+    // Regresa a estado inicial
+    gsap.to(itemRef.current, {
+      scale: 1,
+      rotation: 0,
+      opacity: 1,
+      duration: 0.4,
+      ease: "elastic.out(1, 0.5)"
+    });
+
     console.log('DragEnd en DraggableItem:', item.name);
   };
 
@@ -126,19 +106,19 @@ export function ArrastrarItem ({ item, onDragStart }: DraggableItemProps){
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`
-        ${item.color} 
+        ${item.color}
         p-4 rounded-2xl border-2 border-gray-200 shadow-md cursor-move 
         hover:shadow-lg hover:border-blue-300
         flex flex-col items-center gap-2
         select-none
       `}
     >
-      <div ref={iconRef} className="text-3xl w-8 h-8 position-relative">
+      <div ref={iconRef} className="relative w-8 h-8">
         <Image
           src={item.icon}
           alt={item.name}
-          layout='fill'
-          objectFit='contain'
+          layout="fill"
+          objectFit="contain"
         />
       </div>
       <span className="text-sm font-semibold text-gray-700 text-center">
@@ -146,4 +126,4 @@ export function ArrastrarItem ({ item, onDragStart }: DraggableItemProps){
       </span>
     </div>
   );
-};
+}

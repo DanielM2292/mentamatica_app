@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useContadorEspacial } from '../hooks/useContadorEspacial';
+import { useContadorEspacial } from '../hooks/numeracion/useContadorEspacial';
 import { Rocket, Target, ArrowUp, ArrowDown, CheckCircle, Heart, Star } from 'lucide-react';
 
 // Mock components

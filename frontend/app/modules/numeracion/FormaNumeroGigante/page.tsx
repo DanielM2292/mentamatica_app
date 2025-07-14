@@ -6,7 +6,7 @@ import GameHeader from "@/components/molecules/GameHeader"
 import InformacionNivel from "@/components/molecules/InformacionNivel"
 import JuegoCompletado from "@/components/organisms/JuegoCompletado"
 import NivelCompletado from "@/components/organisms/NivelCompletado"
-import { useFormaNumeroGigante } from "@/hooks/useFormaNumeroGigante"
+import { useFormaNumeroGigante } from "@/hooks/numeracion/useFormaNumeroGigante"
 import GamesTemplate from "@/components/templates/conjuntos/GamesTemplate"
 import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
@@ -334,6 +334,8 @@ const GameWrapper = () => {
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
+            imagen="/images/icons/numeracion.png"
+            name="Forma el Numero Gigante"
             totalSets={currentGameLevel?.numbersPerLevel || 1}
             level={currentLevel + 1}
             totalAciertos={totalAciertos + aciertos}

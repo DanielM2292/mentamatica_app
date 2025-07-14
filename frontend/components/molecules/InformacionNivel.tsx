@@ -1,8 +1,9 @@
-import { GameLevel } from "@/public/data/conjuntos/gameLevels";
+import { GameLevel } from "@/public/data/conjuntos/gameLevelsDetective";
+import { UnifiedGameLevel } from "@/types/gameTypes";
 
 interface LevelInfoProps {
   currentLevel: number;
-  gameLevel: GameLevel;
+  gameLevel: GameLevel | UnifiedGameLevel;
 }
 
 const InformacionNivel = ({ currentLevel, gameLevel }: LevelInfoProps) => {

@@ -32,7 +32,7 @@ const clasificaAgrupa: React.FC = () => {
       },
       {
         id: "detectiveConjunto",
-        title: "Detective del Conjunto Perdido",
+        title: "Detective del Elemento Perdido",
         description: "Encuentra qué conjunto falta para completar una operación",
         type: "drag-drop" as const,
         difficulty: "medium" as const,

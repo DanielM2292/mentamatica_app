@@ -4,7 +4,7 @@ import InformacionNivel from '@/components/molecules/InformacionNivel';
 import JuegoCompletado from '@/components/organisms/JuegoCompletado';
 import NivelCompletado from '@/components/organisms/NivelCompletado';
 import AreaJuego from '@/components/organisms/AreaJuego';
-import { useGameLogic } from '@/hooks/useGameLogic';
+import { useGameLogic } from '@/hooks/conjuntos/useGameLogic';
 import GamesTemplate from '@/components/templates/conjuntos/GamesTemplate';
 import TiempoJuego from '@/components/molecules/TiempoJuego';
 import { TimerProvider } from "@/context/timer-context"
@@ -43,6 +43,8 @@ const GameWrapper = () => {
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}
+          imagen="/images/icons/conjuntos.png"
+            name="Clasifica y Agrupa"
           totalSets={currentGameLevel.sets.length}
           level={currentLevel + 1}
           totalAciertos={totalAciertos + aciertos}

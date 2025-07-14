@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Play, Star, Plus, Coins } from "lucide-react";
 
 interface Activity {
-  id: number;
+  id: string;
   title: string;
   description: string;
   type: "drag-drop" | "selection" | "matching";
@@ -99,7 +99,7 @@ const SumaPage: React.FC = () => {
 
   const activities: Activity[] = [
     {
-      id: 1,
+      id: "sumandoEstrellas",
       title: "Sumando Estrellas",
       description: "Elige la estrella con el resultado correcto",
       type: "selection",
@@ -109,7 +109,7 @@ const SumaPage: React.FC = () => {
       coins: 0,
     },
     {
-      id: 2,
+      id: "carreraNumeros",
       title: "Carrera de Números",
       description: "Resuelve sumas para avanzar en la carrera",
       type: "matching",
@@ -119,7 +119,7 @@ const SumaPage: React.FC = () => {
       coins: 0,
     },
     {
-      id: 3,
+      id: "dragDropNumeros",
       title: "Arrastra y suelta los números",
       description: "Completa sumas arrastrando los números correctos",
       type: "drag-drop",
@@ -134,8 +134,8 @@ const SumaPage: React.FC = () => {
     router.push("/dashboard");
   };
 
-  const handleActivityStart = (activityId: number) => {
-    router.push(`/suma/actividad/${activityId}`);
+  const handleActivityStart = (activityId: string) => {
+    router.push(`/modules/suma/${activityId}`);
   };
 
   const handleVideoPlay = () => {

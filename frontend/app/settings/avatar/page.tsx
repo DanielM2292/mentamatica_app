@@ -36,6 +36,7 @@ export const categoryBgColors: Record<string, string> = {
 interface AvatarCategory {
   categoria_id: string;
   nombre_categoria: string;
+  id_api: string;
   icono?: string;
   emoji?: string;
   orden: number;
@@ -61,25 +62,29 @@ const Page: React.FC<AvatarCustomizerProps> = ({
   onSave = (avatar) => console.log('Save', avatar)
 }) => {
   const [categories, setCategories] = useState<AvatarCategory[]>([]);
+  const [avatarOptions, setAvatarOptions] = useState<Record<string, string>>({});
   const [options, setOptions] = useState<Record<string, AvatarOption[]>>({});
+  const [showSaveAnimation, setShowSaveAnimation] = useState(false);
+  const [seed] = useState('mi-avatar-magico');
   const [unlockedOptions, setUnlockedOptions] = useState<UserUnlockedOption[]>([]);
   const [userCoins, setUserCoins] = useState(0);
-  const [seed] = useState('mi-avatar-magico');
   const { user } = useUser();
   const [activeCategory, setActiveCategory] = useState<string>('');
   const [showConfetti, setShowConfetti] = useState(false);
   const [showSparkles, setShowSparkles] = useState(false);
-  const [showSaveAnimation, setShowSaveAnimation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarOptions, setAvatarOptions] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    console.log("Estado actual de options:", options);
+    console.log("Estado actual de avatarOptions:", avatarOptions);
+    console.log("Opciones desbloqueadas:", unlockedOptions);
+  }, [options, avatarOptions, unlockedOptions]);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!user?.id) return;
 
       try {
-        console.log("Entra a buscar las categorías");
-
         // 1. Obtener categorías
         const catsRes = await fetch(`http://localhost:3001/api/avatar?get=categorias`);
         if (!catsRes.ok) throw new Error("Error al obtener categorías");
@@ -91,19 +96,16 @@ const Page: React.FC<AvatarCustomizerProps> = ({
         }
 
         const categorias = categoriesData.categorias;
-        console.log("Estas categorías:", categorias);
 
         setCategories(categorias.sort((a: AvatarCategory, b: AvatarCategory) => a.orden - b.orden));
 
         // 2. Obtener opciones desbloqueadas
         const unlockedRes = await fetch(`http://localhost:3001/api/avatar?usuario_id=${user.id}`);
-        console.log("las opciones desbloqueadas", unlockedRes);
         const unlockedData = await unlockedRes.json();
-        setUnlockedOptions(unlockedData.unlockedOptions || []);
+        setUnlockedOptions(unlockedData.opciones_desbloqueadas || []);
 
         // 3. Obtener monedas del usuario
         const userRes = await fetch(`http://localhost:3001/api/usuarios?usuario_id=${user?.id}`);
-        console.log("las monedas usuario", userRes);
         const userData = await userRes.json();
         setUserCoins(userData.monedas || 0);
 
@@ -115,7 +117,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
         console.error("Error fetching initial data:", error);
       }
     };
-
     fetchInitialData();
   }, [user]);
 
@@ -125,7 +126,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     }
   }, [activeCategory]);
 
-
   // Función para cargar opciones por categoría
   const loadCategoryOptions = async (categoryId: string) => {
     if (options[categoryId]) return; // Ya cargadas
@@ -133,20 +133,13 @@ const Page: React.FC<AvatarCustomizerProps> = ({
       const res = await fetch(`http://localhost:3001/api/avatar?categoria_id=${categoryId}`);
       if (!res.ok) throw new Error(`Error al cargar opciones para la categoría ${categoryId}`);
       const data = await res.json();
-      console.log("Las opciones por categoria: ", data)
       setOptions(prev => ({
         ...prev,
         [categoryId]: data.opciones
       }));
     } catch (error) {
-      console.error('Error cargando opciones de categorias:', error);
       toast({ description: `Error al cargar opciones para la categoría ${categoryId}` });
     }
-  };
-
-  // Verificar si una opción está desbloqueada
-  const isOptionUnlocked = (optionId: string) => {
-    return unlockedOptions.some(opt => opt.opcion_id === optionId);
   };
 
   const handleUnlockOption = async (option: AvatarOption) => {
@@ -156,40 +149,43 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     }
 
     try {
-      const res = await fetch(`http://localhost:3001/api/avatar`, { // Asumiendo un endpoint específico para desbloquear
+      const res = await fetch(`http://localhost:3001/api/avatar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user?.id,
           categoriaId: option.categoria_id,
           optionId: option.opcion_id,
-          costo: option.costo // Enviar el costo para que el backend lo reste
+          costo: option.costo
         })
       });
-
       const data = await res.json();
-
       if (!res.ok) {
         if (res.status === 409) {
           // Ya está desbloqueada, aún puedes agregarla al estado si hace falta
-          setUnlockedOptions(prev => [...prev, { opcion_id: option.opcion_id, fecha_desbloqueo: new Date().toISOString() }]);
+          setUnlockedOptions(prev => [...prev, {
+            opcion_id: option.opcion_id,
+            fecha_desbloqueo: new Date().toISOString()
+          }]);
           toast({ description: "¡Ya habías desbloqueado esta opción!" });
+          return true;
         } else {
           toast({ description: `Error: ${data.error || 'No se pudo desbloquear la opción.'}` });
+          return false;
         }
-        return;
       }
 
       // Desbloqueo exitoso, aquí puedes usar la lógica que tienes:
-      setUnlockedOptions(prev => [...prev, { opcion_id: option.opcion_id, fecha_desbloqueo: new Date().toISOString() }]);
+      setUnlockedOptions(prev => [...prev, {
+        opcion_id: option.opcion_id,
+        fecha_desbloqueo: new Date().toISOString()
+      }]);
       setUserCoins(prev => prev - option.costo);
       toast({ description: `¡Opción desbloqueada! Costo: ${option.costo} monedas` });
     } catch (error) {
-      console.error('Error de red al desbloquear:', error);
       toast({ description: 'Hubo un problema de conexión con el servidor.' });
     }
   };
-
 
   // Renderizado de opciones (ejemplo para colores)
   const handleOptionChange = (category: string, value: string) => {
@@ -205,6 +201,8 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     setTimeout(() => setShowConfetti(false), 800);
     setTimeout(() => setShowSparkles(false), 1000);
     setTimeout(() => setIsLoading(false), 300);
+
+    console.log("Opción seleccionada:", category, value);
   };
 
   // Mapeo de nombres amigables para las opciones
@@ -239,26 +237,40 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     }
   };
 
-  const avatarUrl = useMemo(() => {
+  const DICEBEAR_PARAMS_MAP: Record<string, string> = {
+    AVC0001: 'skinColor',
+    AVC0002: 'hair',
+    AVC0003: 'hairColor',
+    AVC0004: 'eyes',
+    AVC0005: 'eyebrows',
+    AVC0006: 'mouth',
+    AVC0007: 'glasses',
+    AVC0008: 'earrings',
+    AVC0009: 'features',
+    AVC0010: 'backgroundColor'
+  }
+
+  const generateAvatarUrl = (options: Record<string, string>, seed: string, size: string = '600'): string => {
     const params = new URLSearchParams();
     params.append('seed', seed);
-    params.append('size', '600');
+    params.append('size', size);
 
-    Object.entries(avatarOptions).forEach(([key, value]) => {
-      if (['features', 'glasses', 'earrings', 'hair'].includes(key)) {
-        if (value === 'none') {
-          params.append(`${key}Probability`, '0');
-        } else {
-          params.append(key, value);
-          params.append(`${key}Probability`, '100');
+    Object.entries(options).forEach(([categoryId, value]) => {
+      const param = DICEBEAR_PARAMS_MAP[categoryId];
+      if (param && value && value !== 'none') {
+        params.append(param, value);
+        // Parámetros que necesitan probabilidad
+        if (['glasses', 'earrings', 'features', 'hair'].includes(param)) {
+          params.append(`${param}Probability`, '100');
         }
-      } else if (value && value !== 'none') {
-        params.append(key, value);
       }
     });
 
-    return `https://api.dicebear.com/9.x/adventurer/svg?${params.toString()}`;
-  }, [avatarOptions, seed]);
+    const url = `https://api.dicebear.com/9.x/adventurer/svg?${params.toString()}`;
+    return url;
+  };
+
+  const avatarUrl = useMemo(() => generateAvatarUrl(avatarOptions, seed), [avatarOptions, seed]);
 
   const handleSave = () => {
     setShowSaveAnimation(true);
@@ -289,7 +301,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     }
   };
 
-  const currentCategory = categories.find(cat => cat.categoria_id === activeCategory);
   const currentOptions = activeCategory ? options[activeCategory] || [] : [];
 
   return (
@@ -468,23 +479,23 @@ const Page: React.FC<AvatarCustomizerProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 mb-6 sm:mb-10">
                 {categories.map((category) => (
                   <button
-                    key={category.categoria_id}
+                    key={category.id_api}
                     onClick={() => {
-                      setActiveCategory(category.categoria_id);
+                      setActiveCategory(category.id_api);
                     }}
-                    className={`group relative overflow-hidden flex flex-col items-center gap-1 sm:gap-3 p-3 sm:p-6 rounded-xl sm:rounded-2xl font-black transition-all duration-300 text-xs sm:text-base border-2 sm:border-4 hover:scale-105 sm:hover:scale-110 ${activeCategory === category.categoria_id
-                      ? `bg-gradient-to-r ${categoryColors[category.categoria_id]} text-white shadow-2xl scale-105 sm:scale-110 border-white animate-pulse`
-                      : `${categoryBgColors[category.categoria_id]} text-slate-700 hover:shadow-xl border-slate-300 hover:border-purple-400`
+                    className={`group relative overflow-hidden flex flex-col items-center gap-1 sm:gap-3 p-3 sm:p-6 rounded-xl sm:rounded-2xl font-black transition-all duration-300 text-xs sm:text-base border-2 sm:border-4 hover:scale-105 sm:hover:scale-110 ${activeCategory === category.id_api
+                      ? `bg-gradient-to-r ${categoryColors[category.id_api]} text-white shadow-2xl scale-105 sm:scale-110 border-white animate-pulse`
+                      : `bg-gradient-to-r ${categoryBgColors[category.id_api]} text-slate-700 hover:shadow-xl border-slate-300 hover:border-purple-400`
                       }`}
-                    style={{ animationDuration: activeCategory === category.categoria_id ? '2s' : undefined }}
+                    style={{ animationDuration: activeCategory === category.id_api ? '2s' : undefined }}
                   >
-                    <div className={`text-2xl sm:text-4xl mb-1 sm:mb-2 transition-transform duration-300 ${activeCategory === category.categoria_id ? 'animate-bounce' : 'group-hover:scale-125 group-hover:animate-pulse'
+                    <div className={`text-2xl sm:text-4xl mb-1 sm:mb-2 transition-transform duration-300 ${activeCategory === category.id_api ? 'animate-bounce' : 'group-hover:scale-125 group-hover:animate-pulse'
                       }`} style={{ animationDuration: '1.5s' }}>
                       {category.emoji}
                     </div>
                     <span className="text-center leading-tight">{category.nombre_categoria}</span>
 
-                    {activeCategory === category.categoria_id && (
+                    {activeCategory === category.id_api && (
                       <div className="absolute top-1 right-1 sm:top-2 sm:right-2">
                         <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center animate-ping">
                           <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-400 rounded-full"></div>
@@ -496,125 +507,200 @@ const Page: React.FC<AvatarCustomizerProps> = ({
               </div>
 
               {/* Options */}
-              {currentOptions.length > 0 ? (
-                <>
-                  {/* Color pickers */}
-                  {(activeCategory === 'AVC0001' || activeCategory === 'AVC0010') && (
-                    <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 sm:gap-4">
-                      {currentOptions.map((option) => {
-                        console.log("las opciones", option)
-                        const isSelected = avatarOptions[activeCategory] === option.valor;
-                        const isUnlocked = isOptionUnlocked(option.opcion_id);
-                        const bgColor = option.valor === 'transparent' ? 'transparent' : `#${option.valor}`;
-                        const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || `Color ${option.valor}`;
+              <div>
+                {currentOptions.length > 0 ? (
+                  <>
+                    {/* Color pickers */}
+                    {(activeCategory === 'AVC0001' || activeCategory === 'AVC0010') && (
+                      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2 sm:gap-4">
+                        {currentOptions.map((option) => {
+                          const isSelected = avatarOptions[activeCategory] === option.valor;
+                          const isUnlocked = unlockedOptions.some(uo => uo.opcion_id === option.opcion_id);
+                          const bgColor = option.valor === 'transparent'
+                            ? 'transparent'
+                            : `#${option.valor}`;
 
-                        return (
-                          <button
-                            key={option.opcion_id}
-                            onClick={() => isUnlocked ? handleOptionChange(activeCategory, option.valor) : handleUnlockOption(option)}
-                            className={`group relative w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 hover:scale-110 sm:hover:scale-125 hover:rotate-6 sm:hover:rotate-12 ${isSelected
-                              ? 'border-white scale-110 sm:scale-125 shadow-2xl ring-4 sm:ring-8 ring-yellow-300 animate-pulse'
-                              : 'border-slate-400 hover:border-white shadow-lg hover:shadow-2xl'
-                              } ${option.valor === 'transparent' ? 'bg-white bg-opacity-70 border-dashed' : ''}`}
-                            style={{
-                              backgroundColor: bgColor,
-                              animationDuration: isSelected ? '2s' : undefined
-                            }}
-                            title={friendlyName}
-                            disabled={!isUnlocked && userCoins < option.costo}
-                          >
-                            <div className="flex flex-col items-center gap-2">
-                              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl flex items-center justify-center">
-                                {option.valor === 'none' ? (
-                                  <span className="text-4xl">🚫</span>
-                                ) : (
-                                  <span className="text-4xl">{currentCategory?.emoji || '✨'}</span>
-                                )}
-                              </div>
-                              <div className="text-center">
-                                <div className={`text-xs sm:text-sm font-black rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 ${option.valor === 'none'
-                                  ? 'text-red-600 bg-red-100 border-red-300'
-                                  : isUnlocked
-                                    ? 'text-purple-600 bg-purple-100 border-purple-300'
-                                    : 'text-gray-600 bg-gray-100 border-gray-300'
-                                  }`}>
-                                  {option.valor === 'none' ? '🚫 Ninguno' : friendlyName}
+                          const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || `Color ${option.valor}`;
+
+                          console.log("Renderizando opción:", { // Log para depuración
+                            option,
+                            isSelected,
+                            isUnlocked,
+                            friendlyName,
+                            currentCategory: activeCategory
+                          });
+
+                          return (
+                            <button
+                              key={option.opcion_id}
+                              onClick={async (e) => {
+                                e.stopPropagation(); // Detiene la propagación del evento
+                                e.preventDefault(); // Previene comportamientos por defecto
+
+                                console.log("Click en opción:", option);
+                                if (isUnlocked) {
+                                  console.log("Opción desbloqueada - ejecutando handleOptionChange");
+                                  handleOptionChange(activeCategory, option.valor);
+                                } else {
+                                  console.log("Opción bloqueada - intentadno");
+                                  const success = await handleUnlockOption(option);
+                                  if (success) {
+                                    console.log("desbloqueo exitoso - ejecutando handleOptionChange");
+                                    handleOptionChange(activeCategory, option.valor);
+                                  }
+                                }
+                              }}
+                              className={`group relative w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 hover:scale-110 sm:hover:scale-125 hover:rotate-6 sm:hover:rotate-12 ${isSelected
+                                ? 'border-white scale-110 sm:scale-125 shadow-2xl ring-4 sm:ring-8 ring-yellow-300 animate-pulse'
+                                : 'border-slate-400 hover:border-white shadow-lg hover:shadow-2xl'
+                                } ${option.valor === 'transparent' ? 'bg-white bg-opacity-70 border-dashed' : ''}`}
+                              style={{
+                                backgroundColor: bgColor,
+                                animationDuration: isSelected ? '2s' : undefined
+                              }}
+                              title={friendlyName + (!isUnlocked ? "(Bloqueado)" : '')}
+                              disabled={!isUnlocked}
+                            >
+                              {isSelected && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <div className="w-4 h-4 sm:w-6 sm:h-6 bg-white rounded-full shadow-xl flex items-center justify-center animate-bounce" style={{ animationDuration: '1s' }}>
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"></div>
+                                  </div>
                                 </div>
-                                {!isUnlocked && (
-                                  <div className="mt-1 text-xs font-bold text-yellow-600 flex items-center justify-center gap-1">
-                                    <span>{option.costo} monedas</span>
-                                    <Lock className="w-3 h-3" />
+                              )}
+
+                              {option.valor === 'transparent' && (
+                                <div className="absolute inset-1 sm:inset-2 bg-gradient-to-br from-red-400 to-pink-500 opacity-80 rounded-lg sm:rounded-xl flex items-center justify-center">
+                                  <span className="text-white font-black text-sm sm:text-lg">🚫</span>
+                                </div>
+                              )}
+
+                              {!isUnlocked && ( // Icono de candado para opciones bloqueadas
+                                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl sm:rounded-2xl">
+                                  <Lock className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                  <span className="text-xs font-bold text-white bg-black bg-opacity-50 rounded-full px-1">
+                                    {option.costo}
+                                  </span>
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Regular options */}
+                    {!['AVC0001', 'AVC0010'].includes(activeCategory) && (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+                        {currentOptions.map((option, index) => {
+                          const isSelected = avatarOptions[activeCategory] === option.valor;
+                          const isUnlocked = unlockedOptions.some(uo => uo.opcion_id === option.opcion_id) || false;
+                          const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || `Opción ${index + 1}`;
+
+                          console.log("Renderizando opción 2:", {
+                            option,
+                            isSelected,
+                            currentSelection: avatarOptions[activeCategory]
+                          });
+
+                          const previewOptions = {
+                            ...avatarOptions,
+                            [activeCategory]: option.valor
+                          };
+
+                          const previewUrl = generateAvatarUrl(previewOptions, seed, '120');
+
+                          return (
+                            <button
+                              key={option.opcion_id}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+
+                                console.log("Click en opción:", option);
+
+                                if (isUnlocked) {
+                                  console.log("Opción desbloqueada - ejecutando handleOptionChange");
+                                  handleOptionChange(activeCategory, option.valor);
+                                } else {
+                                  console.log("Opción bloqueada - intentando desbloquear");
+                                  const success = await handleUnlockOption(option);
+                                  if (success) {
+                                    console.log("Desbloqueo exitoso - ejecutando handleOptionChange")
+                                    handleOptionChange(activeCategory, option.valor);
+                                  }
+                                }
+                              }}
+                              className={`group relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 text-left hover:scale-105 sm:hover:scale-110 hover:rotate-1 sm:hover:rotate-2 ${isSelected
+                                ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 text-purple-800 shadow-2xl scale-105 sm:scale-110 ring-2 sm:ring-4 ring-yellow-300 animate-pulse'
+                                : 'border-slate-300 bg-gradient-to-br from-white to-blue-50 text-slate-700 hover:border-purple-400 hover:shadow-xl'
+                                }`}
+                              style={{ animationDuration: isSelected ? '2s' : undefined }}
+                              title={friendlyName + (isUnlocked ? "" : "(Bloqueado)")}
+                              disabled={!isUnlocked && userCoins < option.costo}
+                            >
+                              <div className="flex justify-center mb-2 sm:mb-4">
+                                <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl">
+                                  <img
+                                    src={previewUrl}
+                                    alt={`Preview ${friendlyName}`}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = `https://api.dicebear.com/9.x/adventurer/svg?seed=${seed}&backgroundColor=b6e3f4`;
+                                    }}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="text-center">
+                                {option.valor === 'none' ? (
+                                  <div className="text-xs sm:text-sm font-black text-red-600 bg-red-100 rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 border-red-300">
+                                    🚫 {friendlyName}
+                                  </div>
+                                ) : (
+                                  <div className="text-xs sm:text-sm font-black text-purple-600 bg-purple-100 rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 border-purple-300">
+                                    ✨ Opción {index + 1}
                                   </div>
                                 )}
                               </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
 
-                  {/* Regular options */}
-                  {!['AVC0001', 'AVC0010'].includes(activeCategory) && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
-                      {currentOptions.map((option) => {
-                        const isSelected = avatarOptions[activeCategory] === option.valor;
-                        const isUnlocked = isOptionUnlocked(option.opcion_id);
-                        const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || option.valor;
-
-                        return (
-                          <button
-                            key={option.opcion_id}
-                            onClick={() => isUnlocked ? handleOptionChange(activeCategory, option.valor) : handleUnlockOption(option)}
-                            className={`group relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 text-left hover:scale-105 sm:hover:scale-110 hover:rotate-1 sm:hover:rotate-2 ${isSelected && isUnlocked
-                              ? 'border-purple-500 bg-gradient-to-br from-purple-100 to-pink-100 text-purple-800 shadow-2xl scale-105 sm:scale-110 ring-2 sm:ring-4 ring-yellow-300 animate-pulse'
-                              : 'border-slate-300 bg-gradient-to-br from-white to-blue-50 text-slate-700 hover:border-purple-400 hover:shadow-xl'
-                              }`}
-                            style={{ animationDuration: isSelected ? '2s' : undefined }}
-                            disabled={!isUnlocked && userCoins < option.costo}
-                          >
-                            <div className="flex flex-col items-center gap-2">
-                              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl flex items-center justify-center">
-                                {option.valor === 'none' ? (
-                                  <span className="text-4xl">🚫</span>
-                                ) : (
-                                  <span className="text-4xl">{currentCategory?.emoji || '✨'}</span>
-                                )}
-                              </div>
-                              <div className="text-center">
-                                <div className={`text-xs sm:text-sm font-black rounded-lg sm:rounded-xl py-2 sm:py-3 px-2 sm:px-4 border-2 ${option.valor === 'none'
-                                  ? 'text-red-600 bg-red-100 border-red-300'
-                                  : isUnlocked
-                                    ? 'text-purple-600 bg-purple-100 border-purple-300'
-                                    : 'text-gray-600 bg-gray-100 border-gray-300'
-                                  }`}>
-                                  {option.valor === 'none' ? '🚫 Ninguno' : friendlyName}
-                                </div>
-                                {!isUnlocked && (
-                                  <div className="mt-1 text-xs font-bold text-yellow-600 flex items-center justify-center gap-1">
-                                    <span>{option.costo} monedas</span>
-                                    <Lock className="w-3 h-3" />
+                              {isSelected && (
+                                <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                                  <div
+                                    className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center animate-bounce shadow-xl"
+                                    style={{ animationDuration: '1s' }}
+                                  >
+                                    <div className="text-white font-black text-xs sm:text-sm">✓</div>
                                   </div>
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="text-center py-8 sm:py-16">
-                  <div className="text-4xl sm:text-8xl mb-3 sm:mb-6 animate-bounce" style={{ animationDuration: '2s' }}>🎭</div>
-                  <p className="text-slate-600 font-black text-lg sm:text-2xl mb-2 sm:mb-3">
-                    ¡Ups! No hay opciones aquí
-                  </p>
-                  <p className="text-slate-500 font-bold text-sm sm:text-lg animate-pulse" style={{ animationDuration: '3s' }}>
-                    🔄 Prueba con otra categoría
-                  </p>
-                </div>
-              )}
+                                </div>
+                              )}
+                              {!isUnlocked && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-xl sm:rounded-2xl z-10">
+                                  <Lock className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                  <span className="text-xs font-bold text-gray-700 block mt-1">
+                                    {option.costo} <span className="text-yellow-500">★</span>
+                                  </span>
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                  </>
+                ) : (
+                  <div className="text-center py-8 sm:py-16">
+                    <div className="text-4xl sm:text-8xl mb-3 sm:mb-6 animate-bounce" style={{ animationDuration: '2s' }}>🎭</div>
+                    <p className="text-slate-600 font-black text-lg sm:text-2xl mb-2 sm:mb-3">
+                      ¡Ups! No hay opciones aquí
+                    </p>
+                    <p className="text-slate-500 font-bold text-sm sm:text-lg animate-pulse" style={{ animationDuration: '3s' }}>
+                      🔄 Prueba con otra categoría
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -624,4 +710,3 @@ const Page: React.FC<AvatarCustomizerProps> = ({
 };
 
 export default Page;
-

@@ -13,10 +13,23 @@ export const avatarQueries = {
 
   async obtenerOpciones(categoria_id: string) {
     try {
-      const opciones = await db
+      const categoria = await db
         .select()
         .from(avatar_opcion)
         .where(eq(avatar_opcion.categoria_id, categoria_id));
+      return categoria;
+    } catch (error) {
+      console.error("Error al obtener categoria_id:", error);
+      return [];
+    }
+  },
+
+  async obtenerIdCategoria(id_api: string) {
+    try {
+      const opciones = await db
+        .select()
+        .from(avatar_categoria)
+        .where(eq(avatar_categoria.id_api, id_api));
       return opciones;
     } catch (error) {
       console.error("Error al obtener opciones:", error);

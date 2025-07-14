@@ -186,16 +186,16 @@ const main = async () => {
 
     // Insertar categorías de avatar (usando IDs del frontend)
     await db.insert(schema.avatar_categoria).values([
-      { categoria_id: "AVC0001", nombre_categoria: "Color de Piel", orden: 1, emoji: "👤" },
-      { categoria_id: "AVC0002", nombre_categoria: "Estilo de Cabello", orden: 2, emoji: "👑" },
-      { categoria_id: "AVC0003", nombre_categoria: "Color de Cabello", orden: 3, emoji: "🎨" },
-      { categoria_id: "AVC0004", nombre_categoria: "Ojos", orden: 4, emoji: "👁️" },
-      { categoria_id: "AVC0005", nombre_categoria: "Cejas", orden: 5, emoji: "🤨" },
-      { categoria_id: "AVC0006", nombre_categoria: "Boca", orden: 6, emoji: "😊" },
-      { categoria_id: "AVC0007", nombre_categoria: "Gafas", orden: 7, emoji: "🤓" },
-      { categoria_id: "AVC0008", nombre_categoria: "Pendientes", orden: 8, emoji: "✨" },
-      { categoria_id: "AVC0009", nombre_categoria: "Extras", orden: 9, emoji: "⚡" },
-      { categoria_id: "AVC0010", nombre_categoria: "Fondo", orden: 10, emoji: "🌈" }
+      { categoria_id: "AVC0001", nombre_categoria: "Color de Piel", id_api: "skinColor", orden: 1, emoji: "👤" },
+      { categoria_id: "AVC0002", nombre_categoria: "Estilo de Cabello", id_api: "hair", orden: 2, emoji: "👑" },
+      { categoria_id: "AVC0003", nombre_categoria: "Color de Cabello", id_api: "hairColor", orden: 3, emoji: "🎨" },
+      { categoria_id: "AVC0004", nombre_categoria: "Ojos", id_api: "eyes", orden: 4, emoji: "👁️" },
+      { categoria_id: "AVC0005", nombre_categoria: "Cejas", id_api: "eyebrows", orden: 5, emoji: "🤨" },
+      { categoria_id: "AVC0006", nombre_categoria: "Boca", id_api: "mouth", orden: 6, emoji: "😊" },
+      { categoria_id: "AVC0007", nombre_categoria: "Gafas", id_api: "glasses", orden: 7, emoji: "🤓" },
+      { categoria_id: "AVC0008", nombre_categoria: "Pendientes", id_api: "earrings", orden: 8, emoji: "✨" },
+      { categoria_id: "AVC0009", nombre_categoria: "Extras", id_api: "features", orden: 9, emoji: "⚡" },
+      { categoria_id: "AVC0010", nombre_categoria: "Fondo", id_api: "backgroundColor", orden: 10, emoji: "🌈" }
     ]);
 
     // Definir opciones para cada categoría

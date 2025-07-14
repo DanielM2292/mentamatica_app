@@ -23,81 +23,83 @@ export interface GameLevel {
   items: GameItem[];
   sets: GameSet[];
 }
-
+// emociones rutinas diarias tecnologia 
 export const gameLevels: GameLevel[] = [
   {
     id: 1,
-    title: "La Union",
-    description: "Relaciona los elementos segun correspondan",
+    title: "Relacionar los elementos",
+    description: "Observa la pista y agrupa los elementos que hacen falta",
     items: [
-      { id: '2', name: 'Buzo', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa1.png", color: 'bg-blue-100' },
-      { id: '3', name: 'Medias', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa2.png", color: 'bg-red-100' },
-      { id: '4', name: 'Pelota Tenis', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte1.png", color: 'bg-red-100' },
-      { id: '5', name: 'Temperas', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar2.png", color: 'bg-red-100' },
-      { id: '6', name: 'Balon Futbol', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte2.png", color: 'bg-purple-100' },
-      { id: '7', name: 'Ciclismo', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte3.png", color: 'bg-blue-100' },
-      { id: '8', name: 'Tijeras', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar3.png", color: 'bg-purple-100' },
-      { id: '9', name: 'Zapatillas', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa3.png", color: 'bg-blue-100' },
+      { id: '2', name: 'Sorpresa', category: 'emocion', icon: "/data/conjuntos/icons/detectiveConjuntos/emocion1.png", color: 'bg-blue-100' },
+      { id: '3', name: 'Despertarse', category: 'rutina', icon: "/data/conjuntos/icons/detectiveConjuntos/rutina1.png", color: 'bg-red-100' },
+      { id: '4', name: 'Celular', category: 'tecnologia', icon: "/data/conjuntos/icons/detectiveConjuntos/tecnologia1.png", color: 'bg-red-100' },
+      { id: '5', name: 'Computador', category: 'tecnologia', icon: "/data/conjuntos/icons/detectiveConjuntos/tecnologia2.png", color: 'bg-red-100' },
+      { id: '6', name: 'Tristeza', category: 'emocion', icon: "/data/conjuntos/icons/detectiveConjuntos/emocion2.png", color: 'bg-purple-100' },
+      { id: '7', name: 'Estudiar', category: 'rutina', icon: "/data/conjuntos/icons/detectiveConjuntos/rutina2.png", color: 'bg-blue-100' },
+      { id: '8', name: 'Audifonos', category: 'tecnologia', icon: "/data/conjuntos/icons/detectiveConjuntos/tecnologia3.png", color: 'bg-purple-100' },
+      { id: '9', name: 'Rabia', category: 'emocion', icon: "/data/conjuntos/icons/detectiveConjuntos/emocion3.png", color: 'bg-blue-100' },
+      { id: '10', name: 'Caminar', category: 'rutina', icon: "/data/conjuntos/icons/detectiveConjuntos/rutina3.png", color: 'bg-blue-100' },
     ],
     sets: [
       { 
-        id: 'escolar', 
-        name: 'Objetos Escolares', 
+        id: 'emocion', 
+        name: 'Emociones', 
         color: 'border-blue-400 bg-blue-50', 
         icon: Pencil,
-        clue: { id: '1', name: 'Regla', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar1.png", color: 'bg-purple-100' }
+        clue: { id: 'emocion-clue', name: 'Alegria', category: 'emocion', icon: "/data/conjuntos/icons/detectiveConjuntos/emocion0.png", color: 'bg-purple-100' }
       },
       { 
-        id: 'ropa', 
+        id: 'rutina', 
         name: 'Prendas Vestir', 
         color: 'border-green-400 bg-green-50', 
         icon: Shirt,
-        clue: { id: 'ropa-clue', name: 'Bufanda', category: 'ropa', icon: "/data/conjuntos/icons/detectiveConjuntos/ropa0.png", color: 'bg-green-100' }
+        clue: { id: 'rutina-clue', name: 'Bañarse', category: 'rutina', icon: "/data/conjuntos/icons/detectiveConjuntos/rutina0.png", color: 'bg-green-100' }
       },
       { 
-        id: 'deportes', 
+        id: 'tecnologia', 
         name: 'Deportes', 
         color: 'border-purple-400 bg-purple-50', 
         icon: Trophy,
-        clue: { id: 'deportes-clue', name: 'Ping Pong', category: 'deportes', icon: "/data/conjuntos/icons/detectiveConjuntos/deporte0.png", color: 'bg-purple-100' }
+        clue: { id: 'tecnologia-clue', name: 'Camara', category: 'tecnologia', icon: "/data/conjuntos/icons/detectiveConjuntos/tecnologia0.png", color: 'bg-purple-100' }
       },
     ]
-  },
+  }, // clima partes del cuerpo instrumentos musicales
   {
     id: 2,
-    title: "La Union",
-    description: "Relaciona los elementos segun correspondan",
+    title: "Relacionar los elementos",
+    description: "Observa la pista y agrupa los elementos que hacen falta",
     items: [
-      { id: '2', name: 'Buzo', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa1.png", color: 'bg-blue-100' },
-      { id: '3', name: 'Medias', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa2.png", color: 'bg-red-100' },
-      { id: '4', name: 'Pelota Tenis', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte1.png", color: 'bg-red-100' },
-      { id: '5', name: 'Temperas', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar2.png", color: 'bg-red-100' },
-      { id: '6', name: 'Balon Futbol', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte2.png", color: 'bg-purple-100' },
-      { id: '7', name: 'Ciclismo', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte3.png", color: 'bg-blue-100' },
-      { id: '8', name: 'Tijeras', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar3.png", color: 'bg-purple-100' },
-      { id: '9', name: 'Zapatillas', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa3.png", color: 'bg-blue-100' },
+      { id: '2', name: 'Lluvioso', category: 'clima', icon: "/data/conjuntos/icons/detectiveConjuntos/clima1.png", color: 'bg-blue-100' },
+      { id: '3', name: 'Orejas', category: 'partesCuerpo', icon: "/data/conjuntos/icons/detectiveConjuntos/partesCuerpo1.png", color: 'bg-red-100' },
+      { id: '4', name: 'Guitarra', category: 'instrumentos', icon: "/data/conjuntos/icons/detectiveConjuntos/instrumentos1.png", color: 'bg-red-100' },
+      { id: '5', name: 'Brazos', category: 'partesCuerpo', icon: "/data/conjuntos/icons/detectiveConjuntos/partesCuerpo2.png", color: 'bg-red-100' },
+      { id: '6', name: 'Nublado', category: 'clima', icon: "/data/conjuntos/icons/detectiveConjuntos/clima2.png", color: 'bg-purple-100' },
+      { id: '7', name: 'Piano', category: 'instrumentos', icon: "/data/conjuntos/icons/detectiveConjuntos/instrumentos2.png", color: 'bg-blue-100' },
+      { id: '8', name: 'Flauta', category: 'instrumentos', icon: "/data/conjuntos/icons/detectiveConjuntos/instrumentos3.png", color: 'bg-purple-100' },
+      { id: '9', name: 'Labios', category: 'partesCuerpo', icon: "/data/conjuntos/icons/detectiveConjuntos/partesCuerpo3.png", color: 'bg-blue-100' },
+      { id: '10', name: 'Ventoso', category: 'clima', icon: "/data/conjuntos/icons/detectiveConjuntos/clima3.png", color: 'bg-blue-100' },
     ],
     sets: [
       { 
-        id: 'escolar', 
-        name: 'Objetos Escolares', 
+        id: 'clima', 
+        name: 'Clima', 
         color: 'border-blue-400 bg-blue-50', 
         icon: Pencil,
-        clue: { id: '1', name: 'Regla', category: 'escolar', icon: "/data/conjuntos/icons/unionInterseccion/escolar1.png", color: 'bg-purple-100' }
+        clue: { id: 'clima-clue', name: 'Soleado', category: 'clima', icon: "/data/conjuntos/icons/detectiveConjuntos/clima0.png", color: 'bg-purple-100' }
       },
       { 
-        id: 'ropa', 
-        name: 'Prendas Vestir', 
+        id: 'partesCuerpo', 
+        name: 'Partes del cuerpo', 
         color: 'border-green-400 bg-green-50', 
         icon: Shirt,
-        clue: { id: 'ropa-clue', name: 'Pantalón', category: 'ropa', icon: "/data/conjuntos/icons/unionInterseccion/ropa0.png", color: 'bg-green-100' }
+        clue: { id: 'partesCuerpo-clue', name: 'Manos', category: 'partesCuerpo', icon: "/data/conjuntos/icons/detectiveConjuntos/partesCuerpo0.png", color: 'bg-green-100' }
       },
       { 
-        id: 'deportes', 
-        name: 'Deportes', 
+        id: 'instrumentos', 
+        name: 'Instrumentos Musicales', 
         color: 'border-purple-400 bg-purple-50', 
         icon: Trophy,
-        clue: { id: 'deportes-clue', name: 'Raqueta', category: 'deportes', icon: "/data/conjuntos/icons/unionInterseccion/deporte0.png", color: 'bg-purple-100' }
+        clue: { id: 'instrumentos-clue', name: 'Tambor', category: 'instrumentos', icon: "/data/conjuntos/icons/detectiveConjuntos/instrumentos0.png", color: 'bg-purple-100' }
       },
     ]
   },

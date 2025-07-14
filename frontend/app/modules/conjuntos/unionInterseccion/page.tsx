@@ -59,7 +59,7 @@ const GameWrapper = () => {
           <NivelCompletado aciertos={aciertos} isLastLevel={isLastLevel} onNextLevel={handleNextLevel} />
         ) : (
           <AreaJuego
-            items={items}
+            items={items as any}
             currentGameLevel={currentGameLevel}
             completedSets={completedSets}
             onDragStart={handleDragStart}

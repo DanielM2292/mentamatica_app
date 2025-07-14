@@ -38,16 +38,31 @@ export const useGameDetective = () => {
     setCompletedSets([]);
   }, [currentLevel]);
 
-  // UseEffect para verificar si el nivel está completo
+  // Mostrar mensaje al completar un conjunto
   useEffect(() => {
-    if (completedSets.length === currentGameLevel.sets.length && completedSets.length > 0) {
-      if (!isLastLevel) {
-        setTimeout(() => {
-          advanceLevel();
-        }, 1500);
+    if (completedSets.length > 0) {
+      const lastCompleted = completedSets[completedSets.length - 1];
+      const setInfo = currentGameLevel.sets.find(s => s.id === lastCompleted);
+      if (setInfo) {
+        toast({
+          title: "¡Conjunto completado! 🎉",
+          description: `Has relacionado todos los elementos de "${setInfo.name}"`,
+          duration: 3000,
+        });
       }
     }
-  }, [completedSets, currentGameLevel.sets.length, isLastLevel]);
+  }, [completedSets]);
+
+  // Mostrar mensaje al completar nivel (pero no avanzar automáticamente)
+  useEffect(() => {
+    if (isLevelComplete && !isLastLevel) {
+      toast({
+        title: "¡Nivel completado! ✅",
+        description: "Puedes avanzar al siguiente nivel cuando estés listo.",
+        duration: 3000,
+      });
+    }
+  }, [isLevelComplete, isLastLevel]);
 
   const handleDragStart = (item: UnifiedGameItem) => {
     dragItem.current = item;
@@ -60,10 +75,8 @@ export const useGameDetective = () => {
     const isCorrect = item.category === setId;
 
     if (isCorrect) {
-      // Manejar acierto
       handleCorrectClassification(item, setId);
     } else {
-      // Manejar error
       handleIncorrectClassification();
     }
 
@@ -71,39 +84,18 @@ export const useGameDetective = () => {
   };
 
   const handleCorrectClassification = (item: UnifiedGameItem, setId: string) => {
-    // Actualizar items primero
-    setItems(prev => {
-      const newItems = prev.filter(i => i.id !== item.id);
-      
-      // Verificar si el conjunto está completo después de remover el item
-      const remainingItemsInSet = newItems.filter(i => i.category === setId);
-      
-      if (remainingItemsInSet.length === 0 && !completedSets.includes(setId)) {
-        // Usar setTimeout para asegurar que el estado se actualice correctamente
-        setTimeout(() => {
-          setCompletedSets(prev => {
-            if (!prev.includes(setId)) {
-              const newCompletedSets = [...prev, setId];
-              
-              toast({
-                title: "¡Conjunto completado! 🎉",
-                description: "Has relacionado todos los elementos de este conjunto.",
-                duration: 3000,
-              });
-              
-              return newCompletedSets;
-            }
-            return prev;
-          });
-        }, 0);
-      }
-      
-      return newItems;
-    });
-    
+    // Eliminar item
+    setItems(prev => prev.filter(i => i.id !== item.id));
+
+    // Verificar si el conjunto fue completado
+    const remainingItemsInSet = items.filter(i => i.category === setId && i.id !== item.id);
+    if (remainingItemsInSet.length === 0 && !completedSets.includes(setId)) {
+      setCompletedSets(prev => [...prev, setId]);
+    }
+
     setScore(prev => prev + 10);
     setAciertos(prev => prev + 1);
-    
+
     toast({
       title: "¡Excelente relación!",
       description: `${item.name} pertenece a ${currentGameLevel.sets.find(s => s.id === setId)?.name}`,

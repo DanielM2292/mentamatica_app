@@ -7,8 +7,7 @@ export interface UnifiedGameItem {
 }
 
 export interface UnifiedGameSet {
-  clue: UnifiedGameItem;
-  clue: any;
+  clue: UnifiedGameItem | any;
   id: string;
   name: string;
   color: string;

@@ -6,6 +6,8 @@
 |   |-- README.md
 |   |-- app/
 |   |   `-- api/
+|   |       |-- avatar/
+|   |       |   `-- route.ts
 |   |       |-- conjuntos/
 |   |       |   `-- route.ts
 |   |       `-- usuarios/
@@ -14,6 +16,7 @@
 |   |-- db/
 |   |   |-- drizzle.ts
 |   |   |-- queries/
+|   |   |   |-- queries-avatar.ts
 |   |   |   |-- queries-usuarios.ts
 |   |   |   |-- resultados.ts
 |   |   |   `-- transacciones.ts
@@ -29,7 +32,9 @@
 |   |-- postcss.config.mjs
 |   |-- scripts/
 |   |   `-- seed.ts
-|   `-- tsconfig.json
+|   |-- tsconfig.json
+|   `-- utils/
+|       `-- withCors.ts
 |-- estructura.txt
 |-- frontend/
 |   |-- .env
@@ -41,9 +46,9 @@
 |   |   |-- layout.tsx
 |   |   |-- modules/
 |   |   |   |-- conjuntos/
-|   |   |   |   |-- PruebaJuegos/
-|   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- clasificaAgrupa/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- detectiveConjunto/
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- page.tsx
 |   |   |   |   `-- unionInterseccion/
@@ -55,29 +60,50 @@
 |   |   |   |-- multiplicacion/
 |   |   |   |   `-- page.tsx
 |   |   |   |-- numeracion/
+|   |   |   |   |-- ContadorEspacial/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- FormaNumeroGigante/
+|   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- NumeroCorrecto/
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   `-- page.tsx
 |   |   |   |-- resta/
-|   |   |   |   `-- page.tsx
+|   |   |   |   |-- RestaYRescata/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- memoriaInversa/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- page.tsx
+|   |   |   |   `-- restaCueva/
+|   |   |   |       `-- page.tsx
 |   |   |   `-- suma/
-|   |   |       `-- page.tsx
+|   |   |       |-- carreraNumeros/
+|   |   |       |   `-- page.tsx
+|   |   |       |-- dragDropNumerico/
+|   |   |       |   `-- page.tsx
+|   |   |       |-- page.tsx
+|   |   |       `-- sumandoEstrellas/
+|   |   |           `-- page.tsx
 |   |   |-- page.tsx
 |   |   `-- settings/
 |   |       |-- avatar/
 |   |       |   `-- page.tsx
 |   |       `-- page.tsx
 |   |-- components/
+|   |   |-- SpaceGame.tsx
 |   |   |-- atoms/
 |   |   |   |-- Button.tsx
 |   |   |   |-- CoinCounter.tsx
 |   |   |   |-- Icon.tsx
 |   |   |   |-- Input.tsx
+|   |   |   |-- InputAnswer.tsx
 |   |   |   |-- LevelButton.tsx
 |   |   |   |-- ModuleIcon.tsx
+|   |   |   |-- NumberDisplay.tsx
 |   |   |   |-- ProgressBar.tsx
 |   |   |   |-- SideModuleButton.tsx
+|   |   |   |-- StarButton.tsx
 |   |   |   |-- StarRating.tsx
+|   |   |   |-- ValidateButton.tsx
 |   |   |   |-- VideoPlaceholder.tsx
 |   |   |   `-- index.ts
 |   |   |-- math-animation-box.tsx
@@ -85,12 +111,16 @@
 |   |   |-- module-card.tsx
 |   |   |-- module-icon.tsx
 |   |   |-- molecules/
+|   |   |   |-- AnswerOptions.tsx
 |   |   |   |-- ArrastrarItem.tsx
+|   |   |   |-- ArrastrarItemDetective.tsx
 |   |   |   |-- ConfettiCanvas.tsx
 |   |   |   |-- DropZone.tsx
+|   |   |   |-- DropZoneDetective.tsx
 |   |   |   |-- EstrellasCanvas.tsx
 |   |   |   |-- EstrellasFinales.tsx
 |   |   |   |-- GameHeader.tsx
+|   |   |   |-- GameStats.tsx
 |   |   |   |-- InformacionNivel.tsx
 |   |   |   |-- LevelCard.tsx
 |   |   |   |-- ModuleCard.tsx
@@ -99,13 +129,18 @@
 |   |   |   |-- ModuleNavItem.tsx
 |   |   |   |-- ModuleSidebar.tsx
 |   |   |   |-- Monedas.tsx
+|   |   |   |-- ProgressTrack.tsx
+|   |   |   |-- SumDisplay.tsx
 |   |   |   |-- TiempoJuego.tsx
 |   |   |   |-- UserStats.tsx
 |   |   |   `-- index.ts
 |   |   |-- organisms/
 |   |   |   |-- AreaJuego.tsx
+|   |   |   |-- AreaJuegoDetective.tsx
 |   |   |   |-- AreaJuegoGlobos.tsx
 |   |   |   |-- CognitiveAudioPanel.tsx
+|   |   |   |-- GameBoard.tsx
+|   |   |   |-- GameBoard2.tsx
 |   |   |   |-- JuegoCompletado.tsx
 |   |   |   |-- ModulePageTemplate.tsx
 |   |   |   |-- NivelCompletado.tsx
@@ -116,9 +151,12 @@
 |   |   |   |-- ModulePage.tsx
 |   |   |   `-- SettingsPage.tsx
 |   |   |-- templates/
-|   |   |   `-- conjuntos/
-|   |   |       |-- ConjuntosTemplate.tsx
-|   |   |       `-- GamesTemplate.tsx
+|   |   |   |-- conjuntos/
+|   |   |   |   |-- ConjuntosTemplate.tsx
+|   |   |   |   `-- GamesTemplate.tsx
+|   |   |   `-- suma/
+|   |   |       |-- GamesTemplate.tsx
+|   |   |       `-- SumaTemplate.tsx
 |   |   |-- theme-provider.tsx
 |   |   `-- ui/
 |   |       |-- avatar.tsx
@@ -139,16 +177,29 @@
 |   |   |-- UserContext.tsx
 |   |   `-- timer-context.tsx
 |   |-- hooks/
+|   |   |-- conjuntos/
+|   |   |   |-- useGameDetective.ts
+|   |   |   |-- useGameLogic.ts
+|   |   |   `-- useGameUnion.ts
+|   |   |-- numeracion/
+|   |   |   |-- useContadorEspacial.ts
+|   |   |   |-- useFormaNumeroGigante.ts
+|   |   |   `-- useNumeroCorrect.ts
+|   |   |-- resta/
+|   |   |   |-- useMemoriaInversa.ts
+|   |   |   |-- useRestaEnLaCueva.ts
+|   |   |   `-- useRestaYRescata.ts
+|   |   |-- suma/
+|   |   |   |-- useGameLogic.ts
+|   |   |   `-- useGameLogic2.ts
 |   |   |-- use-toast.ts
-|   |   |-- useApi.ts
 |   |   |-- useCognitiveAudio.ts
-|   |   |-- useGameLogic.ts
-|   |   |-- useNumeroCorrect.ts
+|   |   |-- useEnviarResultados.ts
 |   |   |-- useProgress.ts
 |   |   `-- useTimer.ts
 |   |-- lib/
-|   |   |-- api.ts
 |   |   |-- constants.ts
+|   |   |-- dicebear.ts
 |   |   |-- gsap-config.ts
 |   |   `-- utils.ts
 |   |-- middleware.ts
@@ -165,35 +216,82 @@
 |   |   |-- data/
 |   |   |   |-- conjuntos/
 |   |   |   |   |-- gameLevels.ts
+|   |   |   |   |-- gameLevelsDetective.ts
+|   |   |   |   |-- gameLevelsUnion.ts
 |   |   |   |   `-- icons/
-|   |   |   |       `-- clasificaAgrupa/
-|   |   |   |           |-- amarillo1.png
-|   |   |   |           |-- amarillo2.png
-|   |   |   |           |-- amarillo3.png
+|   |   |   |       |-- clasificaAgrupa/
+|   |   |   |       |   |-- amarillo1.png
+|   |   |   |       |   |-- amarillo2.png
+|   |   |   |       |   |-- amarillo3.png
+|   |   |   |       |   |-- animal1.png
+|   |   |   |       |   |-- animal2.png
+|   |   |   |       |   |-- animal3.png
+|   |   |   |       |   |-- circulo1.png
+|   |   |   |       |   |-- circulo2.png
+|   |   |   |       |   |-- circulo3.png
+|   |   |   |       |   |-- cosa1.png
+|   |   |   |       |   |-- cosa2.png
+|   |   |   |       |   |-- cosa3.png
+|   |   |   |       |   |-- cuadrado1.png
+|   |   |   |       |   |-- cuadrado2.png
+|   |   |   |       |   |-- cuadrado3.png
+|   |   |   |       |   |-- planta1.png
+|   |   |   |       |   |-- planta2.png
+|   |   |   |       |   |-- planta3.png
+|   |   |   |       |   |-- rojo1.png
+|   |   |   |       |   |-- rojo2.png
+|   |   |   |       |   |-- rojo3.png
+|   |   |   |       |   |-- triangulo1.png
+|   |   |   |       |   |-- triangulo2.png
+|   |   |   |       |   |-- triangulo3.png
+|   |   |   |       |   |-- verde1.png
+|   |   |   |       |   |-- verde2.png
+|   |   |   |       |   `-- verde3.png
+|   |   |   |       |-- detectiveConjuntos/
+|   |   |   |       |   |-- clima0.png
+|   |   |   |       |   |-- clima1.png
+|   |   |   |       |   |-- clima2.png
+|   |   |   |       |   |-- clima3.png
+|   |   |   |       |   |-- emocion0.png
+|   |   |   |       |   |-- emocion1.png
+|   |   |   |       |   |-- emocion2.png
+|   |   |   |       |   |-- emocion3.png
+|   |   |   |       |   |-- instrumentos0.png
+|   |   |   |       |   |-- instrumentos1.png
+|   |   |   |       |   |-- instrumentos2.png
+|   |   |   |       |   |-- instrumentos3.png
+|   |   |   |       |   |-- partesCuerpo0.png
+|   |   |   |       |   |-- partesCuerpo1.png
+|   |   |   |       |   |-- partesCuerpo2.png
+|   |   |   |       |   |-- partesCuerpo3.png
+|   |   |   |       |   |-- rutina0.png
+|   |   |   |       |   |-- rutina1.png
+|   |   |   |       |   |-- rutina2.png
+|   |   |   |       |   |-- rutina3.png
+|   |   |   |       |   |-- tecnologia0.png
+|   |   |   |       |   |-- tecnologia1.png
+|   |   |   |       |   |-- tecnologia2.png
+|   |   |   |       |   `-- tecnologia3.png
+|   |   |   |       `-- unionInterseccion/
 |   |   |   |           |-- animal1.png
 |   |   |   |           |-- animal2.png
 |   |   |   |           |-- animal3.png
-|   |   |   |           |-- circulo1.png
-|   |   |   |           |-- circulo2.png
-|   |   |   |           |-- circulo3.png
-|   |   |   |           |-- cosa1.png
-|   |   |   |           |-- cosa2.png
-|   |   |   |           |-- cosa3.png
-|   |   |   |           |-- cuadrado1.png
-|   |   |   |           |-- cuadrado2.png
-|   |   |   |           |-- cuadrado3.png
-|   |   |   |           |-- planta1.png
-|   |   |   |           |-- planta2.png
-|   |   |   |           |-- planta3.png
-|   |   |   |           |-- rojo1.png
-|   |   |   |           |-- rojo2.png
-|   |   |   |           |-- rojo3.png
-|   |   |   |           |-- triangulo1.png
-|   |   |   |           |-- triangulo2.png
-|   |   |   |           |-- triangulo3.png
-|   |   |   |           |-- verde1.png
-|   |   |   |           |-- verde2.png
-|   |   |   |           `-- verde3.png
+|   |   |   |           |-- animal4.png
+|   |   |   |           |-- deporte1.png
+|   |   |   |           |-- deporte2.png
+|   |   |   |           |-- deporte3.png
+|   |   |   |           |-- escolar1.png
+|   |   |   |           |-- escolar2.png
+|   |   |   |           |-- escolar3.png
+|   |   |   |           |-- ropa1.png
+|   |   |   |           |-- ropa2.png
+|   |   |   |           |-- ropa3.png
+|   |   |   |           |-- vuela1.png
+|   |   |   |           |-- vuela2.png
+|   |   |   |           |-- vuela3.png
+|   |   |   |           |-- vuela4.png
+|   |   |   |           `-- vuela5.png
+|   |   |   |-- modules.ts
 |   |   |   `-- numeracion/
 |   |   |       `-- numeroCorrect.ts
 |   |   |-- images/
@@ -215,13 +313,13 @@
 |   |   |-- activity.ts
 |   |   |-- api.ts
 |   |   |-- game.ts
-|   |   |-- module.ts
-|   |   `-- user.ts
+|   |   |-- gameTypes.ts
+|   |   `-- module.ts
 |   `-- utils/
-|       |-- calculateStars.ts
+|       |-- dicebear.ts
 |       `-- formatTime.ts
 |-- next-env.d.ts
 |-- package-lock.json
 `-- package.json
 
-51 directories, 173 files
+68 directories, 254 files

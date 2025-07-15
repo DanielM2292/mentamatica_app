@@ -138,7 +138,21 @@ const RestaPage: React.FC = () => {
   };
 
   const handleActivityStart = (activityId: number) => {
-    router.push(`/resta/actividad/${activityId}`);
+    console.log(`Intentando navegar a actividad ${activityId}`);
+
+    if (activityId === 1) {
+      console.log("Navegando a RestaYRescata");
+      router.push("/modules/resta/RestaYRescata");
+    } else if (activityId === 2) {
+      console.log("Navegando a MemoriaInversa");
+      router.push("/modules/resta/memoriaInversa");
+    } else if (activityId === 3) {
+      console.log("Navegando a RestaCueva");
+      router.push("/modules/resta/restaCueva");
+    } else {
+      console.log("Navegando a actividad genérica");
+      router.push(`/resta/actividad/${activityId}`);
+    }
   };
 
   const handleVideoPlay = () => {

@@ -23,23 +23,35 @@ interface FloatingElement {
   color: string;
 }
 
-// Componente Button responsive
-const Button: React.FC<{
-  onClick: () => void;
-  variant?: "primary" | "ghost";
-  size?: "sm" | "md";
-  icon?: React.ComponentType<any>;
+type ButtonVariant = "primary" | "ghost";
+type ButtonSize = "sm" | "md";
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  icon?: React.ElementType;
   className?: string;
-  children: React.ReactNode;
-}> = ({ onClick, variant = "primary", size = "md", icon: Icon, className = "", children, ...props }) => {
+  children?: React.ReactNode;
+}
+
+const Button: React.FC<ButtonProps> = ({
+  onClick,
+  variant = "primary",
+  size = "sm",
+  icon: Icon,
+  className = "",
+  children,
+  ...props
+}) => {
   const baseClasses = "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
   
-  const variants = {
+  const variants: Record<ButtonVariant, string> = {
     primary: "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl focus:ring-amber-400",
     ghost: "bg-transparent hover:bg-amber-100 text-amber-700 hover:text-amber-800 focus:ring-amber-400"
   };
   
-  const sizes = {
+  const sizes: Record<ButtonSize, string> = {
     sm: "px-3 py-1.5 text-sm",
     md: "px-4 py-2 text-base",
   };
@@ -126,7 +138,21 @@ const MultiplicacionPage: React.FC = () => {
   };
 
   const handleActivityStart = (activityId: number) => {
-    router.push(`/multiplicacion/actividad/${activityId}`);
+    console.log(`Intentando navegar a actividad de multiplicación ${activityId}`);
+
+    if (activityId === 1) {
+      console.log("Navegando a Rompe la Piñata");
+      router.push("/modules/multiplicacion/RompePinata");
+    } else if (activityId === 2) {
+      console.log("Navegando a Repeticiones Rápidas");
+      router.push("/modules/multiplicacion/RepeticionesRapidas");
+    } else if (activityId === 3) {
+      console.log("Navegando a Desafío de Tablas");
+      router.push("/modules/multiplicacion/DesafioTablas");
+    } else {
+      console.log("Navegando a actividad genérica");
+      router.push(`/multiplicacion/actividad/${activityId}`);
+    }
   };
 
   const handleVideoPlay = () => {
@@ -276,11 +302,11 @@ const MultiplicacionPage: React.FC = () => {
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="w-8 h-8 sm:w-12 sm:h-12 bg-amber-100 rounded-xl flex items-center justify-center hover:scale-110 transition-transform duration-300 cursor-pointer flex-shrink-0">
                 <img
-                  src="/images/icons/multiplicacion.png"
-                  alt="Ícono de multiplicación"
-                  className="w-full h-full object-contain animate-bounce"
-                  draggable={false}
-                />
+                    src="/images/icons/multiplicacion.png"
+                    alt="Ícono de suma"
+                    className="w-full h-full object-contain animate-bounce"
+                    draggable={false}
+                  />
               </div>
               <div className="min-w-0 flex-1">
                 <h1 className="text-sm sm:text-2xl font-bold text-gray-800 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent truncate">

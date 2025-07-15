@@ -75,12 +75,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Estado actual de options:", options);
-    console.log("Estado actual de avatarOptions:", avatarOptions);
-    console.log("Opciones desbloqueadas:", unlockedOptions);
-  }, [options, avatarOptions, unlockedOptions]);
-
-  useEffect(() => {
     const fetchInitialData = async () => {
       if (!user?.id) return;
 
@@ -111,7 +105,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
 
         // 4. Cargar opciones de la primera categoría
         if (categorias.length > 0) {
-          setActiveCategory(categorias[0].categoria_id);
+          setActiveCategory(categorias[0].id_api);
         }
       } catch (error) {
         console.error("Error fetching initial data:", error);
@@ -133,6 +127,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
       const res = await fetch(`http://localhost:3001/api/avatar?categoria_id=${categoryId}`);
       if (!res.ok) throw new Error(`Error al cargar opciones para la categoría ${categoryId}`);
       const data = await res.json();
+      console.log("La data que viene de la API", data)
       setOptions(prev => ({
         ...prev,
         [categoryId]: data.opciones
@@ -190,10 +185,13 @@ const Page: React.FC<AvatarCustomizerProps> = ({
   // Renderizado de opciones (ejemplo para colores)
   const handleOptionChange = (category: string, value: string) => {
     setIsLoading(true);
-    setAvatarOptions(prev => ({
-      ...prev,
-      [category]: value
-    }));
+    setAvatarOptions(prev => {
+      const newAvatarOptions = {
+        ...prev,
+        [category]: value
+      };
+      return newAvatarOptions;
+    });
 
     // Efectos visuales
     setShowConfetti(true);
@@ -201,8 +199,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     setTimeout(() => setShowConfetti(false), 800);
     setTimeout(() => setShowSparkles(false), 1000);
     setTimeout(() => setIsLoading(false), 300);
-
-    console.log("Opción seleccionada:", category, value);
   };
 
   // Mapeo de nombres amigables para las opciones
@@ -237,32 +233,21 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     }
   };
 
-  const DICEBEAR_PARAMS_MAP: Record<string, string> = {
-    AVC0001: 'skinColor',
-    AVC0002: 'hair',
-    AVC0003: 'hairColor',
-    AVC0004: 'eyes',
-    AVC0005: 'eyebrows',
-    AVC0006: 'mouth',
-    AVC0007: 'glasses',
-    AVC0008: 'earrings',
-    AVC0009: 'features',
-    AVC0010: 'backgroundColor'
-  }
-
   const generateAvatarUrl = (options: Record<string, string>, seed: string, size: string = '600'): string => {
     const params = new URLSearchParams();
     params.append('seed', seed);
     params.append('size', size);
 
     Object.entries(options).forEach(([categoryId, value]) => {
-      const param = DICEBEAR_PARAMS_MAP[categoryId];
-      if (param && value && value !== 'none') {
-        params.append(param, value);
-        // Parámetros que necesitan probabilidad
-        if (['glasses', 'earrings', 'features', 'hair'].includes(param)) {
-          params.append(`${param}Probability`, '100');
+      if (['features', 'glasses', 'earrings', 'hair'].includes(categoryId)) {
+        if (value === 'none') {
+          params.append(`${categoryId}Probability`, '0');
+        } else {
+          params.append(categoryId, value);
+          params.append(`${categoryId}Probability`, '100');
         }
+      } else if (value && value !== 'none') {
+        params.append(categoryId, value);
       }
     });
 
@@ -277,7 +262,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     setTimeout(() => {
       const avatarData = {
         style: 'adventurer',
-        options: options,
+        options: avatarOptions,
         seed: seed,
         url: avatarUrl
       };
@@ -485,7 +470,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                     }}
                     className={`group relative overflow-hidden flex flex-col items-center gap-1 sm:gap-3 p-3 sm:p-6 rounded-xl sm:rounded-2xl font-black transition-all duration-300 text-xs sm:text-base border-2 sm:border-4 hover:scale-105 sm:hover:scale-110 ${activeCategory === category.id_api
                       ? `bg-gradient-to-r ${categoryColors[category.id_api]} text-white shadow-2xl scale-105 sm:scale-110 border-white animate-pulse`
-                      : `bg-gradient-to-r ${categoryBgColors[category.id_api]} text-slate-700 hover:shadow-xl border-slate-300 hover:border-purple-400`
+                      : `${categoryBgColors[category.id_api]} text-slate-700 hover:shadow-xl border-slate-300 hover:border-purple-400`
                       }`}
                     style={{ animationDuration: activeCategory === category.id_api ? '2s' : undefined }}
                   >
@@ -522,30 +507,17 @@ const Page: React.FC<AvatarCustomizerProps> = ({
 
                           const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || `Color ${option.valor}`;
 
-                          console.log("Renderizando opción:", { // Log para depuración
-                            option,
-                            isSelected,
-                            isUnlocked,
-                            friendlyName,
-                            currentCategory: activeCategory
-                          });
-
                           return (
                             <button
                               key={option.opcion_id}
                               onClick={async (e) => {
-                                e.stopPropagation(); // Detiene la propagación del evento
-                                e.preventDefault(); // Previene comportamientos por defecto
-
-                                console.log("Click en opción:", option);
+                                e.stopPropagation();
+                                e.preventDefault();
                                 if (isUnlocked) {
-                                  console.log("Opción desbloqueada - ejecutando handleOptionChange");
                                   handleOptionChange(activeCategory, option.valor);
                                 } else {
-                                  console.log("Opción bloqueada - intentadno");
                                   const success = await handleUnlockOption(option);
                                   if (success) {
-                                    console.log("desbloqueo exitoso - ejecutando handleOptionChange");
                                     handleOptionChange(activeCategory, option.valor);
                                   }
                                 }
@@ -559,7 +531,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                                 animationDuration: isSelected ? '2s' : undefined
                               }}
                               title={friendlyName + (!isUnlocked ? "(Bloqueado)" : '')}
-                              disabled={!isUnlocked}
+                              disabled={!isUnlocked && userCoins < option.costo}
                             >
                               {isSelected && (
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -597,19 +569,12 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                           const isUnlocked = unlockedOptions.some(uo => uo.opcion_id === option.opcion_id) || false;
                           const friendlyName = FRIENDLY_NAMES[activeCategory]?.[option.valor] || `Opción ${index + 1}`;
 
-                          console.log("Renderizando opción 2:", {
-                            option,
-                            isSelected,
-                            currentSelection: avatarOptions[activeCategory]
-                          });
-
                           const previewOptions = {
                             ...avatarOptions,
                             [activeCategory]: option.valor
                           };
 
                           const previewUrl = generateAvatarUrl(previewOptions, seed, '120');
-
                           return (
                             <button
                               key={option.opcion_id}
@@ -617,16 +582,11 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                                 e.stopPropagation();
                                 e.preventDefault();
 
-                                console.log("Click en opción:", option);
-
                                 if (isUnlocked) {
-                                  console.log("Opción desbloqueada - ejecutando handleOptionChange");
                                   handleOptionChange(activeCategory, option.valor);
                                 } else {
-                                  console.log("Opción bloqueada - intentando desbloquear");
                                   const success = await handleUnlockOption(option);
                                   if (success) {
-                                    console.log("Desbloqueo exitoso - ejecutando handleOptionChange")
                                     handleOptionChange(activeCategory, option.valor);
                                   }
                                 }
@@ -642,7 +602,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                               <div className="flex justify-center mb-2 sm:mb-4">
                                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl">
                                   <img
-                                    src={previewUrl}
+                                    src={`${previewUrl}&t=${Date.now()}`}
                                     alt={`Preview ${friendlyName}`}
                                     className="w-full h-full object-cover"
                                     onError={(e) => {

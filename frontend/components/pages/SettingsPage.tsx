@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ArrowLeft, User, Palette, Volume2, Info } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, User, Palette, Volume2, Info, VolumeX } from 'lucide-react';
 import AvatarCustomizer from '../../app/settings/avatar/page';
 import Link from 'next/link';
 
@@ -15,6 +15,12 @@ interface AvatarOptions {
   clothing: string;
   accessories: string;
   background: string;
+}
+
+interface AudioSettings {
+  soundEffects: boolean;
+  backgroundMusic: boolean;
+  volume: number;
 }
 
 const Settings: React.FC = () => {
@@ -33,14 +39,87 @@ const Settings: React.FC = () => {
     background: 'rainbow'
   });
 
-  // Simular monedas del usuario (esto vendría de tu estado global o API)
+  // Estado para configuraciones de audio
+  const [audioSettings, setAudioSettings] = useState<AudioSettings>({
+    soundEffects: true,
+    backgroundMusic: false,
+    volume: 75
+  });
+
+  // Simular monedas del usuario
   const [userCoins] = useState(25);
+
+  // Cargar configuraciones desde localStorage al montar el componente
+  useEffect(() => {
+    const savedAudioSettings = localStorage.getItem('audioSettings');
+    if (savedAudioSettings) {
+      setAudioSettings(JSON.parse(savedAudioSettings));
+    }
+
+    const savedAvatar = localStorage.getItem('userAvatar');
+    if (savedAvatar) {
+      setUserAvatar(JSON.parse(savedAvatar));
+    }
+  }, []);
+
+  // Guardar configuraciones en localStorage cuando cambien
+  useEffect(() => {
+    localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
+  }, [audioSettings]);
 
   const handleAvatarSave = (avatar: AvatarOptions) => {
     setUserAvatar(avatar);
     setCurrentView('main');
-    // Aquí podrías guardar en localStorage o enviar a una API
     localStorage.setItem('userAvatar', JSON.stringify(avatar));
+  };
+
+  // Funciones para manejar cambios en configuraciones de audio
+  const toggleSoundEffects = () => {
+    setAudioSettings(prev => ({
+      ...prev,
+      soundEffects: !prev.soundEffects
+    }));
+    
+    // Reproducir sonido de prueba si se activa
+    if (!audioSettings.soundEffects) {
+      playTestSound();
+    }
+  };
+
+  const toggleBackgroundMusic = () => {
+    setAudioSettings(prev => ({
+      ...prev,
+      backgroundMusic: !prev.backgroundMusic
+    }));
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseInt(e.target.value);
+    setAudioSettings(prev => ({
+      ...prev,
+      volume: newVolume
+    }));
+  };
+
+  // Función para reproducir sonido de prueba
+  const playTestSound = () => {
+    // Crear un contexto de audio simple para prueba
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+    
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(audioSettings.volume / 100 * 0.1, audioContext.currentTime + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
   };
 
   const FloatingParticle = ({ delay, emoji }: { delay: number; emoji: string }) => (
@@ -69,7 +148,7 @@ const Settings: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
       {/* Partículas de fondo - Responsive */}
       <div className="fixed inset-0 pointer-events-none">
-        {[...Array(window.innerWidth < 768 ? 15 : 25)].map((_, i) => (
+        {[...Array(typeof window !== 'undefined' && window.innerWidth < 768 ? 15 : 25)].map((_, i) => (
           <FloatingParticle key={i} delay={i * 0.3} emoji={['⚙️', '🎨', '🔧', '✨', '🌟', '💫'][i % 6]} />
         ))}
       </div>
@@ -92,7 +171,7 @@ const Settings: React.FC = () => {
           <span className="sm:hidden">Configuración</span>
         </h1>
 
-        <div className="w-12 sm:w-24"></div> {/* Spacer for centering */}
+        <div className="w-12 sm:w-24"></div>
       </header>
 
       {/* Main Content - Responsive */}
@@ -141,18 +220,21 @@ const Settings: React.FC = () => {
                 </div>
               </div>
 
-              {/* Hover Effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 rounded-2xl sm:rounded-3xl"></div>
             </div>
           </Link>
 
-          {/* Sound Settings - Responsive */}
+          {/* Sound Settings - Responsive y Funcional */}
           <div className="group cursor-pointer bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 hover:scale-105 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-cyan-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl sm:rounded-3xl"></div>
 
             <div className="relative z-10">
               <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:animate-bounce">
-                <Volume2 className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
+                {audioSettings.volume === 0 ? (
+                  <VolumeX className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
+                ) : (
+                  <Volume2 className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
+                )}
               </div>
 
               <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-2 sm:mb-4">Sonidos</h3>
@@ -161,25 +243,77 @@ const Settings: React.FC = () => {
               </p>
 
               <div className="space-y-3 sm:space-y-4">
+                {/* Toggle para Efectos de Sonido */}
                 <div className="flex items-center justify-between bg-blue-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                   <span className="text-xs sm:text-sm font-semibold text-blue-800">Efectos de Sonido</span>
-                  <div className="w-12 h-6 sm:w-14 sm:h-7 bg-blue-400 rounded-full relative cursor-pointer">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm transition-transform duration-200"></div>
-                  </div>
+                  <button
+                    onClick={toggleSoundEffects}
+                    className={`w-12 h-6 sm:w-14 sm:h-7 rounded-full relative cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                      audioSettings.soundEffects ? 'bg-blue-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full absolute top-0.5 shadow-sm transition-transform duration-300 ${
+                        audioSettings.soundEffects ? 'translate-x-6 sm:translate-x-7' : 'translate-x-0.5'
+                      }`}
+                    ></div>
+                  </button>
                 </div>
+
+                {/* Toggle para Música de Fondo */}
                 <div className="flex items-center justify-between bg-blue-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                   <span className="text-xs sm:text-sm font-semibold text-blue-800">Música de Fondo</span>
-                  <div className="w-12 h-6 sm:w-14 sm:h-7 bg-gray-300 rounded-full relative cursor-pointer">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full absolute top-0.5 left-0.5 shadow-sm transition-transform duration-200"></div>
-                  </div>
+                  <button
+                    onClick={toggleBackgroundMusic}
+                    className={`w-12 h-6 sm:w-14 sm:h-7 rounded-full relative cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+                      audioSettings.backgroundMusic ? 'bg-blue-500' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div
+                      className={`w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full absolute top-0.5 shadow-sm transition-transform duration-300 ${
+                        audioSettings.backgroundMusic ? 'translate-x-6 sm:translate-x-7' : 'translate-x-0.5'
+                      }`}
+                    ></div>
+                  </button>
                 </div>
+
+                {/* Control de Volumen */}
                 <div className="flex items-center justify-between bg-blue-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
                   <span className="text-xs sm:text-sm font-semibold text-blue-800">Volumen</span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-16 h-2 sm:w-20 sm:h-2 bg-blue-200 rounded-full">
-                      <div className="w-3/4 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="relative">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={audioSettings.volume}
+                        onChange={handleVolumeChange}
+                        className="w-16 sm:w-20 h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        style={{
+                          background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${audioSettings.volume}%, #cbd5e1 ${audioSettings.volume}%, #cbd5e1 100%)`
+                        }}
+                      />
                     </div>
-                    <span className="text-xs text-blue-600 font-medium">75%</span>
+                    <span className="text-xs text-blue-600 font-medium min-w-[2.5rem] text-right">
+                      {audioSettings.volume}%
+                    </span>
+                    <button
+                      onClick={playTestSound}
+                      className="ml-1 px-2 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      disabled={!audioSettings.soundEffects || audioSettings.volume === 0}
+                    >
+                      🔊
+                    </button>
+                  </div>
+                </div>
+
+                {/* Indicador de estado */}
+                <div className="text-center mt-4">
+                  <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
+                    <div className={`w-2 h-2 rounded-full ${audioSettings.soundEffects || audioSettings.backgroundMusic ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                    <span>
+                      {audioSettings.soundEffects || audioSettings.backgroundMusic ? 'Audio Activo' : 'Audio Desactivado'}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -282,12 +416,39 @@ const Settings: React.FC = () => {
           animation: bounce-gentle 2s ease-in-out infinite;
         }
 
+        /* Estilos personalizados para el slider */
+        input[type="range"]::-webkit-slider-thumb {
+          appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+          background: #2563eb;
+          transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
         /* Custom breakpoint for extra small screens */
         @media (min-width: 475px) {
-          .xs\:inline {
+          .xs\\:inline {
             display: inline;
           }
-          .xs\:hidden {
+          .xs\\:hidden {
             display: none;
           }
         }

@@ -118,6 +118,7 @@ export const useRompePinata = () => {
   const [showCelebration, setShowCelebration] = useState(false)
   const [combo, setCombo] = useState(0)
   const [maxCombo, setMaxCombo] = useState(0)
+  const [hitAnimations, setHitAnimations] = useState<Set<number>>(new Set())
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
@@ -247,19 +248,28 @@ export const useRompePinata = () => {
     const piñata = pinatas.find(p => p.id === piñataId)
     if (!piñata || piñata.isHit) return
 
-    // Animación de golpe inmediata
+    // Marcar inmediatamente como golpeada para evitar doble conteo
     setPinatas(prev => prev.map(p => 
       p.id === piñataId 
-        ? { ...p, isAnimating: true, scale: p.scale * 1.3 }
+        ? { ...p, isHit: true, isAnimating: true, scale: p.scale * 1.4 }
         : p
     ))
 
+    // Animación de golpe inmediata mejorada
+    setHitAnimations(prev => new Set([...prev, piñataId]))
+
     setTimeout(() => {
+      setHitAnimations(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(piñataId)
+        return newSet
+      })
+      
       if (piñata.isCorrect) {
         // Respuesta correcta - feedback positivo inmediato
         setPinatas(prev => prev.map(p => 
           p.id === piñataId 
-            ? { ...p, isHit: true, isAnimating: false }
+            ? { ...p, isAnimating: false }
             : p
         ))
         
@@ -303,9 +313,10 @@ export const useRompePinata = () => {
         }
       } else {
         // Respuesta incorrecta - feedback correctivo
+        // Restaurar el estado de la piñata para permitir otro intento
         setPinatas(prev => prev.map(p => 
           p.id === piñataId 
-            ? { ...p, isAnimating: false, scale: p.scale * 0.8 }
+            ? { ...p, isHit: false, isAnimating: false, scale: p.scale * 0.7 }
             : p
         ))
         
@@ -325,13 +336,14 @@ export const useRompePinata = () => {
         setTimeout(() => {
           setPinatas(prev => prev.map(p => 
             p.id === piñataId 
-              ? { ...p, scale: p.scale / 0.8 }
+              ? { ...p, scale: p.scale / 0.7 }
               : p
           ))
-        }, 500)
+        }, 800)
       }
-    }, 300) // Delay para percepción de impacto
-  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, getNextProblem, generatePinatas, showToast, currentLevel])
+    }, 400) // Delay mejorado para percepción de impacto
+  }
+  )
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {

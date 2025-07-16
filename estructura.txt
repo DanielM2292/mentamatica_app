@@ -54,10 +54,28 @@
 |   |   |   |   `-- unionInterseccion/
 |   |   |   |       `-- page.tsx
 |   |   |   |-- division/
-|   |   |   |   `-- page.tsx
+|   |   |   |   |-- divisionTesoro/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- page.tsx
+|   |   |   |   |-- pulsaCifraCorrecta/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   `-- reparteDulces/
+|   |   |   |       `-- page.tsx
 |   |   |   |-- geometria/
-|   |   |   |   `-- page.tsx
+|   |   |   |   |-- construyeFiguras/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- detectiveFiguras/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- page.tsx
+|   |   |   |   `-- perimetroMagico/
+|   |   |   |       `-- page.tsx
 |   |   |   |-- multiplicacion/
+|   |   |   |   |-- DesafioTablas/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- RepeticionesRapidas/
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- RompePinata/
+|   |   |   |   |   `-- page.tsx
 |   |   |   |   `-- page.tsx
 |   |   |   |-- numeracion/
 |   |   |   |   |-- ContadorEspacial/
@@ -181,6 +199,18 @@
 |   |   |   |-- useGameDetective.ts
 |   |   |   |-- useGameLogic.ts
 |   |   |   `-- useGameUnion.ts
+|   |   |-- division/
+|   |   |   |-- useDivisionTesoro.ts
+|   |   |   |-- usePulsaCifraCorrecta.ts
+|   |   |   `-- useReparteDulces.ts
+|   |   |-- geometria/
+|   |   |   |-- useConstruyeFiguras.ts
+|   |   |   |-- useDetectiveFiguras.ts
+|   |   |   `-- usePerimetroMagico.ts
+|   |   |-- multiplicacion/
+|   |   |   |-- useDesafioTablas.ts
+|   |   |   |-- useRepeticionesRapidas.ts
+|   |   |   `-- useRompePinata.ts
 |   |   |-- numeracion/
 |   |   |   |-- useContadorEspacial.ts
 |   |   |   |-- useFormaNumeroGigante.ts
@@ -322,4 +352,4 @@
 |-- package-lock.json
 `-- package.json
 
-68 directories, 254 files
+80 directories, 272 files

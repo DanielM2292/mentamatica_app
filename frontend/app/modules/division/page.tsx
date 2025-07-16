@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowLeft, Play, Star, Coins, X } from "lucide-react";
+import { gsap } from "gsap";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Play, Star, Coins } from "lucide-react";
 
 interface Activity {
   id: number;
@@ -74,11 +75,18 @@ const DivisionPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedElements, setAnimatedElements] = useState<Set<number>>(new Set());
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [showVideo, setShowVideo] = useState(false);
 
-  // Efecto de entrada progresiva
+  // Referencias para animaciones GSAP
+  const headerRef = useRef<HTMLDivElement>(null);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
+  const activitiesRef = useRef<HTMLDivElement>(null);
+  const floatingElementsRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const funFactRef = useRef<HTMLDivElement>(null);
+
+  // Efecto de entrada progresiva con GSAP
   useEffect(() => {
-    setIsVisible(true);
-
     // Crear elementos flotantes para representar divisiones - menos en móvil
     const elementsCount = window.innerWidth < 768 ? 6 : 12;
     const elements = Array.from({ length: elementsCount }, (_, i) => ({
@@ -92,12 +100,100 @@ const DivisionPage: React.FC = () => {
     }));
     setFloatingElements(elements);
 
-    // Animación escalonada
+    // Timeline principal de GSAP
+    const tl = gsap.timeline();
+
+    // Animación del header
+    if (headerRef.current) {
+      tl.fromTo(headerRef.current, 
+        { x: -100, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.6, ease: "power2.out" }
+      );
+    }
+
+    // Animación de la sección de video
+    if (videoSectionRef.current) {
+      tl.fromTo(videoSectionRef.current,
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
+        "-=0.3"
+      );
+    }
+
+    // Animación de las actividades
+    if (activitiesRef.current) {
+      const activityCards = activitiesRef.current.children;
+      tl.fromTo(activityCards,
+        { y: 50, opacity: 0, scale: 0.8 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          scale: 1, 
+          duration: 0.4, 
+          stagger: 0.2, 
+          ease: "back.out(1.7)" 
+        },
+        "-=0.2"
+      );
+    }
+
+    // Animación del progreso y fun fact
+    if (progressRef.current) {
+      tl.fromTo(progressRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+        "-=0.1"
+      );
+    }
+
+    if (funFactRef.current) {
+      tl.fromTo(funFactRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+        "-=0.2"
+      );
+    }
+
+    // Animación de elementos flotantes
+    if (floatingElementsRef.current) {
+      const floatingEls = floatingElementsRef.current.children;
+      gsap.fromTo(floatingEls,
+        { scale: 0, rotation: 0 },
+        { 
+          scale: 1, 
+          rotation: 360, 
+          duration: 1, 
+          stagger: 0.1, 
+          ease: "elastic.out(1, 0.3)",
+          delay: 0.5
+        }
+      );
+
+      // Animación continua de flotación
+      gsap.to(floatingEls, {
+        y: "random(-20, 20)",
+        x: "random(-10, 10)",
+        rotation: "random(-180, 180)",
+        duration: "random(3, 6)",
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: {
+          amount: 2,
+          from: "random"
+        }
+      });
+    }
+
+    setIsVisible(true);
+
+    // Animaciones de hover para las actividades
     activities.forEach((_, index) => {
       setTimeout(() => {
         setAnimatedElements((prev) => new Set([...prev, index]));
       }, index * 200);
     });
+
   }, []);
 
   const activities: Activity[] = [
@@ -138,11 +234,41 @@ const DivisionPage: React.FC = () => {
   };
 
   const handleActivityStart = (activityId: number) => {
-    router.push(`/division/actividad/${activityId}`);
+    console.log(`Intentando navegar a actividad de división ${activityId}`);
+
+    if (activityId === 1) {
+      console.log("Navegando a Reparte los Dulces");
+      window.location.href = "/modules/division/reparteDulces";
+    } else if (activityId === 2) {
+      console.log("Navegando a División del Tesoro");
+      window.location.href = "/modules/division/divisionTesoro";
+    } else if (activityId === 3) {
+      console.log("Navegando a Pulsa la cifra Correcta");
+      window.location.href = "/modules/division/pulsaCifraCorrecta";
+    } else {
+      console.log("Navegando a actividad genérica de división");
+      window.location.href = `/division/actividad/${activityId}`;
+    }
   };
 
   const handleVideoPlay = () => {
-    console.log("Playing división video");
+    setShowVideo(true);
+    // Animación de entrada del modal de video
+    gsap.fromTo(".video-modal", 
+      { scale: 0.5, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)" }
+    );
+  };
+
+  const handleCloseVideo = () => {
+    // Animación de salida del modal de video
+    gsap.to(".video-modal", {
+      scale: 0.5,
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.in",
+      onComplete: () => setShowVideo(false)
+    });
   };
 
   const completedActivities = activities.filter(activity => activity.completed).length;
@@ -203,17 +329,15 @@ const DivisionPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-teal-50 relative overflow-hidden">
-      {/* Elementos flotantes de fondo - ocultos en móvil muy pequeño */}
-      <div className="absolute inset-0 pointer-events-none hidden xs:block">
+      {/* Elementos flotantes de fondo */}
+      <div ref={floatingElementsRef} className="absolute inset-0 pointer-events-none hidden xs:block">
         {floatingElements.map((item) => (
           <div
             key={item.id}
-            className={`absolute w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 ${item.color} rounded-full opacity-20 animate-float flex items-center justify-center text-teal-800 font-bold text-xs sm:text-sm`}
+            className={`absolute w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 ${item.color} rounded-full opacity-20 flex items-center justify-center text-teal-800 font-bold text-xs sm:text-sm`}
             style={{
               left: `${item.x}%`,
               top: `${item.y}%`,
-              animationDelay: `${item.id * 0.5}s`,
-              animationDuration: `${3 + item.id * 0.2}s`,
             }}
           >
             {item.symbol}
@@ -225,51 +349,15 @@ const DivisionPage: React.FC = () => {
       <div className="hidden sm:block absolute top-20 left-4 sm:left-10 w-16 h-16 sm:w-32 sm:h-32 bg-cyan-100 rounded-full opacity-30 animate-pulse flex items-center justify-center text-xl sm:text-4xl font-bold text-cyan-600">
         ÷
       </div>
-      <div
-        className="hidden sm:block absolute top-40 right-4 sm:right-20 w-12 h-12 sm:w-24 sm:h-24 bg-teal-100 rounded-full opacity-30 animate-pulse flex items-center justify-center text-lg sm:text-2xl font-bold text-teal-600"
-        style={{ animationDelay: "1s" }}
-      >
+      <div className="hidden sm:block absolute top-40 right-4 sm:right-20 w-12 h-12 sm:w-24 sm:h-24 bg-teal-100 rounded-full opacity-30 animate-pulse flex items-center justify-center text-lg sm:text-2xl font-bold text-teal-600">
         12÷3
       </div>
-      <div
-        className="hidden sm:block absolute bottom-40 left-4 sm:left-20 w-14 h-14 sm:w-28 sm:h-28 bg-emerald-100 rounded-full opacity-30 animate-pulse flex items-center justify-center text-lg sm:text-3xl font-bold text-emerald-600"
-        style={{ animationDelay: "2s" }}
-      >
+      <div className="hidden sm:block absolute bottom-40 left-4 sm:left-20 w-14 h-14 sm:w-28 sm:h-28 bg-emerald-100 rounded-full opacity-30 animate-pulse flex items-center justify-center text-lg sm:text-3xl font-bold text-emerald-600">
         =4
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        @keyframes slideInFromLeft {
-          0% { transform: translateX(-100px); opacity: 0; }
-          100% { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideInFromRight {
-          0% { transform: translateX(100px); opacity: 0; }
-          100% { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes scaleIn {
-          0% { transform: scale(0.8); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes bounceIn {
-          0% { transform: scale(0.3); opacity: 0; }
-          50% { transform: scale(1.05); }
-          70% { transform: scale(0.9); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-float { animation: float linear infinite; }
-        .animate-slide-in-left { animation: slideInFromLeft 0.6s ease-out forwards; }
-        .animate-slide-in-right { animation: slideInFromRight 0.6s ease-out forwards; }
-        .animate-scale-in { animation: scaleIn 0.5s ease-out forwards; }
-        .animate-bounce-in { animation: bounceIn 0.8s ease-out forwards; }
-      `}</style>
-
-      {/* Header - Mejorado para móvil */}
-      <div className={`bg-white/90 backdrop-blur-sm shadow-sm border-b p-3 sm:p-4 relative z-10 transition-all duration-700 ${isVisible ? "animate-slide-in-left" : "opacity-0"}`}>
+      {/* Header */}
+      <div ref={headerRef} className="bg-white/90 backdrop-blur-sm shadow-sm border-b p-3 sm:p-4 relative z-10 opacity-0">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
             <Button
@@ -302,11 +390,11 @@ const DivisionPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <div className={`flex items-center gap-1 sm:gap-2 bg-cyan-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-cyan-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`} style={{ animationDelay: "0.5s" }}>
+            <div className="flex items-center gap-1 sm:gap-2 bg-cyan-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-cyan-200 transition-colors duration-300">
               <Star className="w-3 h-3 sm:w-5 sm:h-5 text-cyan-500 animate-pulse" />
               <span className="font-bold text-cyan-700 text-xs sm:text-base">0</span>
             </div>
-            <div className={`flex items-center gap-1 sm:gap-2 bg-amber-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-amber-200 transition-colors duration-300 ${isVisible ? "animate-bounce-in" : "opacity-0"}`} style={{ animationDelay: "0.7s" }}>
+            <div className="flex items-center gap-1 sm:gap-2 bg-amber-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-amber-200 transition-colors duration-300">
               <Coins className="w-3 h-3 sm:w-5 sm:h-5 text-amber-600 animate-pulse" />
               <span className="font-bold text-amber-700 text-xs sm:text-base">0</span>
             </div>
@@ -316,8 +404,8 @@ const DivisionPage: React.FC = () => {
 
       {/* Content */}
       <div className="max-w-6xl mx-auto p-3 sm:p-6 relative z-10">
-        {/* Video Section - Optimizado para móvil */}
-        <div className={`mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? "animate-scale-in" : "opacity-0 scale-75"}`} style={{ animationDelay: "0.3s" }}>
+        {/* Video Section */}
+        <div ref={videoSectionRef} className="mb-6 sm:mb-8 opacity-0">
           <div className="bg-gradient-to-br from-cyan-50 to-teal-50 rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-cyan-100 hover:shadow-xl transition-all duration-500 group">
             <div className="text-center mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-2xl font-bold text-gray-800 mb-2 group-hover:scale-105 transition-transform duration-300">
@@ -328,23 +416,26 @@ const DivisionPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="relative bg-gradient-to-br from-cyan-100 to-teal-100 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-gray-800 p-4 sm:p-8 flex flex-col items-center justify-center min-h-[200px] sm:min-h-[300px] cursor-pointer group hover:from-cyan-200 hover:to-teal-200 transition-all duration-300 hover:scale-[1.02]" onClick={handleVideoPlay}>
+            <div 
+              className="relative bg-gradient-to-br from-cyan-100 to-teal-100 rounded-2xl sm:rounded-3xl border-2 sm:border-4 border-gray-800 p-4 sm:p-8 flex flex-col items-center justify-center min-h-[200px] sm:min-h-[300px] cursor-pointer group hover:from-cyan-200 hover:to-teal-200 transition-all duration-300 hover:scale-[1.02]" 
+              onClick={handleVideoPlay}
+            >
               <div className="absolute inset-2 sm:inset-4 border-2 border-dashed border-gray-400 rounded-xl sm:rounded-2xl group-hover:border-gray-600 transition-colors duration-300"></div>
 
-              {/* Elementos visuales de división en el video - simplificados en móvil */}
+              {/* Elementos visuales de división en el video */}
               <div className="absolute top-3 sm:top-6 left-3 sm:left-6 flex gap-1 sm:gap-2 items-center">
                 <div className="w-4 h-4 sm:w-6 sm:h-6 bg-cyan-300 rounded-full animate-pulse flex items-center justify-center text-xs font-bold text-cyan-800">
                   <span className="hidden sm:inline">12</span>
                 </div>
-                <span className="text-cyan-600 animate-pulse text-xs sm:text-base" style={{ animationDelay: "0.3s" }}>÷</span>
-                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-teal-300 rounded-full animate-pulse flex items-center justify-center text-xs font-bold text-teal-800" style={{ animationDelay: "0.6s" }}>
+                <span className="text-cyan-600 animate-pulse text-xs sm:text-base">÷</span>
+                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-teal-300 rounded-full animate-pulse flex items-center justify-center text-xs font-bold text-teal-800">
                   <span className="hidden sm:inline">3</span>
                 </div>
               </div>
 
               <div className="absolute top-3 sm:top-6 right-3 sm:right-6 flex gap-1 sm:gap-2 items-center">
-                <span className="text-cyan-600 font-bold animate-pulse text-xs sm:text-base" style={{ animationDelay: "0.9s" }}>=</span>
-                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-emerald-300 rounded-full animate-pulse flex items-center justify-center text-xs font-bold text-emerald-800" style={{ animationDelay: "1.2s" }}>
+                <span className="text-cyan-600 font-bold animate-pulse text-xs sm:text-base">=</span>
+                <div className="w-4 h-4 sm:w-6 sm:h-6 bg-emerald-300 rounded-full animate-pulse flex items-center justify-center text-xs font-bold text-emerald-800">
                   <span className="hidden sm:inline">4</span>
                 </div>
               </div>
@@ -359,9 +450,8 @@ const DivisionPage: React.FC = () => {
                 </h3>
               </div>
 
-              {/* Representación visual de división con grupos - simplificada en móvil */}
+              {/* Representación visual de división con grupos */}
               <div className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 sm:gap-6 items-center">
-                {/* Representación de 12 elementos divididos en 3 grupos de 4 */}
                 {[1, 2, 3].map((groupNum) => (
                   <div key={groupNum} className="flex flex-col items-center gap-1 sm:gap-2">
                     <div className="text-xs text-cyan-700 font-bold hidden sm:block">Grupo {groupNum}</div>
@@ -380,25 +470,22 @@ const DivisionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Activities Grid - Responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* Activities Grid */}
+        <div ref={activitiesRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {activities.map((activity, index) => (
             <div
               key={activity.id}
-              className={`bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden ${
-                animatedElements.has(index) ? "animate-bounce-in" : "opacity-0"
-              }`}
-              style={{ animationDelay: `${index * 0.2}s` }}
+              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 hover:rotate-1 group relative overflow-hidden opacity-0"
             >
-              {/* Elementos decorativos relacionados con división - simplificados en móvil */}
+              {/* Elementos decorativos relacionados con división */}
               <div className="absolute top-2 right-2 flex gap-1 opacity-30 group-hover:opacity-60 transition-opacity duration-300">
                 <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-cyan-400 rounded-full animate-ping flex items-center justify-center text-xs font-bold text-white">
                   <span className="hidden sm:inline">÷</span>
                 </div>
-                <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-teal-400 rounded-full animate-ping flex items-center justify-center text-xs font-bold text-white" style={{ animationDelay: "0.5s" }}>
+                <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-teal-400 rounded-full animate-ping flex items-center justify-center text-xs font-bold text-white">
                   <span className="hidden sm:inline">8</span>
                 </div>
-                <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-emerald-400 rounded-full animate-ping flex items-center justify-center text-xs font-bold text-white" style={{ animationDelay: "1s" }}>
+                <div className="w-1.5 h-1.5 sm:w-3 sm:h-3 bg-emerald-400 rounded-full animate-ping flex items-center justify-center text-xs font-bold text-white">
                   <span className="hidden sm:inline">4</span>
                 </div>
               </div>
@@ -466,8 +553,8 @@ const DivisionPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Progress Section - Optimizado para móvil */}
-        <div className="mt-8 sm:mt-12 bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg">
+        {/* Progress Section */}
+        <div ref={progressRef} className="mt-8 sm:mt-12 bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg opacity-0">
           <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4 text-center break-words">
             Tu Progreso en División
           </h3>
@@ -484,8 +571,8 @@ const DivisionPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Fun Fact Section - Responsive */}
-        <div className="mt-6 sm:mt-8 bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-cyan-100">
+        {/* Fun Fact Section */}
+        <div ref={funFactRef} className="mt-6 sm:mt-8 bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-cyan-100 opacity-0">
           <div className="text-center">
             <h3 className="text-base sm:text-lg font-bold text-cyan-800 mb-2 flex items-center justify-center gap-2 break-words">
               🧠 ¿Sabías qué?
@@ -497,6 +584,36 @@ const DivisionPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de Video de YouTube */}
+      {showVideo && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="video-modal bg-white rounded-2xl p-4 sm:p-6 max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                División para Niños - Aprende a Dividir
+              </h3>
+              <Button
+                onClick={handleCloseVideo}
+                variant="ghost"
+                size="sm"
+                icon={X}
+                className="hover:bg-gray-100"
+              />
+            </div>
+            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full rounded-lg"
+                src="https://www.youtube.com/embed/iA0fP4tL67s?autoplay=1&rel=0"
+                title="División para Niños"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

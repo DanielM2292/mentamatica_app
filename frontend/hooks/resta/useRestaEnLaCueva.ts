@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas";
 
 // Configuración de niveles para Resta en la Cueva con generación aleatoria
 const restaEnLaCuevaLevels = [
@@ -9,7 +11,6 @@ const restaEnLaCuevaLevels = [
     name: "Nivel 1 - Entrada de la Cueva",
     description: "Primeros pasos en la oscuridad",
     difficulty: "Fácil",
-    timeLimit: 15,
     minNumber: 3,
     maxNumber: 12,
     targetDepth: 10,
@@ -18,7 +19,6 @@ const restaEnLaCuevaLevels = [
     name: "Nivel 2 - Túneles Profundos",
     description: "Más adentro en la cueva",
     difficulty: "Medio",
-    timeLimit: 12,
     minNumber: 5,
     maxNumber: 18,
     targetDepth: 15,
@@ -27,7 +27,6 @@ const restaEnLaCuevaLevels = [
     name: "Nivel 3 - Corazón de la Cueva",
     description: "El desafío final",
     difficulty: "Difícil",
-    timeLimit: 10,
     minNumber: 8,
     maxNumber: 25,
     targetDepth: 20,
@@ -39,10 +38,6 @@ interface CaveProblem {
   subtrahend: number
   result: number
   options: number[]
-}
-
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
 }
 
 export const useRestaEnLaCueva = () => {
@@ -61,9 +56,6 @@ export const useRestaEnLaCueva = () => {
   const [vidas, setVidas] = useState(3)
   const [timeLeft, setTimeLeft] = useState(15)
   const [streak, setStreak] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [isGameOver, setIsGameOver] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
@@ -81,6 +73,8 @@ export const useRestaEnLaCueva = () => {
   // Computed values
   const currentGameLevel = restaEnLaCuevaLevels[currentLevel]
   const isLastLevel = currentLevel >= restaEnLaCuevaLevels.length - 1
+  const isLevelComplete = currentDepth >= currentGameLevel.targetDepth
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
 
   // Initialize timer
@@ -159,36 +153,6 @@ export const useRestaEnLaCueva = () => {
     }
   }, [currentGameLevel])
 
-  // Timer management with dynamic time based on difficulty
-  useEffect(() => {
-    if (!isGameActive || showFeedback || isGameOver || isLevelComplete || isGameComplete) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-      }
-      return
-    }
-
-    // Tiempo dinámico basado en la profundidad
-    const dynamicTime = Math.max(currentGameLevel.timeLimit - Math.floor(currentDepth / 5), 8)
-    setTimeLeft(dynamicTime)
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          handleTimeUp()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-      }
-    }
-  }, [currentDepth, isGameActive, showFeedback, isGameOver, isLevelComplete, isGameComplete, currentGameLevel])
-
   // Handle time up with better feedback
   const handleTimeUp = useCallback(() => {
     if (timerRef.current) {
@@ -199,7 +163,6 @@ export const useRestaEnLaCueva = () => {
       const newVidas = prev - 1
       if (newVidas <= 0) {
         setIsGameOver(true)
-        setIsGameActive(false)
         showToast("¡Perdido en la Cueva! 💀", `Profundidad máxima: ${maxDepthReached}m`, "destructive")
       } else {
         // Retroceder en la cueva
@@ -259,8 +222,6 @@ export const useRestaEnLaCueva = () => {
         // Check if level is complete
         if (newDepth >= currentGameLevel.targetDepth) {
           setTimeout(() => {
-            setIsLevelComplete(true)
-            setIsGameActive(false)
             setCompletedSets([{ id: currentLevel }])
             showToast("¡Escapaste! 🌟", `¡Completaste ${currentGameLevel.name}!`)
           }, 1000)
@@ -274,7 +235,6 @@ export const useRestaEnLaCueva = () => {
           const newVidas = prev - 1
           if (newVidas <= 0) {
             setIsGameOver(true)
-            setIsGameActive(false)
             showToast("¡Perdido en la Cueva! 💀", `Profundidad máxima: ${maxDepthReached}m`, "destructive")
           } else {
             // Retroceder más dramáticamente
@@ -314,22 +274,17 @@ export const useRestaEnLaCueva = () => {
     if (currentLevel < restaEnLaCuevaLevels.length - 1) {
       const newLevel = currentLevel + 1
       setTotalAciertos((prev) => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setCurrentDepth(0)
       setMaxDepthReached(0)
       setAciertos(0)
       setErrores(0)
       setVidas(3)
       setStreak(0)
-      setIsLevelComplete(false)
       setIsGameOver(false)
       setCompletedSets([])
-      setIsGameActive(true)
 
       showToast("¡Nueva Cueva! 🕳️", `${restaEnLaCuevaLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
     }
   }, [currentLevel, aciertos, showToast, detener])
 
@@ -342,13 +297,10 @@ export const useRestaEnLaCueva = () => {
     setErrores(0)
     setVidas(3)
     setStreak(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setIsGameOver(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    setIsGameActive(true)
     setShowFeedback(false)
     setSelectedAnswer(null)
 
@@ -360,50 +312,22 @@ export const useRestaEnLaCueva = () => {
   useEffect(() => {
     if (currentGameLevel && !currentProblem && !isLevelComplete && !isGameComplete && !isGameOver) {
       nextProblem()
-      setIsGameActive(true)
     }
   }, [currentGameLevel, currentProblem, isLevelComplete, isGameComplete, isGameOver, nextProblem])
 
   // Results submission
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-      const intentos = aciertos + errores
-      const tiempoAEnviar = tiempo
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos,
-            errores,
-            tiempo: tiempoAEnviar,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempoAEnviar)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {
@@ -435,7 +359,6 @@ export const useRestaEnLaCueva = () => {
     isLevelComplete,
     isGameComplete,
     isGameOver,
-    isGameActive,
     showFeedback,
     isCorrect,
     gameContainerRef,

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from "@/hooks/useEnviarResultados"
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
 // Configuración de niveles basada en desarrollo cognitivo
 const repeticionesLevels = [
@@ -59,10 +61,6 @@ interface Problem {
   totalElements: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 // Elementos visuales para arrastrar
 const elementTypes = [
   { emoji: "🍎", color: "from-red-400 to-red-600", name: "manzanas" },
@@ -87,14 +85,13 @@ export const useRepeticionesRapidas = () => {
   const [errores, setErrores] = useState(0)
   const [problemsCompleted, setProblemsCompleted] = useState(0)
   const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
   const [selectedElement, setSelectedElement] = useState(0)
   const [draggedItem, setDraggedItem] = useState<number | null>(null)
   const [showHint, setShowHint] = useState(false)
+  const [resultadosEnviados, setResultadosEnviados] = useState(false)
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
@@ -104,9 +101,11 @@ export const useRepeticionesRapidas = () => {
 
   // Computed values
   const currentGameLevel = repeticionesLevels[currentLevel]
-  const isLastLevel = currentLevel >= repeticionesLevels.length - 1
+  const isLastLevel = currentLevel === repeticionesLevels.length - 1
+  const isLevelComplete = completedSets.includes(currentLevel.toString())
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
-  const progress = (problemsCompleted / currentGameLevel.problemsPerLevel) * 100
+  const progress = (problemsCompleted / currentGameLevel?.problemsPerLevel) * 100 || 0
 
   // Initialize timer
   useEffect(() => {
@@ -155,7 +154,6 @@ export const useRepeticionesRapidas = () => {
   // Generar elementos arrastrables
   const generateDragItems = useCallback((problem: Problem) => {
     const items: DragItem[] = []
-    const elementType = elementTypes[selectedElement]
     
     // Crear elementos individuales
     for (let i = 0; i < problem.totalElements; i++) {
@@ -171,7 +169,7 @@ export const useRepeticionesRapidas = () => {
     }
     
     return items
-  }, [selectedElement])
+  }, [])
 
   // Generar zonas de drop
   const generateDropZones = useCallback((problem: Problem) => {
@@ -244,17 +242,24 @@ export const useRepeticionesRapidas = () => {
     
     if (allZonesComplete) {
       setAciertos(prev => prev + 1)
-      setProblemsCompleted(prev => prev + 1)
+      const newProblemsCompleted = problemsCompleted + 1
+      setProblemsCompleted(newProblemsCompleted)
       
       showToast("¡Perfecto! 🎯", `${currentProblem.expression} = ${currentProblem.result}`)
       
       // Verificar si el nivel está completo
-      if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
+      if (newProblemsCompleted >= currentGameLevel.problemsPerLevel) {
         setTimeout(() => {
-          setIsLevelComplete(true)
+          setCompletedSets(prev => [...prev, currentLevel.toString()])
           setIsGameActive(false)
-          setCompletedSets([{ id: currentLevel }])
-          showToast("¡Nivel Completado! 🏆", "¡Excelente trabajo agrupando!")
+          
+          // AÑADIDO: Verificar si es el último nivel completado
+          if (isLastLevel) {
+            detener()
+            showToast("¡Juego Completado! 🏆", "¡Felicidades! Has terminado todos los niveles")
+          } else {
+            showToast("¡Nivel Completado! 🎉", "¡Excelente trabajo agrupando!")
+          }
         }, 1500)
       } else {
         // Generar nuevo problema
@@ -295,14 +300,14 @@ export const useRepeticionesRapidas = () => {
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < repeticionesLevels.length - 1) {
+    if (!isLastLevel) {
+      // Avanzar al siguiente nivel
       const newLevel = currentLevel + 1
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(newLevel)
       setProblemsCompleted(0)
       setAciertos(0)
       setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
       
       const newProblem = generateProblem()
@@ -314,10 +319,13 @@ export const useRepeticionesRapidas = () => {
 
       showToast("¡Nuevo Desafío! 🎯", `${repeticionesLevels[newLevel].name}`)
     } else {
-      setIsGameComplete(true)
+      // Completar el juego
+      setTotalAciertos(prev => prev + aciertos)
+      setIsGameActive(false)
       detener()
+      showToast("¡Juego Completado! 🏆", "¡Felicidades! Has terminado todos los niveles")
     }
-  }, [currentLevel, aciertos, generateProblem, generateDragItems, generateDropZones, showToast, detener])
+  }, [currentLevel, aciertos, isLastLevel, generateProblem, generateDragItems, generateDropZones, showToast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -325,12 +333,11 @@ export const useRepeticionesRapidas = () => {
     setProblemsCompleted(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
     setDraggedItem(null)
+    setResultadosEnviados(false)
     
     const newProblem = generateProblem()
     setCurrentProblem(newProblem)
@@ -340,12 +347,13 @@ export const useRepeticionesRapidas = () => {
     setIsGameActive(true)
 
     reiniciar()
+    iniciar()
     showToast("¡Nueva Partida! 🔄", "¡A agrupar elementos!")
-  }, [generateProblem, generateDragItems, generateDropZones, reiniciar, showToast])
+  }, [generateProblem, generateDragItems, generateDropZones, reiniciar, iniciar, showToast])
 
   // Inicializar juego
   useEffect(() => {
-    if (currentGameLevel && !currentProblem) {
+    if (currentGameLevel && !currentProblem && !isGameComplete) {
       const newProblem = generateProblem()
       setCurrentProblem(newProblem)
       setDragItems(generateDragItems(newProblem))
@@ -353,46 +361,20 @@ export const useRepeticionesRapidas = () => {
       setSelectedElement(Math.floor(Math.random() * elementTypes.length))
       setIsGameActive(true)
     }
-  }, [currentGameLevel, currentProblem, generateProblem, generateDragItems, generateDropZones])
+  }, [currentGameLevel, currentProblem, isGameComplete, generateProblem, generateDragItems, generateDropZones])
 
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
+  // Enviar resultados cuando el juego esté completo
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Cleanup
   useEffect(() => {

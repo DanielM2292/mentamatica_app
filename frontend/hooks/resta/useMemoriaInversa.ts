@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas";
 
 // Configuración de niveles para Memoria Inversa con generación aleatoria
 const memoriaInversaLevels = [
@@ -41,10 +43,6 @@ interface MemoryCard {
   isMatched: boolean
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 export const useMemoriaInversa = () => {
   const { toast } = useToast()
   const { user } = useUser()
@@ -58,9 +56,6 @@ export const useMemoriaInversa = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [attempts, setAttempts] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -75,7 +70,10 @@ export const useMemoriaInversa = () => {
   // Computed values
   const currentGameLevel = memoriaInversaLevels[currentLevel]
   const isLastLevel = currentLevel >= memoriaInversaLevels.length - 1
+  const isLevelComplete = matchedPairs >= currentGameLevel.pairs
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
+  const isGameActive = !isLevelComplete && !isGameComplete;
 
   // Initialize timer
   useEffect(() => {
@@ -208,8 +206,6 @@ export const useMemoriaInversa = () => {
           // Check if level is complete
           if (matchedPairs + 1 >= currentGameLevel.pairs) {
             setTimeout(() => {
-              setIsLevelComplete(true)
-              setIsGameActive(false)
               setCompletedSets([{ id: currentLevel }])
               showToast("¡Memoria Perfecta! 🌟", `¡Completaste ${currentGameLevel.name}!`)
             }, 1000)
@@ -244,21 +240,16 @@ export const useMemoriaInversa = () => {
     if (currentLevel < memoriaInversaLevels.length - 1) {
       const newLevel = currentLevel + 1
       setTotalAciertos((prev) => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setMatchedPairs(0)
       setAttempts(0)
       setAciertos(0)
       setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
       setFlippedCards([])
-      setCards(generateRandomCards(newLevel)) // Generar nuevas cartas aleatorias
-      setIsGameActive(true)
+      setCards(generateRandomCards(newLevel))
 
       showToast("¡Nuevo Desafío! 🧠", `${memoriaInversaLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
     }
   }, [currentLevel, aciertos, generateRandomCards, showToast, detener])
 
@@ -269,14 +260,11 @@ export const useMemoriaInversa = () => {
     setAttempts(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
     setFlippedCards([])
-    setCards(generateRandomCards(0)) // Generar nuevas cartas aleatorias
-    setIsGameActive(true)
+    setCards(generateRandomCards(0))
 
     reiniciar()
     showToast("¡Nueva Partida! 🔄", "¡Entrena tu memoria!")
@@ -301,50 +289,20 @@ export const useMemoriaInversa = () => {
   useEffect(() => {
     if (currentGameLevel && cards.length === 0) {
       setCards(generateRandomCards(currentLevel))
-      setIsGameActive(true)
     }
   }, [currentGameLevel, cards.length, generateRandomCards, currentLevel])
 
-  // Results submission
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-      const intentos = attempts
-      const tiempoAEnviar = tiempo
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos,
-            errores,
-            tiempo: tiempoAEnviar,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempoAEnviar)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, attempts, errores, tiempo, detener])
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Cleanup
   useEffect(() => {

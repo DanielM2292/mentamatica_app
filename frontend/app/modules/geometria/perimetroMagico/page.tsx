@@ -171,10 +171,11 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-6xl mx-auto pt-2 sm:pt-4 relative z-10 px-2 sm:px-4">
           <GameHeader
+            nav="/modules/geometria"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
-            imagen="/images/icons/geometry.png"
+            imagen="/images/icons/geometria.png"
             name="Perímetro Mágico"
             totalSets={currentGameLevel?.problemsPerLevel || 1}
             level={currentLevel + 1}

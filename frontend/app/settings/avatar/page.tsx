@@ -8,29 +8,29 @@ import { toast } from '@/hooks/use-toast';
 import Monedas from '@/components/molecules/Monedas';
 
 export const categoryColors: Record<string, string> = {
-  AVC0001: "from-orange-400 via-amber-400 to-yellow-400",
-  AVC0002: "from-amber-400 via-yellow-400 to-lime-400",
-  AVC0003: "from-rose-400 via-pink-400 to-purple-400",
-  AVC0004: "from-blue-400 via-cyan-400 to-teal-400",
-  AVC0005: "from-green-400 via-emerald-400 to-teal-400",
-  AVC0006: "from-pink-400 via-rose-400 to-red-400",
-  AVC0007: "from-indigo-400 via-purple-400 to-pink-400",
-  AVC0008: "from-yellow-400 via-orange-400 to-red-400",
-  AVC0009: "from-red-400 via-pink-400 to-purple-400",
-  AVC0010: "from-purple-400 via-pink-400 to-red-400",
+  skinColor: "from-orange-400 via-amber-400 to-yellow-400",
+  hair: "from-amber-400 via-yellow-400 to-lime-400",
+  hairColor: "from-rose-400 via-pink-400 to-purple-400",
+  eyes: "from-blue-400 via-cyan-400 to-teal-400",
+  eyebrows: "from-green-400 via-emerald-400 to-teal-400",
+  mouth: "from-pink-400 via-rose-400 to-red-400",
+  glasses: "from-indigo-400 via-purple-400 to-pink-400",
+  earrings: "from-yellow-400 via-orange-400 to-red-400",
+  features: "from-red-400 via-pink-400 to-purple-400",
+  backgroundColor: "from-purple-400 via-pink-400 to-red-400",
 };
 
 export const categoryBgColors: Record<string, string> = {
-  AVC0001: "from-orange-100 to-amber-100",
-  AVC0002: "from-amber-100 to-yellow-100",
-  AVC0003: "from-rose-100 to-pink-100",
-  AVC0004: "from-blue-100 to-cyan-100",
-  AVC0005: "from-green-100 to-emerald-100",
-  AVC0006: "from-pink-100 to-rose-100",
-  AVC0007: "from-indigo-100 to-purple-100",
-  AVC0008: "from-yellow-100 to-orange-100",
-  AVC0009: "from-red-100 to-pink-100",
-  AVC0010: "from-purple-100 to-pink-100",
+  skinColor: "from-orange-100 to-amber-100",
+  hair: "from-amber-100 to-yellow-100",
+  hairColor: "from-rose-100 to-pink-100",
+  eyes: "from-blue-100 to-cyan-100",
+  eyebrows: "from-green-100 to-emerald-100",
+  mouth: "from-pink-100 to-rose-100",
+  glasses: "from-indigo-100 to-purple-100",
+  earrings: "from-yellow-100 to-orange-100",
+  features: "from-red-100 to-pink-100",
+  backgroundColor: "from-purple-100 to-pink-100",
 };
 
 interface AvatarCategory {
@@ -59,7 +59,6 @@ interface AvatarCustomizerProps {
 }
 
 const Page: React.FC<AvatarCustomizerProps> = ({
-  onSave = (avatar) => console.log('Save', avatar)
 }) => {
   const [categories, setCategories] = useState<AvatarCategory[]>([]);
   const [avatarOptions, setAvatarOptions] = useState<Record<string, string>>({});
@@ -103,6 +102,14 @@ const Page: React.FC<AvatarCustomizerProps> = ({
         const userData = await userRes.json();
         setUserCoins(userData.monedas || 0);
 
+        // 4. Cargar las opciones activas que vienen desde la base de datos
+        const savedOptionsRes = await fetch(`http://localhost:3001/api/avatar?usuario_id=${user.id}`);
+        const savedOptionsData = await savedOptionsRes.json();
+
+        if (savedOptionsData.success && savedOptionsData.opciones_desbloqueadas) {
+          setAvatarOptions(savedOptionsData.opciones_enviar || {});
+        }
+
         // 4. Cargar opciones de la primera categoría
         if (categorias.length > 0) {
           setActiveCategory(categorias[0].id_api);
@@ -126,8 +133,7 @@ const Page: React.FC<AvatarCustomizerProps> = ({
     try {
       const res = await fetch(`http://localhost:3001/api/avatar?categoria_id=${categoryId}`);
       if (!res.ok) throw new Error(`Error al cargar opciones para la categoría ${categoryId}`);
-      const data = await res.json();
-      console.log("La data que viene de la API", data)
+      const data = await res.json()
       setOptions(prev => ({
         ...prev,
         [categoryId]: data.opciones
@@ -138,11 +144,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
   };
 
   const handleUnlockOption = async (option: AvatarOption) => {
-    if (userCoins < option.costo) {
-      toast({ description: 'No tienes suficientes monedas' });
-      return;
-    }
-
     try {
       const res = await fetch(`http://localhost:3001/api/avatar`, {
         method: 'POST',
@@ -176,6 +177,9 @@ const Page: React.FC<AvatarCustomizerProps> = ({
         fecha_desbloqueo: new Date().toISOString()
       }]);
       setUserCoins(prev => prev - option.costo);
+      const userRes = await fetch(`http://localhost:3001/api/usuarios?usuario_id=${user?.id}`);
+      const userData = await userRes.json();
+      setUserCoins(userData.monedas || 0);
       toast({ description: `¡Opción desbloqueada! Costo: ${option.costo} monedas` });
     } catch (error) {
       toast({ description: 'Hubo un problema de conexión con el servidor.' });
@@ -257,16 +261,29 @@ const Page: React.FC<AvatarCustomizerProps> = ({
 
   const avatarUrl = useMemo(() => generateAvatarUrl(avatarOptions, seed), [avatarOptions, seed]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setShowSaveAnimation(true);
+    try {
+      const res = await fetch(`http://localhost:3001/api/avatar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          opciones_guardar: avatarOptions
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        toast({ description: `Error al guardar el avatar en base de datos: ${data.error}` });
+      } else {
+        toast({ description: "¡Avatar guardado exitosamente!" });
+      }
+
+    } catch (error) {
+      toast({ description: "Error al guardar el avatar. Inténtalo de nuevo." });
+    }
     setTimeout(() => {
-      const avatarData = {
-        style: 'adventurer',
-        options: avatarOptions,
-        seed: seed,
-        url: avatarUrl
-      };
-      onSave(avatarData);
       setShowSaveAnimation(false);
     }, 2000);
   };
@@ -513,13 +530,17 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                               onClick={async (e) => {
                                 e.stopPropagation();
                                 e.preventDefault();
-                                if (isUnlocked) {
-                                  handleOptionChange(activeCategory, option.valor);
-                                } else {
+                                if (!isUnlocked) {
+                                  if (userCoins < option.costo) {
+                                    toast({ description: 'No tienes suficientes monedas' });
+                                    return;
+                                  }
                                   const success = await handleUnlockOption(option);
                                   if (success) {
                                     handleOptionChange(activeCategory, option.valor);
                                   }
+                                } else {
+                                  handleOptionChange(activeCategory, option.valor);
                                 }
                               }}
                               className={`group relative w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 hover:scale-110 sm:hover:scale-125 hover:rotate-6 sm:hover:rotate-12 ${isSelected
@@ -531,7 +552,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                                 animationDuration: isSelected ? '2s' : undefined
                               }}
                               title={friendlyName + (!isUnlocked ? "(Bloqueado)" : '')}
-                              disabled={!isUnlocked && userCoins < option.costo}
                             >
                               {isSelected && (
                                 <div className="absolute inset-0 flex items-center justify-center">
@@ -582,13 +602,17 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                                 e.stopPropagation();
                                 e.preventDefault();
 
-                                if (isUnlocked) {
-                                  handleOptionChange(activeCategory, option.valor);
-                                } else {
+                                if (!isUnlocked) {
+                                  if (userCoins < option.costo) {
+                                    toast({ description: 'No tienes suficientes monedas' });
+                                    return;
+                                  }
                                   const success = await handleUnlockOption(option);
                                   if (success) {
                                     handleOptionChange(activeCategory, option.valor);
                                   }
+                                } else {
+                                  handleOptionChange(activeCategory, option.valor);
                                 }
                               }}
                               className={`group relative p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 sm:border-4 transition-all duration-300 text-left hover:scale-105 sm:hover:scale-110 hover:rotate-1 sm:hover:rotate-2 ${isSelected
@@ -597,7 +621,6 @@ const Page: React.FC<AvatarCustomizerProps> = ({
                                 }`}
                               style={{ animationDuration: isSelected ? '2s' : undefined }}
                               title={friendlyName + (isUnlocked ? "" : "(Bloqueado)")}
-                              disabled={!isUnlocked && userCoins < option.costo}
                             >
                               <div className="flex justify-center mb-2 sm:mb-4">
                                 <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-slate-300 group-hover:border-purple-400 transition-all duration-300 group-hover:scale-105 sm:group-hover:scale-110 shadow-lg group-hover:shadow-xl">

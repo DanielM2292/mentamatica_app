@@ -4,8 +4,10 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
-// Modificar la configuración de niveles para generar números aleatorios
+// Configuración de niveles
 const formaNumeroLevels = [
   {
     name: "Nivel 1",
@@ -27,14 +29,13 @@ const formaNumeroLevels = [
   },
 ]
 
-// Agregar función para generar números aleatorios
+// Generar números aleatorios
 const generateRandomNumber = (digits: number): number => {
   const min = Math.pow(10, digits - 1)
   const max = Math.pow(10, digits) - 1
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// Agregar función para generar array de números aleatorios únicos
 const generateRandomNumbers = (digits: number, count: number): number[] => {
   const numbers = new Set<number>()
   while (numbers.size < count) {
@@ -57,15 +58,10 @@ interface DropSlot {
   value: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 const generateDigitCards = (targetNumber: number): DigitCard[] => {
   const targetDigits = targetNumber.toString().split("").map(Number)
   const extraDigits = []
 
-  // Add random extra digits for challenge
   for (let i = 0; i < 4; i++) {
     extraDigits.push(Math.floor(Math.random() * 10))
   }
@@ -85,7 +81,7 @@ export const useFormaNumeroGigante = () => {
   const { user } = useUser()
   const { iniciar, detener, reiniciar, tiempo } = useTimer()
 
-  // Core game state
+  // Estados del juego
   const [currentLevel, setCurrentLevel] = useState(0)
   const [currentNumberIndex, setCurrentNumberIndex] = useState(0)
   const [digitCards, setDigitCards] = useState<DigitCard[]>([])
@@ -93,12 +89,9 @@ export const useFormaNumeroGigante = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
-  const [completedSets, setCompletedSets] = useState<any[]>([])
+  const [completedSets, setCompletedSets] = useState<string[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
-  // En el hook, modificar la inicialización para generar números aleatorios
   const [randomNumbers, setRandomNumbers] = useState<number[]>([])
 
   // Refs
@@ -107,19 +100,21 @@ export const useFormaNumeroGigante = () => {
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Computed values
+  // Valores calculados - SIGUIENDO EL PATRÓN DE useGameLogic
   const currentGameLevel = formaNumeroLevels[currentLevel]
-  // Modificar currentTargetNumber para usar números aleatorios
   const currentTargetNumber = randomNumbers[currentNumberIndex]
-  const isLastLevel = currentLevel >= formaNumeroLevels.length - 1
+  const isLastLevel = currentLevel === formaNumeroLevels.length - 1
+  const isLevelComplete = completedSets.includes(currentLevel.toString())
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
 
-  // Initialize timer
+  // Inicializar temporizador
   useEffect(() => {
     iniciar()
-  }, [iniciar])
+    return () => detener()
+  }, [iniciar, detener])
 
-  // Toast function to prevent duplicates
+  // Toast function
   const showToast = useCallback(
     (title: string, description: string, variant?: "default" | "destructive") => {
       const now = Date.now()
@@ -142,7 +137,7 @@ export const useFormaNumeroGigante = () => {
     [toast],
   )
 
-  // Initialize drop slots
+  // Inicializar slots
   const initializeDropSlots = useCallback((targetNumber: number) => {
     const digits = targetNumber.toString().length
     const slots: DropSlot[] = []
@@ -157,10 +152,10 @@ export const useFormaNumeroGigante = () => {
       })
     }
 
-    return slots.reverse() // Show from left to right (highest to lowest value)
+    return slots.reverse()
   }, [])
 
-  // Start new number challenge
+  // Comenzar nuevo número
   const startNewNumber = useCallback(() => {
     if (!currentTargetNumber) return
 
@@ -172,13 +167,13 @@ export const useFormaNumeroGigante = () => {
     setIsGameActive(true)
   }, [currentTargetNumber, initializeDropSlots])
 
-  // Handle drag start
+  // Manejar inicio de arrastre
   const handleDragStart = useCallback((digitCard: DigitCard) => {
     if (digitCard.isUsed) return
     draggedItem.current = digitCard
   }, [])
 
-  // Handle drop
+  // Manejar soltar
   const handleDrop = useCallback((slotPosition: number) => {
     if (!draggedItem.current) return
 
@@ -190,7 +185,6 @@ export const useFormaNumeroGigante = () => {
 
       if (!targetSlot) return prev
 
-      // If slot is occupied, return previous digit to available cards
       if (targetSlot.digit !== null) {
         setDigitCards((prevCards) =>
           prevCards.map((card) =>
@@ -199,12 +193,10 @@ export const useFormaNumeroGigante = () => {
         )
       }
 
-      // Place the new digit
       targetSlot.digit = draggedDigit.digit
       return newSlots
     })
 
-    // Mark digit as used
     setDigitCards((prev) =>
       prev.map((card) => (card.id === draggedDigit.id ? { ...card, isUsed: true, position: slotPosition } : card)),
     )
@@ -212,7 +204,7 @@ export const useFormaNumeroGigante = () => {
     draggedItem.current = null
   }, [])
 
-  // Check if number is complete and correct
+  // Verificar número
   const checkNumber = useCallback(() => {
     const formedNumber = dropSlots
       .sort((a, b) => b.position - a.position)
@@ -227,7 +219,7 @@ export const useFormaNumeroGigante = () => {
     return formedNum === currentTargetNumber
   }, [dropSlots, currentTargetNumber])
 
-  // Submit current number
+  // Enviar número
   const submitNumber = useCallback(() => {
     const isCorrect = checkNumber()
 
@@ -235,18 +227,17 @@ export const useFormaNumeroGigante = () => {
       setAciertos((prev) => prev + 1)
       showToast("¡Excelente!", `¡Formaste correctamente ${currentTargetNumber?.toLocaleString()}!`)
 
-      // Move to next number or complete level
+      // Mover al siguiente número o completar nivel
       if (currentNumberIndex < currentGameLevel.numbersPerLevel - 1) {
         setTimeout(() => {
           setCurrentNumberIndex((prev) => prev + 1)
         }, 1500)
       } else {
-        // Level complete
+        // Nivel completado
         setTimeout(() => {
-          setIsLevelComplete(true)
-          setIsGameActive(false)
-          setCompletedSets([{ id: currentLevel }])
+          setCompletedSets(prev => [...prev, currentLevel.toString()])
           showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
+          setIsGameActive(false)
         }, 1500)
       }
     } else {
@@ -255,99 +246,42 @@ export const useFormaNumeroGigante = () => {
     }
   }, [checkNumber, currentTargetNumber, currentNumberIndex, currentGameLevel, showToast, currentLevel])
 
-  // Clear current number
+  // Limpiar número
   const clearNumber = useCallback(() => {
     setDropSlots((prev) => prev.map((slot) => ({ ...slot, digit: null })))
     setDigitCards((prev) => prev.map((card) => ({ ...card, isUsed: false, position: undefined })))
   }, [])
 
-  // Handle next level
+  // Siguiente nivel - SIGUIENDO EL PATRÓN DE useGameLogic
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < formaNumeroLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos((prev) => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setCurrentNumberIndex(0)
       setAciertos(0)
       setErrores(0)
-      setIsLevelComplete(false)
-      setCompletedSets([])
-      setRandomNumbers([]) // Resetear para generar nuevos números
+      setRandomNumbers([])
 
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${formaNumeroLevels[newLevel].name}`)
-
-      setTimeout(() => {
-        startNewNumber()
-      }, 1000)
-    } else {
-      setIsGameComplete(true)
-      detener()
+      showToast("¡Nuevo nivel desbloqueado! 🚀", `${formaNumeroLevels[currentLevel + 1].name}`)
     }
-  }, [currentLevel, aciertos, showToast, detener, startNewNumber])
+  }, [isLastLevel, aciertos, showToast, currentLevel])
 
-  // Handle restart
+  // Reiniciar juego
   const handleRestart = useCallback(() => {
     setCurrentLevel(0)
     setCurrentNumberIndex(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    setRandomNumbers([]) // Resetear números aleatorios
+    setRandomNumbers([])
 
     reiniciar()
     showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
+  }, [reiniciar, showToast])
 
-    setTimeout(() => {
-      startNewNumber()
-    }, 1000)
-  }, [reiniciar, showToast, startNewNumber])
-
-  // Results submission
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-      const intentos = aciertos + errores
-      const tiempoAEnviar = tiempo
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos,
-            errores,
-            tiempo: tiempoAEnviar,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempoAEnviar)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
-
-  // Modificar el useEffect de inicialización
+  // Efecto para generar números aleatorios cuando cambia el nivel
   useEffect(() => {
     if (currentGameLevel && randomNumbers.length === 0) {
       const newRandomNumbers = generateRandomNumbers(currentGameLevel.digits, currentGameLevel.numbersPerLevel)
@@ -355,7 +289,7 @@ export const useFormaNumeroGigante = () => {
     }
   }, [currentGameLevel, randomNumbers.length])
 
-  // Auto-start game
+  // Efecto para iniciar nuevo número cuando cambia el índice
   useEffect(() => {
     if (currentTargetNumber && !isGameActive && !isLevelComplete && !isGameComplete) {
       const timeout = setTimeout(() => {
@@ -366,25 +300,40 @@ export const useFormaNumeroGigante = () => {
     }
   }, [currentTargetNumber, isGameActive, isLevelComplete, isGameComplete, startNewNumber])
 
-  // Update when number index changes
+  // Efecto para manejar la finalización del juego
   useEffect(() => {
-    if (currentTargetNumber && isGameActive) {
-      startNewNumber()
+    if (isGameComplete) {
+      setTotalAciertos(prev => prev + aciertos)
+      setTiempoFinal(tiempo)
+      detener()
     }
-  }, [currentNumberIndex, currentTargetNumber, isGameActive, startNewNumber])
+  }, [isGameComplete, aciertos, tiempo, detener])
+
+  // Enviar resultados
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos: totalAciertos + aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   return {
-    // Core game state
+    // Estados del juego
     currentLevel,
     currentNumberIndex,
     digitCards,
     dropSlots,
     currentTargetNumber,
-    aciertos,
+    aciertos: totalAciertos + aciertos,
     errores,
     estrellas,
     completedSets,
-    totalAciertos,
+    totalAciertos: totalAciertos + aciertos,
     currentGameLevel,
     isLastLevel,
     isLevelComplete,
@@ -393,7 +342,7 @@ export const useFormaNumeroGigante = () => {
     gameContainerRef,
     tiempoFinal,
 
-    // Game actions
+    // Acciones del juego
     handleDragStart,
     handleDrop,
     submitNumber,
@@ -401,10 +350,10 @@ export const useFormaNumeroGigante = () => {
     handleNextLevel,
     handleRestart,
 
-    // Utility
+    // Utilidades
     checkNumber,
 
-    // Compatibility with existing interface
+    // Compatibilidad
     items: digitCards,
   }
 }

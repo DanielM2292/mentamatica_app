@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Brain, Star, Trophy, Clock, Settings, User, Volume2, Play, Pause, Coins } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
+import Monedas from "@/components/molecules/Monedas";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -69,6 +70,8 @@ export default function DashboardPage() {
     name: "Nombre/Apodo",
     totalStars: 0,
     totalCoins: 0,
+    streak: 0,
+    timeSpent: 0,
     level: 1,
   });
 
@@ -534,14 +537,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Contenedor de monedas */}
-          <div className={`flex items-center gap-1 bg-amber-100 ${isSmallMobile ? 'px-1.5 py-1' : 'px-2 sm:px-3 lg:px-4 py-1 sm:py-2'} rounded-full`}>
-            <Coins
-              className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'} text-amber-600`}
-            />
-            <span ref={coinsCounterRef} className={`font-bold text-amber-700 ${isSmallMobile ? 'text-xs' : 'text-sm sm:text-base'}`}>
-              0
-            </span>
-          </div>
+          {user && <Monedas userId={user.id} isVisible={true} />}
 
           {/* Botón de Configuración */}
           <Link href="/settings">

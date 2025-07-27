@@ -40,6 +40,7 @@ const GameWrapper = () => {
     <GamesTemplate>
       <div className="max-w-6xl mx-auto pt-4">
         <GameHeader
+          nav="/modules/conjuntos"
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}

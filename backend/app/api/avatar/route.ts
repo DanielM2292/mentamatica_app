@@ -11,14 +11,27 @@ export async function GET(request: Request) {
 
   try {
     if (usuarioId) {
+      const opciones_guardadas = await avatarQueries.obtenerOpcionesActivas(usuarioId);
+
+      const opciones_enviar: Record<string, any> = {};
+
+      for (const opcion of opciones_guardadas) {
+        const categoria = await avatarQueries.obtenerId_api(opcion.categoria_id as string);
+        const opc = await avatarQueries.obtenerOpcionEspecial(opcion.categoria_id as string, opcion.opcion_id as string);
+
+        if (categoria) {
+          opciones_enviar[categoria as string] = opc;
+        }
+      }
+
       const opciones_desbloqueadas = await usuarioQueries.obtenerOpcionesDesbloqueadas(usuarioId);
       const monedas = await usuarioQueries.obtenerMonedas(usuarioId);
 
-      if (!opciones_desbloqueadas || !monedas) {
+      if (!opciones_desbloqueadas || !monedas || !opciones_enviar) {
         return withCors({ error: "Usuario no encontrado o sin datos" }, 404);
       }
 
-      return withCors({ success: true, monedas, opciones_desbloqueadas }, 200);
+      return withCors({ success: true, monedas, opciones_desbloqueadas, opciones_enviar }, 200);
     }
 
     if (getCategorias) {
@@ -28,9 +41,8 @@ export async function GET(request: Request) {
 
     if (getOpciones) {
       const id_categoria_resultado = await avatarQueries.obtenerIdCategoria(getOpciones);
-      const id_categoria = id_categoria_resultado[0].categoria_id;      
+      const id_categoria = id_categoria_resultado[0].categoria_id;
       const opciones = await avatarQueries.obtenerOpciones(id_categoria);
-      console.log("Categorias obtenidas:", opciones);
       return withCors({ success: true, opciones }, 200);
     }
 
@@ -43,7 +55,34 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userId, categoriaId, optionId, costo } = body;
+    const { userId, categoriaId, optionId, costo, opciones_guardar } = body;
+
+    // Si estás guardando personalización completa
+    if (opciones_guardar && typeof opciones_guardar === 'object') {
+      if (!userId) {
+        return withCors({ error: 'Falta userId para guardar opciones' }, 400);
+      }
+      // Obtiene las opciones de cada categoría que se van a guardar en la base de datos
+      // con el for va a recorrer todas las categorias que el usuario quiere guardar
+      const entradas = Object.entries(opciones_guardar);
+
+      for (const [clave, valor] of entradas) {
+        // Primero con el nombre de la categoria(clave) saca el id y con ese id junto con el valor de la opcion
+        // obtiene el id_opcion que son datos clave para acutalizar los estados en el avatar_personalizado
+        const id_categoria = await avatarQueries.obtenerIdCategoria(clave);
+        const data = await avatarQueries.obtenerOpcionCategoria(id_categoria[0].categoria_id, valor as string);
+
+        if (!data || data.length === 0) {
+          return withCors({ error: 'Opción no encontrada' }, 404);
+        }
+        // Actualiza el estado a inactivo de todas las opciones de la categoria que el usuario quiere guardar
+        // y por ultimo se va a la opcion especifica que el usuario quiere guardar y la actualiza a activo
+        await avatarQueries.actualizarOpcion(userId, id_categoria[0].categoria_id as string);
+        await avatarQueries.guardarOpciones(userId, id_categoria[0].categoria_id as string, data[0].opcion_id);
+      }
+
+      return withCors({ success: true, message: "Avatar actualizado correctamente" });
+    }
 
     if (!userId || !optionId || costo == null || !categoriaId) {
       return withCors({ error: 'Faltan datos obligatorios' }, 400);
@@ -51,7 +90,6 @@ export async function POST(request: Request) {
 
     const yaDesbloqueada = await avatarQueries.validarOpcion(userId, optionId);
     if (yaDesbloqueada.success === true) {
-      console.log(`La opción ${optionId} ya estaba desbloqueada para el usuario ${userId}`);
       return withCors({
         error: 'La opción ya está desbloqueada',
         yaDesbloqueada: true
@@ -80,6 +118,8 @@ export async function POST(request: Request) {
     await transaccionesQueries.registarTransaccion(transacciones)
 
     return withCors({ success: true });
+
+
   } catch (error) {
     console.error('Error en el endpoint POST /api/avatar:', error);
     return withCors({ error: 'Error en el servidor' }, 500);

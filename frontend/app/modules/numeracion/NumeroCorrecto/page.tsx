@@ -7,7 +7,6 @@ import AreaJuegoGlobos from "@/components/organisms/AreaJuegoGlobos"
 import { useNumeroCorrect } from "@/hooks/numeracion/useNumeroCorrect"
 import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
-import { Sparkles } from "lucide-react"
 
 const Page = () => {
   return (
@@ -43,18 +42,19 @@ const GameWrapper = () => {
       {/* Contenido Principal */}
       <div className="max-w-6xl mx-auto px-4 py-4">
         <GameHeader
+          nav="/modules/numeracion"
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}
           imagen="/images/icons/numeracion.png"
-            name="Numero Correcto"
-          totalSets={currentGameLevel?.sets?.length || 1}
+          name="Numero Correcto"
+          totalSets={currentGameLevel.maxNumber || 1}
           level={currentLevel + 1}
           totalAciertos={totalAciertos + aciertos}
         />
 
         <TiempoJuego position="top-right" formato="minutos" />
-        <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel} />
+        <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
 
         {/* Área de Juego con altura fija para evitar interferencia con footer */}
         <div className="pb-20">

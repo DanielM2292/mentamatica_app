@@ -28,9 +28,9 @@ const GameWrapper = () => {
     constructionState,
     aciertos,
     errores,
+    onprogress,
     figuresCompleted,
     estrellas,
-    progress,
     completedSets,
     totalAciertos,
     currentGameLevel,
@@ -164,10 +164,11 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-6xl mx-auto pt-2 sm:pt-4 relative z-10 px-2 sm:px-4">
           <GameHeader
+            nav="/modules/geometria"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
-            imagen="/images/icons/geometry.png"
+            imagen="/images/icons/geometria.png"
             name="Construye tu Figura"
             totalSets={currentGameLevel?.figuresPerLevel || 1}
             level={currentLevel + 1}
@@ -307,7 +308,7 @@ const GameWrapper = () => {
                           <Wrench className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
                           <span className="font-bold text-purple-800 text-xs sm:text-sm">Progreso</span>
                         </div>
-                        <div className="text-sm sm:text-lg font-bold text-purple-700">{Math.round(progress)}%</div>
+                        <div className="text-sm sm:text-lg font-bold text-purple-700">{Math.round(onprogress)}%</div>
                       </div>
                     </div>
                     
@@ -316,7 +317,7 @@ const GameWrapper = () => {
                         <div
                           ref={progressBarRef}
                           className="bg-gradient-to-r from-blue-500 via-green-500 to-purple-500 h-full rounded-full transition-all duration-1000 animate-glow-construction"
-                          style={{ width: `${progress}%` }}
+                          style={{ width: `${onprogress}%` }}
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
                         </div>

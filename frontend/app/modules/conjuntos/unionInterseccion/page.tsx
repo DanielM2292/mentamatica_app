@@ -40,6 +40,7 @@ const GameWrapper = () => {
     <GamesTemplate>
       <div className="max-w-6xl mx-auto pt-4">
         <GameHeader
+          nav="/modules/conjuntos"
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}
@@ -51,7 +52,7 @@ const GameWrapper = () => {
         />
 
         <TiempoJuego position="top-right" formato="minutos" />
-        <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel} />
+        <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
 
         {isGameComplete ? (
           <JuegoCompletado aciertos={aciertos} estrellas={estrellas} onRestart={handleRestart} />
@@ -60,7 +61,7 @@ const GameWrapper = () => {
         ) : (
           <AreaJuego
             items={items as any}
-            currentGameLevel={currentGameLevel}
+            currentGameLevel={currentGameLevel as any}
             completedSets={completedSets}
             onDragStart={handleDragStart}
             onDrop={handleDrop}

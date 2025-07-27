@@ -1,54 +1,71 @@
 "use client";
+
 import React from 'react';
 import { GameBoard } from '@/components/organisms/GameBoard';
-import { Button } from '@/components/ui/button';
-import { RotateCcw, Trophy } from 'lucide-react';
-import { useGameLogic } from '@/hooks/suma/useGameLogic';
+import GamesTemplate from '@/components/templates/suma/GamesTemplate';
+import { useSumandoEstrellas } from '@/hooks/suma/useSumandoEstrellas';
+import { TimerProvider } from "@/context/timer-context";
+import JuegoCompletado from '@/components/organisms/JuegoCompletado';
+import GameHeader from '@/components/molecules/GameHeader';
+import TiempoJuego from '@/components/molecules/TiempoJuego';
+import InformacionNivel from '@/components/molecules/InformacionNivel';
+import NivelCompletado from '@/components/organisms/NivelCompletado';
 
-const Index = () => {
-  const { gameState, handleAnswer, resetGame } = useGameLogic();
+const Page = () => (
+  <TimerProvider>
+    <GameWrapper />
+  </TimerProvider>
+);
 
-  if (gameState.gameCompleted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-orange-200 to-red-200 flex items-center justify-center p-4">
-        <div className="text-center bg-white rounded-3xl p-8 shadow-2xl animate-scale-in">
-          <Trophy className="w-24 h-24 text-yellow-500 mx-auto mb-4 animate-bounce" />
-          <h1 className="text-4xl font-bold text-green-600 mb-4">
-            ¡Felicitaciones! 🎉
-          </h1>
-          <p className="text-xl text-gray-700 mb-2">
-            Has completado todos los niveles
-          </p>
-          <p className="text-lg text-gray-600 mb-6">
-            Total de errores: {gameState.errors}
-          </p>
-          <Button 
-            onClick={resetGame}
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-full text-lg font-bold"
-          >
-            <RotateCcw className="w-5 h-5 mr-2" />
-            Jugar de Nuevo
-          </Button>
-        </div>
-      </div>
-    );
-  }
+const GameWrapper = () => {
+  const { gameState, handleAnswer, levelUpPending, isLastLevel, handleNextLevel, resetGame, estrellas } = useSumandoEstrellas();
 
   return (
-    <GameBoard
-      number1={gameState.number1}
-      number2={gameState.number2}
-      result={gameState.result}
-      options={gameState.options}
-      level={gameState.level}
-      correctAnswers={gameState.correctAnswers}
-      errors={gameState.errors}
-      totalQuestions={gameState.totalQuestions}
-      onAnswer={handleAnswer}
-      selectedAnswer={gameState.selectedAnswer}
-      showResult={gameState.showResult}
-    />
+    <GamesTemplate>
+      <div className="max-w-6xl mx-auto pt-4">
+        <GameHeader
+          nav="/modules/suma"
+          aciertos={gameState.correctAnswers}
+          errores={gameState.errors}
+          completedSets={gameState.currentPosition}
+          imagen="/images/icons/suma.png"
+          name="Sumando Estrellas"
+          totalSets={gameState.totalQuestions}
+          level={gameState.level}
+          totalAciertos={gameState.correctAnswers}
+        />
+
+        <TiempoJuego position="top-right" formato="minutos" />
+        <InformacionNivel currentLevel={gameState.level} gameLevel={gameState.level as any} />
+
+        {gameState.gameCompleted ? (
+          <JuegoCompletado aciertos={gameState.correctAnswers} estrellas={estrellas} onRestart={resetGame} />
+        ) : levelUpPending ? (
+          <NivelCompletado
+              aciertos={gameState.correctAnswers}
+              nivel={gameState.level + 1}
+              isLastLevel={isLastLevel}
+              onNextLevel={handleNextLevel}
+              onRestart={resetGame}
+            />
+        ) : (
+          <GameBoard
+            number1={gameState.number1}
+            number2={gameState.number2}
+            result={gameState.result}
+            options={gameState.options}
+            level={gameState.level}
+            correctAnswers={gameState.correctAnswers}
+            errors={gameState.errors}
+            totalQuestions={gameState.totalQuestions}
+            onAnswer={handleAnswer}
+            selectedAnswer={gameState.selectedAnswer}
+            showResult={gameState.showResult}
+          />
+        )}
+      </div>
+    </GamesTemplate>
   );
 };
 
-export default Index;
+export default Page;

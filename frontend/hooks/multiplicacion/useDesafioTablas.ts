@@ -1,9 +1,12 @@
+"use client"
+
 import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
-// Configuración de niveles basada en desarrollo cognitivo
 const desafioTablasLevels = [
   {
     name: "Nivel 1 - Tablas Básicas",
@@ -12,7 +15,6 @@ const desafioTablasLevels = [
     tables: [2, 3],
     maxMultiplier: 5,
     problemsPerLevel: 8,
-    timeLimit: 90,
   },
   {
     name: "Nivel 2 - Tablas Intermedias",
@@ -21,7 +23,6 @@ const desafioTablasLevels = [
     tables: [2, 3, 4],
     maxMultiplier: 7,
     problemsPerLevel: 10,
-    timeLimit: 120,
   },
   {
     name: "Nivel 3 - Desafío Completo",
@@ -30,7 +31,6 @@ const desafioTablasLevels = [
     tables: [2, 3, 4, 5],
     maxMultiplier: 10,
     problemsPerLevel: 12,
-    timeLimit: 150,
   },
 ]
 
@@ -45,18 +45,6 @@ interface TableCell {
   isActive: boolean
 }
 
-interface Problem {
-  multiplicand: number
-  multiplier: number
-  result: number
-  expression: string
-}
-
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
-// Función para generar problemas únicos
 const generateUniqueProblems = (level: any, count: number): TableCell[] => {
   const problems: TableCell[] = []
   const usedProblems = new Set<string>()
@@ -81,7 +69,6 @@ const generateUniqueProblems = (level: any, count: number): TableCell[] => {
     }
   }
   
-  // Activar primera celda
   if (problems.length > 0) {
     problems[0].isActive = true
   }
@@ -94,45 +81,44 @@ export const useDesafioTablas = () => {
   const { user } = useUser()
   const { iniciar, detener, reiniciar, tiempo } = useTimer()
 
-  // Core game state
+  // Estados del juego
   const [currentLevel, setCurrentLevel] = useState(0)
   const [tableCells, setTableCells] = useState<TableCell[]>([])
   const [currentCellIndex, setCurrentCellIndex] = useState(0)
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [completedCells, setCompletedCells] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
-  const [completedSets, setCompletedSets] = useState<any[]>([])
+  const [completedSets, setCompletedSets] = useState<string[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
-  const [timeRemaining, setTimeRemaining] = useState(0)
   const [streak, setStreak] = useState(0)
   const [maxStreak, setMaxStreak] = useState(0)
   const [inputValue, setInputValue] = useState("")
+  const [isGameActive, setIsGameActive] = useState(true)
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Computed values
+  // Valores calculados
   const currentGameLevel = desafioTablasLevels[currentLevel]
-  const isLastLevel = currentLevel >= desafioTablasLevels.length - 1
+  const isLastLevel = currentLevel === desafioTablasLevels.length - 1
+  const isLevelComplete = completedSets.includes(currentLevel.toString())
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
-  const progress = (completedCells / currentGameLevel.problemsPerLevel) * 100
+  const progress = (completedCells / currentGameLevel?.problemsPerLevel) * 100 || 0
   const currentCell = tableCells[currentCellIndex]
 
-  // Initialize timer
+  // Inicializar temporizador solo una vez al inicio del juego
   useEffect(() => {
     iniciar()
-  }, [iniciar])
+    return () => detener()
+  }, [iniciar, detener])
 
-  // Toast function
+  // Función para mostrar toast
   const showToast = useCallback(
     (title: string, description: string, variant?: "default" | "destructive") => {
       const now = Date.now()
@@ -155,31 +141,10 @@ export const useDesafioTablas = () => {
     [toast],
   )
 
-  // Generar celdas de tabla únicas
+  // Generar celdas de tabla
   const generateTableCells = useCallback((): TableCell[] => {
     return generateUniqueProblems(currentGameLevel, currentGameLevel.problemsPerLevel)
   }, [currentGameLevel])
-
-  // Inicializar timer del nivel
-  const initializeLevelTimer = useCallback(() => {
-    setTimeRemaining(currentGameLevel.timeLimit)
-    
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
-    }
-    
-    timerRef.current = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          // Tiempo agotado
-          setIsGameActive(false)
-          showToast("⏰ Tiempo Agotado", "¡Inténtalo de nuevo!", "destructive")
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-  }, [currentGameLevel, showToast])
 
   // Manejar respuesta
   const handleAnswer = useCallback((answer: string) => {
@@ -188,7 +153,6 @@ export const useDesafioTablas = () => {
     const numericAnswer = parseInt(answer)
     const isCorrect = numericAnswer === currentCell.result
 
-    // Actualizar celda actual
     setTableCells(prev => prev.map((cell, index) => 
       index === currentCellIndex 
         ? { ...cell, userAnswer: answer, isCorrect, isCompleted: true, isActive: false }
@@ -197,7 +161,6 @@ export const useDesafioTablas = () => {
 
     if (isCorrect) {
       setAciertos(prev => prev + 1)
-      setCompletedCells(prev => prev + 1)
       setStreak(prev => prev + 1)
       setMaxStreak(prev => Math.max(prev, streak + 1))
       
@@ -225,16 +188,13 @@ export const useDesafioTablas = () => {
     }
 
     setInputValue("")
+    setCompletedCells(prev => prev + 1)
 
     // Verificar si el nivel está completo
     if (completedCells + 1 >= currentGameLevel.problemsPerLevel) {
       setTimeout(() => {
-        setIsLevelComplete(true)
+        setCompletedSets(prev => [...prev, currentLevel.toString()])
         setIsGameActive(false)
-        setCompletedSets([{ id: currentLevel }])
-        if (timerRef.current) {
-          clearInterval(timerRef.current)
-        }
         showToast("¡Nivel Completado! 🏆", "¡Dominaste las tablas!")
       }, 1000)
     } else {
@@ -246,61 +206,48 @@ export const useDesafioTablas = () => {
           index === nextIndex ? { ...cell, isActive: true } : cell
         ))
         
-        // Focus en input
         if (inputRef.current) {
           inputRef.current.focus()
         }
       }, 1500)
     }
-  }, [currentCell, isGameActive, currentCellIndex, completedCells, currentGameLevel, currentLevel, streak, showToast])
+  }, [currentCell, currentCellIndex, completedCells, currentGameLevel, currentLevel, streak, showToast, isGameActive])
 
   // Manejar input
   const handleInputChange = useCallback((value: string) => {
-    // Solo permitir números
-    const numericValue = value.replace(/[^0-9]/g, '')
-    setInputValue(numericValue)
+    setInputValue(value.replace(/[^0-9]/g, ''))
   }, [])
 
   // Manejar envío de respuesta
   const handleSubmit = useCallback(() => {
-    if (inputValue.trim() !== "") {
+    if (inputValue.trim() !== "" && isGameActive) {
       handleAnswer(inputValue)
     }
-  }, [inputValue, handleAnswer])
+  }, [inputValue, handleAnswer, isGameActive])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < desafioTablasLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos(prev => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setCompletedCells(0)
       setCurrentCellIndex(0)
       setAciertos(0)
       setErrores(0)
       setStreak(0)
-      setIsLevelComplete(false)
-      setCompletedSets([])
       setInputValue("")
       
-      const newCells = generateUniqueProblems(desafioTablasLevels[newLevel], desafioTablasLevels[newLevel].problemsPerLevel)
+      const newCells = generateUniqueProblems(desafioTablasLevels[currentLevel + 1], 
+        desafioTablasLevels[currentLevel + 1].problemsPerLevel)
       setTableCells(newCells)
       setIsGameActive(true)
-      initializeLevelTimer()
 
-      showToast("¡Nuevo Desafío! ⚡", `${desafioTablasLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
+      showToast("¡Nuevo Desafío! ⚡", `${desafioTablasLevels[currentLevel + 1].name}`)
     }
-  }, [currentLevel, aciertos, initializeLevelTimer, showToast, detener])
+  }, [isLastLevel, aciertos, currentLevel, showToast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
-    }
-    
     setCurrentLevel(0)
     setCompletedCells(0)
     setCurrentCellIndex(0)
@@ -308,21 +255,20 @@ export const useDesafioTablas = () => {
     setErrores(0)
     setStreak(0)
     setMaxStreak(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
     setInputValue("")
     
-    const newCells = generateUniqueProblems(desafioTablasLevels[0], desafioTablasLevels[0].problemsPerLevel)
+    const newCells = generateUniqueProblems(desafioTablasLevels[0], 
+      desafioTablasLevels[0].problemsPerLevel)
     setTableCells(newCells)
     setIsGameActive(true)
-    initializeLevelTimer()
 
     reiniciar()
+    iniciar()
     showToast("¡Nueva Partida! 🔄", "¡A por las tablas!")
-  }, [initializeLevelTimer, reiniciar, showToast])
+  }, [reiniciar, iniciar, showToast])
 
   // Inicializar juego
   useEffect(() => {
@@ -330,93 +276,74 @@ export const useDesafioTablas = () => {
       const newCells = generateTableCells()
       setTableCells(newCells)
       setIsGameActive(true)
-      initializeLevelTimer()
     }
-  }, [currentGameLevel, tableCells.length, generateTableCells, initializeLevelTimer])
+  }, [currentGameLevel, tableCells.length, generateTableCells])
 
-  // Focus en input cuando se activa
+  // Focus en input cuando cambia la celda activa
   useEffect(() => {
-    if (isGameActive && inputRef.current) {
+    if (inputRef.current && currentCell?.isActive && isGameActive) {
       inputRef.current.focus()
+      inputRef.current.select()
     }
-  }, [isGameActive, currentCellIndex])
+  }, [currentCell, isGameActive])
 
-  // Enviar resultados
+  // Manejar finalización del juego
   useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
+    if (isGameComplete && !tiempoFinal) {
+      setTotalAciertos(prev => prev + aciertos)
+      setTiempoFinal(tiempo)
       detener()
-      enviarResultados()
+      showToast("¡Juego Completado! 🎉", "¡Felicidades por completar todos los niveles!")
     }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
+  }, [isGameComplete, aciertos, tiempo, detener, tiempoFinal, showToast])
 
-  // Cleanup
+  // Limpieza
   useEffect(() => {
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current)
-      }
       animationTimeouts.current.forEach(timeout => clearTimeout(timeout))
     }
   }, [])
 
+  // Enviar resultados usando el hook personalizado
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos: totalAciertos + aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
+
   return {
-    // Core game state
+    // Estados del juego
     currentLevel,
     tableCells,
     currentCell,
     currentCellIndex,
     aciertos,
     errores,
+    isGameActive,
     completedCells,
     streak,
     maxStreak,
     estrellas,
     progress,
     completedSets,
-    totalAciertos,
+    totalAciertos: totalAciertos + aciertos,
     currentGameLevel,
     isLastLevel,
     isLevelComplete,
     isGameComplete,
-    isGameActive,
-    timeRemaining,
+    timeRemaining: 0, // Ya no se usa
     inputValue,
     gameContainerRef,
     inputRef,
     tiempoFinal,
 
-    // Game actions
+    // Acciones del juego
     handleInputChange,
     handleSubmit,
     handleNextLevel,

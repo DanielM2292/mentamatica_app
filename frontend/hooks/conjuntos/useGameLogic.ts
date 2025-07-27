@@ -8,7 +8,6 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 import { useTimer } from '@/context/timer-context';
 import { useEnviarResultados } from '../useEnviarResultados';
 
-
 export const useGameLogic = () => {
   const { toast } = useToast();
   const [currentLevel, setCurrentLevel] = useState(0);

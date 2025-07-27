@@ -5,6 +5,7 @@ export default authMiddleware({
   // Rutas públicas que no requieren autenticación
   publicRoutes: [
     '/',
+    '/api/metricas',
   ],
   
   // Rutas que siempre serán protegidas

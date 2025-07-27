@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from '@/services/convertidorEstrellas';
 
 // Configuración de niveles
 const construccionLevels = [
@@ -117,10 +119,6 @@ interface ConstructionState {
   currentConnections: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 export const useConstruyeFigura = () => {
   const { toast } = useToast()
   const { user } = useUser()
@@ -139,9 +137,6 @@ export const useConstruyeFigura = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [figuresCompleted, setFiguresCompleted] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -165,8 +160,10 @@ export const useConstruyeFigura = () => {
   // Computed values
   const currentGameLevel = construccionLevels[currentLevel]
   const isLastLevel = currentLevel >= construccionLevels.length - 1
+  const isLevelComplete = figuresCompleted >= currentGameLevel.figuresPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
-  const progress = (figuresCompleted / currentGameLevel.figuresPerLevel) * 100
+  const isGameActive = !isLevelComplete && !isGameComplete
 
   // Detectar dispositivo táctil
   useEffect(() => {
@@ -179,10 +176,32 @@ export const useConstruyeFigura = () => {
     return () => window.removeEventListener('resize', checkTouchDevice)
   }, [])
 
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
+
   // Initialize timer
   useEffect(() => {
     iniciar()
   }, [iniciar])
+
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      setIsTouchDevice(hasTouch)
+    }
+    checkTouchDevice()
+    window.addEventListener('resize', checkTouchDevice)
+    return () => window.removeEventListener('resize', checkTouchDevice)
+  }, [])
 
   // Mensajes de aliento
   const encouragementMessages = [
@@ -265,7 +284,7 @@ export const useConstruyeFigura = () => {
   const generateConstructionArea = useCallback(() => {
     const level = currentGameLevel
     const targetFigures = level.targetFigures
-    const targetFigure = targetFigures[Math.floor(Math.random() * targetFigures.length)]
+    const targetFigure = targetFigures[Math.floor(Math.random() * targetFigures.length)] as keyof typeof figureTemplates
     const template = figureTemplates[targetFigure]
     
     const points: Point[] = []
@@ -416,12 +435,8 @@ export const useConstruyeFigura = () => {
           
           // Verificar si el nivel está completo
           if (figuresCompleted + 1 >= currentGameLevel.figuresPerLevel) {
-            setTimeout(() => {
-              setIsLevelComplete(true)
-              setIsGameActive(false)
-              setCompletedSets([{ id: currentLevel }])
-              showToast("¡Nivel Completado! 🏆", "¡Eres un constructor increíble!")
-            }, 1500)
+            setCompletedSets([{ id: currentGameLevel.figuresPerLevel }])
+            showToast("¡Nivel Completado! 🏆", "¡Eres un constructor increíble!")
           } else {
             // Nueva figura
             setTimeout(() => {
@@ -496,15 +511,10 @@ export const useConstruyeFigura = () => {
       setFiguresCompleted(0)
       setAciertos(0)
       setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
-      setIsGameActive(true)
 
       generateConstructionArea()
       showToast("¡Nuevo Desafío! 🔧", `${construccionLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
     }
   }, [currentLevel, aciertos, generateConstructionArea, showToast, detener])
 
@@ -514,12 +524,9 @@ export const useConstruyeFigura = () => {
     setFiguresCompleted(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    setIsGameActive(true)
     setCelebrationParticles([])
     setConstructionSparkles([])
 
@@ -532,47 +539,8 @@ export const useConstruyeFigura = () => {
   useEffect(() => {
     if (currentGameLevel && constructionState.points.length === 0) {
       generateConstructionArea()
-      setIsGameActive(true)
     }
   }, [currentGameLevel, constructionState.points.length, generateConstructionArea])
-
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const actividad = "construye-figura"
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/geometria`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {
@@ -589,7 +557,7 @@ export const useConstruyeFigura = () => {
     errores,
     figuresCompleted,
     estrellas,
-    progress,
+    onprogress,
     completedSets,
     totalAciertos,
     currentGameLevel,

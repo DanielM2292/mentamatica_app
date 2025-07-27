@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from '@/services/convertidorEstrellas';
 
 // Configuración de niveles basada en narrativa pirata
 const divisionTesoroLevels = [
@@ -66,10 +68,6 @@ interface Pirate {
   expectedCoins: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 // Piratas adorables
 const pirates = [
   { name: "Capitán Barba", emoji: "🏴‍☠️", color: "from-red-400 to-red-600" },
@@ -109,8 +107,6 @@ export const useDivisionTesoro = () => {
   const [errores, setErrores] = useState(0)
   const [problemsCompleted, setProblemsCompleted] = useState(0)
   const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -129,9 +125,24 @@ export const useDivisionTesoro = () => {
   // Computed values
   const currentGameLevel = divisionTesoroLevels[currentLevel]
   const isLastLevel = currentLevel >= divisionTesoroLevels.length - 1
+  const isLevelComplete = problemsCompleted >= currentGameLevel.problemsPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
   const progress = (problemsCompleted / currentGameLevel.problemsPerLevel) * 100
   const currentTreasureType = treasureTypes[selectedTreasure]
+
+  // Enviar resultados
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Initialize timer
   useEffect(() => {
@@ -165,17 +176,17 @@ export const useDivisionTesoro = () => {
   const generateProblem = useCallback((): Problem => {
     const level = currentGameLevel
     const divisor = level.divisors[Math.floor(Math.random() * level.divisors.length)]
-    
+
     // Generar dividendo que sea divisible exactamente
     const quotient = Math.floor(Math.random() * (level.maxDividend / divisor)) + 1
     const dividend = divisor * quotient
-    
+
     const treasure = treasureTypes[selectedTreasure]
     const storyTemplate = storyTemplates[Math.floor(Math.random() * storyTemplates.length)]
     const story = storyTemplate
       .replace("{dividend}", dividend.toString())
       .replace("{treasure}", treasure.name)
-    
+
     return {
       dividend,
       divisor,
@@ -189,7 +200,7 @@ export const useDivisionTesoro = () => {
   // Generar piratas
   const generatePirates = useCallback((problem: Problem) => {
     const pirateList: Pirate[] = []
-    
+
     for (let i = 0; i < problem.divisor; i++) {
       const pirate = pirates[i]
       pirateList.push({
@@ -201,14 +212,14 @@ export const useDivisionTesoro = () => {
         expectedCoins: problem.quotient,
       })
     }
-    
+
     return pirateList
   }, [])
 
   // Generar mapas del tesoro
   const generateTreasureMaps = useCallback(() => {
     const maps: TreasureMap[] = []
-    
+
     for (let i = 0; i < currentGameLevel.problemsPerLevel; i++) {
       const problem = generateProblem()
       maps.push({
@@ -225,7 +236,7 @@ export const useDivisionTesoro = () => {
         treasureType: treasureTypes[Math.floor(Math.random() * treasureTypes.length)].emoji,
       })
     }
-    
+
     return maps
   }, [currentGameLevel, generateProblem])
 
@@ -239,42 +250,38 @@ export const useDivisionTesoro = () => {
     if (isCorrect) {
       setAciertos(prev => prev + 1)
       setProblemsCompleted(prev => prev + 1)
-      
+
       // Actualizar mapa actual como completado
-      setTreasureMaps(prev => prev.map((map, index) => 
-        index === currentMapIndex 
+      setTreasureMaps(prev => prev.map((map, index) =>
+        index === currentMapIndex
           ? { ...map, isCompleted: true }
           : map
       ))
-      
+
       // Distribuir tesoro entre piratas
       setPiratesState(prev => prev.map(pirate => ({
         ...pirate,
         receivedCoins: currentProblem.quotient,
       })))
-      
+
       showToast("¡Tesoro Encontrado! 🏴‍☠️", `Cada pirata recibe ${currentProblem.quotient} ${currentTreasureType.name}`)
-      
+
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
-        setTimeout(() => {
-          setIsLevelComplete(true)
-          setIsGameActive(false)
-          setCompletedSets([{ id: currentLevel }])
-          showToast("¡Aventura Completada! 🏆", "¡Todos los tesoros han sido encontrados!")
-        }, 2000)
+        setCompletedSets([{ id: currentLevel }])
+        showToast("¡Aventura Completada! 🏆", "¡Todos los tesoros han sido encontrados!")
       } else {
         // Revelar siguiente mapa
         setTimeout(() => {
           const nextMapIndex = currentMapIndex + 1
           setCurrentMapIndex(nextMapIndex)
-          
-          setTreasureMaps(prev => prev.map((map, index) => 
-            index === nextMapIndex 
+
+          setTreasureMaps(prev => prev.map((map, index) =>
+            index === nextMapIndex
               ? { ...map, isRevealed: true }
               : map
           ))
-          
+
           const nextMap = treasureMaps[nextMapIndex]
           if (nextMap) {
             const newProblem = {
@@ -288,7 +295,7 @@ export const useDivisionTesoro = () => {
             setCurrentProblem(newProblem)
             setPiratesState(generatePirates(newProblem))
           }
-          
+
           setUserAnswer("")
           setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
         }, 2500)
@@ -298,6 +305,39 @@ export const useDivisionTesoro = () => {
       showToast("¡Pista Incorrecta! 🗺️", `El tesoro no está ahí. Intenta de nuevo.`, "destructive")
     }
   }, [currentProblem, currentMapIndex, problemsCompleted, currentGameLevel, currentLevel, treasureMaps, currentTreasureType, generatePirates, showToast])
+
+  // Manejar siguiente nivel
+  const handleNextLevel = useCallback(() => {
+    if (!isLastLevel) {
+      setTotalAciertos(prev => prev + aciertos)
+      setCurrentLevel(prev => prev + 1)
+      setProblemsCompleted(0)
+      setCurrentMapIndex(0)
+      setAciertos(0)
+      setErrores(0)
+      setUserAnswer("")
+
+      const newMaps = generateTreasureMaps()
+      setTreasureMaps(newMaps)
+
+      if (newMaps.length > 0) {
+        const firstMap = newMaps[0]
+        const newProblem = {
+          dividend: firstMap.dividend,
+          divisor: firstMap.divisor,
+          quotient: firstMap.quotient,
+          remainder: firstMap.remainder,
+          expression: `${firstMap.dividend} ÷ ${firstMap.divisor}`,
+          story: firstMap.clue,
+        }
+        setCurrentProblem(newProblem)
+        setPiratesState(generatePirates(newProblem))
+      }
+
+      setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
+      showToast("¡Nueva Aventura! 🏴‍☠️", `${divisionTesoroLevels[currentLevel + 1].name}`)
+    }
+  }, [isLastLevel, aciertos, generateTreasureMaps, generatePirates, showToast, detener])
 
   // Manejar input
   const handleInputChange = useCallback((value: string) => {
@@ -320,47 +360,6 @@ export const useDivisionTesoro = () => {
     }
   }, [showHint, currentProblem, showToast])
 
-  // Manejar siguiente nivel
-  const handleNextLevel = useCallback(() => {
-    if (currentLevel < divisionTesoroLevels.length - 1) {
-      const newLevel = currentLevel + 1
-      setTotalAciertos(prev => prev + aciertos)
-      setCurrentLevel(newLevel)
-      setProblemsCompleted(0)
-      setCurrentMapIndex(0)
-      setAciertos(0)
-      setErrores(0)
-      setIsLevelComplete(false)
-      setCompletedSets([])
-      setUserAnswer("")
-      
-      const newMaps = generateTreasureMaps()
-      setTreasureMaps(newMaps)
-      
-      if (newMaps.length > 0) {
-        const firstMap = newMaps[0]
-        const newProblem = {
-          dividend: firstMap.dividend,
-          divisor: firstMap.divisor,
-          quotient: firstMap.quotient,
-          remainder: firstMap.remainder,
-          expression: `${firstMap.dividend} ÷ ${firstMap.divisor}`,
-          story: firstMap.clue,
-        }
-        setCurrentProblem(newProblem)
-        setPiratesState(generatePirates(newProblem))
-      }
-      
-      setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
-      setIsGameActive(true)
-
-      showToast("¡Nueva Aventura! 🏴‍☠️", `${divisionTesoroLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
-    }
-  }, [currentLevel, aciertos, generateTreasureMaps, generatePirates, showToast, detener])
-
   // Reiniciar juego
   const handleRestart = useCallback(() => {
     setCurrentLevel(0)
@@ -368,16 +367,14 @@ export const useDivisionTesoro = () => {
     setCurrentMapIndex(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
     setUserAnswer("")
-    
+
     const newMaps = generateTreasureMaps()
     setTreasureMaps(newMaps)
-    
+
     if (newMaps.length > 0) {
       const firstMap = newMaps[0]
       const newProblem = {
@@ -391,7 +388,7 @@ export const useDivisionTesoro = () => {
       setCurrentProblem(newProblem)
       setPiratesState(generatePirates(newProblem))
     }
-    
+
     setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
     setIsGameActive(true)
 
@@ -404,7 +401,7 @@ export const useDivisionTesoro = () => {
     if (currentGameLevel && treasureMaps.length === 0) {
       const newMaps = generateTreasureMaps()
       setTreasureMaps(newMaps)
-      
+
       if (newMaps.length > 0) {
         const firstMap = newMaps[0]
         const newProblem = {
@@ -418,7 +415,7 @@ export const useDivisionTesoro = () => {
         setCurrentProblem(newProblem)
         setPiratesState(generatePirates(newProblem))
       }
-      
+
       setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
       setIsGameActive(true)
     }
@@ -430,45 +427,6 @@ export const useDivisionTesoro = () => {
       inputRef.current.focus()
     }
   }, [isGameActive, currentMapIndex])
-
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {

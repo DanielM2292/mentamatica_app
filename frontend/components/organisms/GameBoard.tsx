@@ -31,25 +31,20 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   showResult
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-200 via-purple-200 to-pink-200 p-4">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <GameStats 
-          level={level}
-          correctAnswers={correctAnswers}
-          errors={errors}
-          totalQuestions={totalQuestions}
-        />
-        
+    <div className="min-h-screen w-full rounded-xl flex items-center justify-center bg-gradient-to-br from-sky-200 via-purple-200 to-pink-200 p-4">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-xl p-6 md:p-10 space-y-8 animate-fade-in">
+
+        {/* Encabezado */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-purple-700 mb-2 animate-bounce">
+          <h1 className="text-3xl md:text-4xl font-bold text-purple-700 mb-2 animate-bounce">
             ¡Resuelve la Suma! ⭐
           </h1>
-          <p className="text-lg text-purple-600">
+          <p className="text-base md:text-lg text-purple-600">
             Elige la estrella con la respuesta correcta
           </p>
         </div>
 
-        <SumDisplay 
+        <SumDisplay
           number1={number1}
           number2={number2}
           result={result}
@@ -64,5 +59,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         />
       </div>
     </div>
+
   );
 };

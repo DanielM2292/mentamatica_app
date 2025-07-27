@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { gameLevels } from '@/public/data/conjuntos/gameLevelsUnion';
-import { UnifiedGameLevel, UnifiedGameItem } from '@/types/gameTypes';
+import { GameLevel, gameLevels } from '@/public/data/conjuntos/gameLevelsUnion';
+import { UnifiedGameItem } from '@/types/gameTypes';
 import { useUser } from '@clerk/nextjs';
 import { convertirErrores } from '@/services/convertidorEstrellas';
 import { useTimer } from '@/context/timer-context';
@@ -23,7 +23,7 @@ export const useGameUnion = () => {
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null);
   const dragItem = useRef<UnifiedGameItem | null>(null);
 
-  const currentGameLevel: UnifiedGameLevel = gameLevels[currentLevel];
+  const currentGameLevel: GameLevel = gameLevels[currentLevel];
   const isLastLevel = currentLevel === gameLevels.length - 1;
   const isLevelComplete = completedSets.length === currentGameLevel.sets.length;
   const isGameComplete = isLastLevel && isLevelComplete;

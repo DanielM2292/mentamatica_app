@@ -7,6 +7,7 @@ import Button from '../atoms/Button';
 import Link from 'next/link';
 
 interface GameHeaderProps {
+  nav: string;
   aciertos: number;
   errores: number;
   completedSets: number;
@@ -17,7 +18,7 @@ interface GameHeaderProps {
   totalAciertos?: number;
 }
 
-export default function GameHeader({ aciertos, errores, completedSets, imagen, name, totalSets, level = 1 }: GameHeaderProps) {
+export default function GameHeader({ nav, aciertos, errores, completedSets, imagen, name, totalSets, level = 1 }: GameHeaderProps) {
   const progress = (completedSets / totalSets) * 100;
   const headerRef = useRef<HTMLDivElement>(null);
   const brainRef = useRef<SVGSVGElement>(null);
@@ -109,7 +110,7 @@ export default function GameHeader({ aciertos, errores, completedSets, imagen, n
     <div ref={headerRef} className="bg-white rounded-3xl p-6 mb-8 shadow-xl border border-gray-200">
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-          <Link href="/modules/conjuntos">
+          <Link href={nav}>
             <Button
               icon={ArrowLeft}
               variant="ghost"

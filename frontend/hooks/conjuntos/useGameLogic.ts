@@ -8,7 +8,6 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 import { useTimer } from '@/context/timer-context';
 import { useEnviarResultados } from '../useEnviarResultados';
 
-
 export const useGameLogic = () => {
   const { toast } = useToast();
   const [currentLevel, setCurrentLevel] = useState(0);
@@ -94,6 +93,7 @@ export const useGameLogic = () => {
   };
 
   const handleRestart = () => {
+    setTiempoFinal(null);
     setCurrentLevel(0);
     setItems(gameLevels[0].items);
     setScore(0);
@@ -116,6 +116,18 @@ export const useGameLogic = () => {
   };
 
   const estrellas = convertirErrores(errores);
+
+  console.log("Data para el back", {
+    user: user ? { id: user.id } : {},
+    aciertos: totalAciertos + aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal,
+  });
 
   useEnviarResultados({
     user: user ? { id: user.id } : {},

@@ -128,6 +128,7 @@ export const useGameDetective = () => {
   };
 
   const handleRestart = () => {
+    setTiempoFinal(null);
     setCurrentLevel(0);
     setItems(gameLevels[0].items);
     setScore(0);

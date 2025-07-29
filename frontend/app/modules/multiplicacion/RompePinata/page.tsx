@@ -8,9 +8,8 @@ import { useRompePinata } from "@/hooks/multiplicacion/useRompePinata"
 import GamesTemplate from "@/components/templates/conjuntos/GamesTemplate"
 import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Star, Zap, Target, Gift, Sparkles, Crown, Trophy, Volume2, Gamepad2 } from "lucide-react"
+import { Star, Gift, Sparkles, Trophy, Gamepad2 } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const PinataGamePage = () => {
@@ -29,8 +28,6 @@ const GameWrapper = () => {
     aciertos,
     errores,
     piñatasRotas,
-    combo,
-    maxCombo,
     estrellas,
     progress,
     completedSets,
@@ -512,6 +509,7 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4 relative z-10">
           <GameHeader
+            nav="/modules/multiplicacion"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
@@ -530,18 +528,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-3 sm:mt-6 space-y-3 sm:space-y-6" ref={gameContainerRef}>

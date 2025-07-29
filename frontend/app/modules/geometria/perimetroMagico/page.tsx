@@ -10,7 +10,6 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Key, Lightbulb, Clock, Target, CheckCircle, Coins, Send, BookOpen, Zap, Sparkles, Smartphone, Hand } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -171,10 +170,11 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-6xl mx-auto pt-2 sm:pt-4 relative z-10 px-2 sm:px-4">
           <GameHeader
+            nav="/modules/geometria"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
-            imagen="/images/icons/geometry.png"
+            imagen="/images/icons/geometria.png"
             name="Perímetro Mágico"
             totalSets={currentGameLevel?.problemsPerLevel || 1}
             level={currentLevel + 1}
@@ -189,18 +189,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6" ref={gameContainerRef}>
@@ -306,8 +301,8 @@ const GameWrapper = () => {
                 </Card>
               )}
 
-              {/* Timer y tesoro */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Timer */}
+              <div className="gap-4 sm:gap-6">
                 <Card
                   className={`bg-white/95 backdrop-blur-lg border-4 border-red-400 shadow-2xl ${
                     animatedElements.has("progress") ? "animate-slide-treasure" : "opacity-0"
@@ -332,60 +327,6 @@ const GameWrapper = () => {
                         }`}
                         style={{ width: `${(roundTime / currentGameLevel.timeLimit) * 100}%` }}
                       />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card
-                  className={`bg-white/95 backdrop-blur-lg border-4 border-yellow-400 shadow-2xl ${
-                    animatedElements.has("progress") ? "animate-slide-treasure" : "opacity-0"
-                  }`}
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  <CardContent className="p-3 sm:p-6">
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-                      <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-xl p-2 sm:p-3 border-2 border-yellow-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <Target className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-600" />
-                          <span className="font-bold text-yellow-800 text-xs sm:text-sm">Cofres</span>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold text-yellow-700">
-                          {problemsCompleted}/{currentGameLevel?.problemsPerLevel}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-2 sm:p-3 border-2 border-green-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          <span className="font-bold text-green-800 text-xs sm:text-sm">Aciertos</span>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold text-green-700">{aciertos}</div>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-amber-100 to-amber-200 rounded-xl p-2 sm:p-3 border-2 border-amber-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <Coins className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
-                          <span className="font-bold text-amber-800 text-xs sm:text-sm">Tesoro</span>
-                        </div>
-                        <div 
-                          ref={treasureRef}
-                          className="text-sm sm:text-lg font-bold text-amber-700 animate-treasure-count"
-                        >
-                          {gameState.totalTreasure}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-2 sm:mt-3">
-                      <div className="relative w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
-                        <div
-                          ref={progressBarRef}
-                          className="bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 h-full rounded-full transition-all duration-1000 animate-glow-treasure"
-                          style={{ width: `${progress}%` }}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                        </div>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -473,7 +414,6 @@ const GameWrapper = () => {
                     {gameState.chests.map((chest, index) => (
                       <div
                         key={chest.id}
-                        ref={(el) => (chestsRefs.current[index] = el)}
                         className={`
                           relative p-3 sm:p-4 rounded-xl border-3 transition-all duration-500 touch-manipulation
                           ${chest.isUnlocked 

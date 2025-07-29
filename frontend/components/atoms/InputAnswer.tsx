@@ -71,7 +71,7 @@ export const InputAnswer: React.FC<InputAnswerProps> = ({
         disabled={disabled}
         placeholder="?"
         className={cn(
-          "w-24 h-16 text-center text-2xl font-bold rounded-xl border-4 transition-colors",
+          "relative w-24 h-16 text-center text-2xl font-bold rounded-xl border-4 transition-colors",
           isCorrect === true && "border-green-400 bg-green-50",
           isCorrect === false && "border-red-400 bg-red-50",
           isCorrect === null && "border-purple-400 bg-purple-50"

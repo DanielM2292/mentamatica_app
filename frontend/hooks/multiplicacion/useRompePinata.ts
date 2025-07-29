@@ -2,34 +2,39 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from "../useEnviarResultados"
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
 // Configuración de niveles basada en desarrollo cognitivo infantil
 const rompePinataLevels = [
   {
-    name: "Nivel 1 - Primeras Multiplicaciones",
+    name: "Nivel 1",
+    title: "Primeras Multiplicaciones",
     description: "Tablas del 2 y 3",
     difficulty: "Fácil",
     tables: [2, 3],
     maxMultiplier: 5,
-    piñatasPerLevel: 8,
+    piñatasPerLevel: 4,
     timeLimit: 60,
   },
   {
-    name: "Nivel 2 - Multiplicaciones Básicas",
+    name: "Nivel 2",
+    title: "Multiplicaciones Básicas",
     description: "Tablas del 2, 3 y 4",
     difficulty: "Medio",
     tables: [2, 3, 4],
     maxMultiplier: 7,
-    piñatasPerLevel: 10,
+    piñatasPerLevel: 6,
     timeLimit: 90,
   },
   {
-    name: "Nivel 3 - Desafío Multiplicativo",
+    name: "Nivel 3",
+    title: "Desafio Multiplicativo",
     description: "Tablas del 2 al 5",
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
     maxMultiplier: 10,
-    piñatasPerLevel: 12,
+    piñatasPerLevel: 8,
     timeLimit: 120,
   },
 ]
@@ -55,10 +60,6 @@ interface Problem {
   expression: string
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 // Colores basados en teoría del color para estimulación cognitiva
 const piñataColors = [
   { bg: "from-pink-400 to-pink-600", border: "border-pink-700", emoji: "🎉" },
@@ -75,12 +76,12 @@ const piñataColors = [
 const generateUniqueProblems = (level: any, count: number): Problem[] => {
   const problems: Problem[] = []
   const usedProblems = new Set<string>()
-  
+
   while (problems.length < count) {
     const table = level.tables[Math.floor(Math.random() * level.tables.length)]
     const multiplier = Math.floor(Math.random() * level.maxMultiplier) + 1
     const problemKey = `${table}x${multiplier}`
-    
+
     if (!usedProblems.has(problemKey)) {
       usedProblems.add(problemKey)
       problems.push({
@@ -91,7 +92,7 @@ const generateUniqueProblems = (level: any, count: number): Problem[] => {
       })
     }
   }
-  
+
   return problems
 }
 
@@ -109,9 +110,6 @@ export const useRompePinata = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [piñatasRotas, setPiñatasRotas] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -126,11 +124,27 @@ export const useRompePinata = () => {
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Computed values
+  // Computed values - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const currentGameLevel = rompePinataLevels[currentLevel]
   const isLastLevel = currentLevel >= rompePinataLevels.length - 1
+  const isLevelComplete = piñatasRotas >= currentGameLevel.piñatasPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
+  const isGameActive = !isLevelComplete && !isGameComplete
   const estrellas = convertirErrores(errores)
   const progress = (piñatasRotas / currentGameLevel.piñatasPerLevel) * 100
+
+  // ENVIAR RESULTADOS - COLOCADO EN LA MISMA POSICIÓN QUE useConstruyeFiguras
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Initialize timer
   useEffect(() => {
@@ -182,17 +196,17 @@ export const useRompePinata = () => {
   const generatePinatas = useCallback((problem: Problem) => {
     const newPinatas: Pinata[] = []
     const correctAnswer = problem.result
-    
+
     // Generar respuestas incorrectas estratégicamente
     const wrongAnswers = new Set<number>()
-    
+
     // Errores comunes en multiplicación (neurociencia educativa)
     wrongAnswers.add(correctAnswer + problem.multiplicand) // Suma en lugar de multiplicar
     wrongAnswers.add(correctAnswer - problem.multiplicand) // Error de cálculo
     wrongAnswers.add(problem.multiplicand + problem.multiplier) // Suma los factores
     wrongAnswers.add(correctAnswer + 1) // Error por uno
     wrongAnswers.add(correctAnswer - 1) // Error por uno
-    
+
     // Añadir más respuestas aleatorias si es necesario
     while (wrongAnswers.size < 3) {
       const randomWrong = Math.floor(Math.random() * 50) + 1
@@ -202,7 +216,7 @@ export const useRompePinata = () => {
     }
 
     const allAnswers = [correctAnswer, ...Array.from(wrongAnswers).slice(0, 3)]
-    
+
     // Mezclar respuestas
     for (let i = allAnswers.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -222,7 +236,7 @@ export const useRompePinata = () => {
       const colorIndex = Math.floor(Math.random() * piñataColors.length)
       const color = piñataColors[colorIndex]
       const position = positions[index] || { x: 40 + Math.random() * 20, y: 40 + Math.random() * 20 }
-      
+
       newPinatas.push({
         id: index,
         x: position.x,
@@ -249,8 +263,8 @@ export const useRompePinata = () => {
     if (!piñata || piñata.isHit) return
 
     // Marcar inmediatamente como golpeada para evitar doble conteo
-    setPinatas(prev => prev.map(p => 
-      p.id === piñataId 
+    setPinatas(prev => prev.map(p =>
+      p.id === piñataId
         ? { ...p, isHit: true, isAnimating: true, scale: p.scale * 1.4 }
         : p
     ))
@@ -264,25 +278,26 @@ export const useRompePinata = () => {
         newSet.delete(piñataId)
         return newSet
       })
-      
+
       if (piñata.isCorrect) {
         // Respuesta correcta - feedback positivo inmediato
-        setPinatas(prev => prev.map(p => 
-          p.id === piñataId 
+        setPinatas(prev => prev.map(p =>
+          p.id === piñataId
             ? { ...p, isAnimating: false }
             : p
         ))
-        
+
         setAciertos(prev => prev + 1)
-        setPiñatasRotas(prev => prev + 1)
+        const newPiñatasRotas = piñatasRotas + 1
+        setPiñatasRotas(newPiñatasRotas)
         setCombo(prev => prev + 1)
         setMaxCombo(prev => Math.max(prev, combo + 1))
         setShowCelebration(true)
-        
+
         // Feedback auditivo simulado con toast
         const celebrationMessages = [
           "¡Piñata rota! 🎉",
-          "¡Perfecto! 🎊", 
+          "¡Perfecto! 🎊",
           "¡Excelente! ⭐",
           "¡Fantástico! 🎯",
           "¡Increíble! 🌟",
@@ -290,17 +305,21 @@ export const useRompePinata = () => {
         ]
         const randomMessage = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)]
         showToast(randomMessage, `${currentProblem.expression} = ${currentProblem.result}`)
-        
+
         setTimeout(() => setShowCelebration(false), 1500)
-        
-        // Verificar si el nivel está completo
-        if (piñatasRotas + 1 >= currentGameLevel.piñatasPerLevel) {
-          setTimeout(() => {
-            setIsLevelComplete(true)
-            setIsGameActive(false)
-            setCompletedSets([{ id: currentLevel }])
+
+        // LÓGICA DE FINALIZACIÓN MEJORADA - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
+        if (newPiñatasRotas >= currentGameLevel.piñatasPerLevel) {
+          // Marcar nivel como completado
+          setCompletedSets([{ id: currentGameLevel.piñatasPerLevel }])
+          
+          if (isLastLevel) {
+            // Es el último nivel - finalizamos el juego completamente
+            showToast("¡Juego Completado! 🏆🎉", `¡Has completado todos los niveles!`)
+          } else {
+            // No es el último nivel - solo completamos el nivel actual
             showToast("¡Nivel Completado! 🏆", `¡Rompiste todas las piñatas!`)
-          }, 1000)
+          }
         } else {
           // Generar nuevo problema después de un breve delay
           setTimeout(() => {
@@ -314,15 +333,15 @@ export const useRompePinata = () => {
       } else {
         // Respuesta incorrecta - feedback correctivo
         // Restaurar el estado de la piñata para permitir otro intento
-        setPinatas(prev => prev.map(p => 
-          p.id === piñataId 
+        setPinatas(prev => prev.map(p =>
+          p.id === piñataId
             ? { ...p, isHit: false, isAnimating: false, scale: p.scale * 0.7 }
             : p
         ))
-        
+
         setErrores(prev => prev + 1)
         setCombo(0) // Resetear combo
-        
+
         const errorMessages = [
           "¡Ups! 😅",
           "¡Inténtalo de nuevo! 🤔",
@@ -331,49 +350,40 @@ export const useRompePinata = () => {
         ]
         const randomErrorMessage = errorMessages[Math.floor(Math.random() * errorMessages.length)]
         showToast(randomErrorMessage, "Esa no es la piñata correcta", "destructive")
-        
+
         // Restaurar escala después de feedback
         setTimeout(() => {
-          setPinatas(prev => prev.map(p => 
-            p.id === piñataId 
+          setPinatas(prev => prev.map(p =>
+            p.id === piñataId
               ? { ...p, scale: p.scale / 0.7 }
               : p
           ))
         }, 800)
       }
-    }, 400) // Delay mejorado para percepción de impacto
-  }
-  )
+    }, 400)
+  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, showToast, isLastLevel, getNextProblem, generatePinatas])
 
-  // Manejar siguiente nivel
+  // MANEJAR SIGUIENTE NIVEL - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const handleNextLevel = useCallback(() => {
     if (currentLevel < rompePinataLevels.length - 1) {
       const newLevel = currentLevel + 1
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(newLevel)
       setPiñatasRotas(0)
-      setAciertos(0)
-      setErrores(0)
       setCombo(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
-      
-      // Generar nuevos problemas para el nivel
+
       const newProblems = generateUniqueProblems(rompePinataLevels[newLevel], rompePinataLevels[newLevel].piñatasPerLevel)
       setLevelProblems(newProblems)
       setCurrentProblemIndex(0)
       const firstProblem = newProblems[0]
-      
+
       setCurrentProblem(firstProblem)
       setPinatas(generatePinatas(firstProblem))
-      setIsGameActive(true)
 
       showToast("¡Nuevo Desafío! 🎪", `${rompePinataLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
     }
-  }, [currentLevel, aciertos, generatePinatas, showToast, detener])
+  }, [currentLevel, aciertos, generatePinatas, showToast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -383,21 +393,18 @@ export const useRompePinata = () => {
     setErrores(0)
     setCombo(0)
     setMaxCombo(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    
+
     // Generar nuevos problemas
     const newProblems = generateUniqueProblems(rompePinataLevels[0], rompePinataLevels[0].piñatasPerLevel)
     setLevelProblems(newProblems)
     setCurrentProblemIndex(0)
     const firstProblem = newProblems[0]
-    
+
     setCurrentProblem(firstProblem)
     setPinatas(generatePinatas(firstProblem))
-    setIsGameActive(true)
 
     reiniciar()
     showToast("¡Nueva Fiesta! 🎉", "¡A romper piñatas!")
@@ -409,48 +416,8 @@ export const useRompePinata = () => {
       const firstProblem = generateLevelProblems()
       setCurrentProblem(firstProblem)
       setPinatas(generatePinatas(firstProblem))
-      setIsGameActive(true)
     }
   }, [currentGameLevel, currentProblem, generateLevelProblems, generatePinatas])
-
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {
@@ -460,7 +427,6 @@ export const useRompePinata = () => {
   }, [])
 
   return {
-    // Core game state
     currentLevel,
     currentProblem,
     pinatas,
@@ -481,8 +447,7 @@ export const useRompePinata = () => {
     showCelebration,
     gameContainerRef,
     tiempoFinal,
-
-    // Game actions
+        
     handlePinataHit,
     handleNextLevel,
     handleRestart,

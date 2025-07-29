@@ -10,8 +10,7 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Clock, Zap, Target, Trophy, Flame, Timer, CheckCircle, X, Keyboard, Smartphone } from "lucide-react"
+import { Clock, Zap, CheckCircle, X, Keyboard, Smartphone } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const Page = () => {
@@ -27,14 +26,10 @@ const GameWrapper = () => {
     currentLevel,
     tableCells,
     currentCell,
-    currentCellIndex,
     aciertos,
     errores,
-    completedCells,
     streak,
-    maxStreak,
-    estrellas,
-    progress,
+    estrellas,    
     completedSets,
     totalAciertos,
     currentGameLevel,
@@ -42,7 +37,6 @@ const GameWrapper = () => {
     isLevelComplete,
     isGameComplete,
     isGameActive,
-    timeRemaining,
     inputValue,
     gameContainerRef,
     inputRef,
@@ -309,6 +303,7 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-4xl mx-auto px-2 sm:px-4 pt-2 sm:pt-4 relative z-10">
           <GameHeader
+            nav="/modules/multiplicacion"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
@@ -327,42 +322,16 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-3 sm:mt-6 space-y-3 sm:space-y-6" ref={gameContainerRef}>
-              {/* Timer y estadísticas de velocidad */}
-              <Card
-                className={`bg-white/95 backdrop-blur-lg border-2 sm:border-4 border-blue-400 shadow-2xl animate-glow-speed ${
-                  animatedElements.has("timer") ? "animate-slide-speed" : "opacity-0"
-                }`}
-              >
-                <CardContent className="p-3 sm:p-6">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-                    <div className="text-center bg-gradient-to-r from-red-100 to-red-200 rounded-xl p-2 sm:p-3 border-2 border-red-300">
-                      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                        <Timer className={`w-4 h-4 sm:w-5 sm:h-5 text-red-600 ${timeRemaining <= 30 ? 'animate-timer-pulse' : ''}`} />
-                        <span className="font-bold text-red-800 text-xs sm:text-sm">Tiempo</span>
-                      </div>
-                      <div className={`text-lg sm:text-xl font-bold ${timeRemaining <= 30 ? 'text-red-700 animate-timer-pulse' : 'text-red-600'}`}>
-                        {formatTime(timeRemaining)}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Problema actual */}
               <Card
                 className={`bg-white/95 backdrop-blur-lg border-2 sm:border-4 border-purple-400 shadow-2xl ${

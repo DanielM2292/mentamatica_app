@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { gameLevels } from '@/public/data/conjuntos/gameLevelsUnion';
-import { UnifiedGameLevel, UnifiedGameItem } from '@/types/gameTypes';
+import { GameLevel, gameLevels } from '@/public/data/conjuntos/gameLevelsUnion';
+import { UnifiedGameItem } from '@/types/gameTypes';
 import { useUser } from '@clerk/nextjs';
 import { convertirErrores } from '@/services/convertidorEstrellas';
 import { useTimer } from '@/context/timer-context';
@@ -23,7 +23,7 @@ export const useGameUnion = () => {
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null);
   const dragItem = useRef<UnifiedGameItem | null>(null);
 
-  const currentGameLevel: UnifiedGameLevel = gameLevels[currentLevel];
+  const currentGameLevel: GameLevel = gameLevels[currentLevel];
   const isLastLevel = currentLevel === gameLevels.length - 1;
   const isLevelComplete = completedSets.length === currentGameLevel.sets.length;
   const isGameComplete = isLastLevel && isLevelComplete;
@@ -33,51 +33,93 @@ export const useGameUnion = () => {
     iniciar();
   }, []);
 
+  // Función para verificar si un item pertenece a un conjunto específico
+  const itemBelongsToSet = (item: UnifiedGameItem, setId: string): boolean => {
+    const categories = Array.isArray(item.category) ? item.category : [item.category];
+    
+    if (setId === 'interseccion') {
+      // Para intersección, el item debe tener exactamente 2 categorías
+      return categories.length === 2;
+    } else {
+      // Para conjuntos normales, debe contener la categoría específica
+      return categories.includes(setId);
+    }
+  };
+
+  // Función para verificar si un conjunto específico está completo
+  const isSetComplete = (setId: string, currentItems: UnifiedGameItem[]): boolean => {
+    // Buscar si quedan items que pertenezcan a este conjunto
+    return !currentItems.some(item => itemBelongsToSet(item, setId));
+  };
+
   const handleDragStart = (item: UnifiedGameItem) => {
     dragItem.current = item;
-    console.log('Iniciando arrastre:', item.name);
+    console.log('Iniciando arrastre:', item.name, 'Categorías:', item.category);
   };
 
   const handleDrop = (setId: string) => {
     if (!dragItem.current) return;
+    
     const item = dragItem.current;
-    const categories = Array.isArray(item.category) ? item.category : [item.category];
-
-    const isIntersection = setId === 'interseccion';
-    const belongsToSet = isIntersection
-      ? categories.length > 1
-      : categories.includes(setId);
+    const belongsToSet = itemBelongsToSet(item, setId);
 
     if (belongsToSet) {
-      setItems(prev => prev.filter(i => i.id !== item.id));
+      // Remover el item de la lista (siempre que sea correcto)
+      const newItems = items.filter(i => i.id !== item.id);
+      setItems(newItems);
       setScore(prev => prev + 10);
       setAciertos(prev => prev + 1);
 
+      // Encontrar el nombre del conjunto para mostrar en el toast
+      const setName = currentGameLevel.sets.find(s => s.id === setId)?.name || setId;
+      
       toast({
         title: "¡Excelente relación!",
-        description: `${item.name} pertenece a ${currentGameLevel.sets.find(s => s.id === setId)?.name}`,
+        description: `${item.name} pertenece a ${setName}`,
         duration: 2000,
       });
 
-      const remainingItemsInSet = items.filter(i => {
-        const cat = Array.isArray(i.category) ? i.category : [i.category];
-        const valid = setId === 'interseccion' ? cat.length > 1 : cat.includes(setId);
-        return valid && i.id !== item.id;
+      // Verificar qué conjuntos se completaron después de este movimiento
+      const newlyCompletedSets: string[] = [];
+      
+      currentGameLevel.sets.forEach(set => {
+        if (!completedSets.includes(set.id) && isSetComplete(set.id, newItems)) {
+          newlyCompletedSets.push(set.id);
+        }
       });
 
-      if (remainingItemsInSet.length === 0 && !completedSets.includes(setId)) {
-        setCompletedSets(prev => [...prev, setId]);
-        toast({
-          title: "¡Conjunto completado! 🎉",
-          description: "Has relacionado todos los elementos de este conjunto.",
-          duration: 3000,
-        });
+      // Actualizar conjuntos completados si hay nuevos
+      if (newlyCompletedSets.length > 0) {
+        setCompletedSets(prev => [...prev, ...newlyCompletedSets]);
+        
+        // Mostrar toast especial para conjuntos completados
+        if (newlyCompletedSets.length === 1) {
+          const completedSetName = currentGameLevel.sets.find(s => s.id === newlyCompletedSets[0])?.name;
+          toast({
+            title: "¡Conjunto completado! 🎉",
+            description: `Has completado el conjunto ${completedSetName}`,
+            duration: 3000,
+          });
+        } else {
+          toast({
+            title: "¡Múltiples conjuntos completados! 🎉",
+            description: `${item.name} completó ${newlyCompletedSets.length} conjuntos`,
+            duration: 3000,
+          });
+        }
       }
     } else {
       setErrores(prev => prev + 1);
+      
+      // Mensaje más específico según el tipo de error
+      let errorMessage = "Intenta con otro conjunto";
+      if (setId === 'interseccion') {
+        errorMessage = "Este elemento no pertenece a ambos conjuntos a la vez";
+      }
+      
       toast({
         title: "El elemento no pertenece a este conjunto",
-        description: "Intenta con otro conjunto",
+        description: errorMessage,
         duration: 2000,
         variant: "destructive"
       });
@@ -88,15 +130,26 @@ export const useGameUnion = () => {
 
   const handleNextLevel = () => {
     if (!isLastLevel) {
-      setTotalAciertos(prev => prev + score);
+      setTotalAciertos(prev => prev + aciertos);
       setCurrentLevel(prev => prev + 1);
-      setItems(gameLevels[currentLevel + 1].items);
+      
+      // Resetear estados para el nuevo nivel
+      const nextLevel = currentLevel + 1;
+      setItems(gameLevels[nextLevel].items);
       setScore(0);
       setCompletedSets([]);
+      setAciertos(0);
+      
+      toast({
+        title: "¡Nivel completado! 🎉",
+        description: `Avanzando al nivel ${nextLevel + 1}`,
+        duration: 2000,
+      });
     }
   };
 
   const handleRestart = () => {
+    setTiempoFinal(null);
     setCurrentLevel(0);
     setItems(gameLevels[0].items);
     setScore(0);

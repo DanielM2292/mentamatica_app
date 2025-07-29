@@ -2,32 +2,37 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
 // Configuración de niveles
 const perimetroLevels = [
   {
-    name: "Nivel 1 - Perímetros Básicos",
+    name: "Nivel 1",
+    title: "Perímetros Básicos",
     description: "Cuadrados y rectángulos simples",
     difficulty: "Fácil",
-    problemsPerLevel: 6,
+    problemsPerLevel: 4,
     maxSideLength: 8,
     shapes: ["square", "rectangle"],
     timeLimit: 120,
   },
   {
-    name: "Nivel 2 - Perímetros Intermedios",
+    name: "Nivel 2",
+    title: "Perímetros Intermedios",
     description: "Incluye triángulos y hexágonos",
     difficulty: "Medio",
-    problemsPerLevel: 8,
+    problemsPerLevel: 6,
     maxSideLength: 12,
     shapes: ["square", "rectangle", "triangle", "hexagon"],
     timeLimit: 150,
   },
   {
-    name: "Nivel 3 - Perímetros Avanzados",
+    name: "Nivel 3",
+    title: "Perímetros Avanzados",
     description: "Figuras complejas y múltiples lados",
     difficulty: "Difícil",
-    problemsPerLevel: 10,
+    problemsPerLevel: 8,
     maxSideLength: 15,
     shapes: ["square", "rectangle", "triangle", "pentagon", "hexagon", "octagon"],
     timeLimit: 180,
@@ -46,7 +51,7 @@ const shapeTypes = {
   },
   rectangle: {
     name: "Rectángulo",
-    emoji: "🟩",
+    emoji: "▭",
     color: "from-green-400 to-green-600",
     sidesCount: 2,
     formula: "2 × (largo + ancho)",
@@ -64,7 +69,7 @@ const shapeTypes = {
   },
   pentagon: {
     name: "Pentágono",
-    emoji: "🔷",
+    emoji: "⬟",
     color: "from-purple-400 to-purple-600",
     sidesCount: 5,
     formula: "5 × lado",
@@ -108,10 +113,6 @@ interface GameState {
   totalTreasure: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 export const usePerimetroMagico = () => {
   const { toast } = useToast()
   const { user } = useUser()
@@ -129,9 +130,6 @@ export const usePerimetroMagico = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [problemsCompleted, setProblemsCompleted] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -160,8 +158,23 @@ export const usePerimetroMagico = () => {
   // Computed values
   const currentGameLevel = perimetroLevels[currentLevel]
   const isLastLevel = currentLevel >= perimetroLevels.length - 1
+  const isLevelComplete = problemsCompleted >= currentGameLevel.problemsPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
   const progress = (problemsCompleted / currentGameLevel.problemsPerLevel) * 100
+  const isGameActive = !isLevelComplete && !isGameComplete
+
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Detectar dispositivo táctil
   useEffect(() => {
@@ -366,12 +379,8 @@ export const usePerimetroMagico = () => {
 
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
-        setTimeout(() => {
-          setIsLevelComplete(true)
-          setIsGameActive(false)
-          setCompletedSets([{ id: currentLevel }])
-          showToast("¡Nivel Completado! 🏆", `¡Tesoro total: ${newTreasure} monedas!`)
-        }, 1500)
+        setCompletedSets([{ id: currentLevel }])
+        showToast("¡Nivel Completado! 🏆", `¡Tesoro total: ${newTreasure} monedas!`)
       } else {
         // Siguiente problema
         setTimeout(() => {
@@ -407,6 +416,7 @@ export const usePerimetroMagico = () => {
 
   // Timer de ronda
   useEffect(() => {
+    if(gameState.problems.length === 0) return;
     if (isGameActive && roundTime > 0) {
       roundTimer.current = setTimeout(() => {
         setRoundTime(prev => prev - 1)
@@ -424,7 +434,7 @@ export const usePerimetroMagico = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateProblems, showToast])
+  }, [isGameActive, roundTime, generateProblems, showToast, gameState.problems.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
@@ -457,37 +467,26 @@ export const usePerimetroMagico = () => {
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < perimetroLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos(prev => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
-      setIsGameActive(true)
 
       generateProblems()
-      showToast("¡Nuevo Desafío! 🗝️", `${perimetroLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
+      showToast("¡Nuevo Desafío! 🗝️", `${perimetroLevels[currentLevel + 1].name}`)
     }
-  }, [currentLevel, aciertos, generateProblems, showToast, detener])
+  }, [isLastLevel, aciertos, generateProblems, showToast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
     setCurrentLevel(0)
     setProblemsCompleted(0)
     setAciertos(0)
-    setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
+    setErrores(0)    
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    setIsGameActive(true)
     setCelebrationParticles([])
     setTreasureSparkles([])
 
@@ -500,47 +499,8 @@ export const usePerimetroMagico = () => {
   useEffect(() => {
     if (currentGameLevel && gameState.problems.length === 0) {
       generateProblems()
-      setIsGameActive(true)
     }
   }, [currentGameLevel, gameState.problems.length, generateProblems])
-
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const actividad = "perimetro-magico"
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/geometria`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {

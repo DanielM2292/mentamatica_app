@@ -11,8 +11,9 @@ export default authMiddleware({
   // PARA IR AGREGANDO OOOOOOJOOOOOO
   ignoredRoutes: [
     '/app/dashboard(.*)',
-    '/profile(.*)',
-    '/modules(.*)',
+    '/app/profile(.*)',
+    '/app/modules(.*)',
+    '/app/settings(.*)',
     '/admin(.*)',
   ],
   

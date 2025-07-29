@@ -5,6 +5,7 @@ import { convertirEstrellas, obtenerActividad } from "@/db/utils/queries";
 import { withCors } from "@/utils/withCors";
 
 export async function POST(request: Request) {
+    console.log("Entra a registrar el envio de datos del juego")
     try {
         const data = await request.json();
 

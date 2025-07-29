@@ -2,11 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
 // Configuración de niveles
 const detectiveLevels = [
   {
-    name: "Nivel 1 - Figuras Básicas",
+    name: "Nivel 1",
+    title: "Figuras Básicas",
     description: "Encuentra círculos, cuadrados y triángulos",
     difficulty: "Fácil",
     figuresPerLevel: 4,
@@ -15,7 +18,8 @@ const detectiveLevels = [
     distractors: 3,
   },
   {
-    name: "Nivel 2 - Figuras Intermedias", 
+    name: "Nivel 2", 
+    title: "Figuras Intermedias",
     description: "Incluye rectángulos, pentágonos y hexágonos",
     difficulty: "Medio",
     figuresPerLevel: 6,
@@ -24,7 +28,8 @@ const detectiveLevels = [
     distractors: 5,
   },
   {
-    name: "Nivel 3 - Figuras Avanzadas",
+    name: "Nivel 3",
+    title: "Figuras Avanzadas",
     description: "Todas las figuras geométricas",
     difficulty: "Difícil", 
     figuresPerLevel: 8,
@@ -38,8 +43,8 @@ const figureTypes = {
   circle: { name: "Círculo", emoji: "🟠", color: "from-orange-400 to-orange-600", shape: "rounded-full", sound: "¡Redondo como una pelota!" },
   square: { name: "Cuadrado", emoji: "🟦", color: "from-blue-400 to-blue-600", shape: "rounded-none", sound: "¡Cuatro lados iguales!" },
   triangle: { name: "Triángulo", emoji: "🔺", color: "from-red-400 to-red-600", shape: "clip-triangle", sound: "¡Tres puntas como una montaña!" },
-  rectangle: { name: "Rectángulo", emoji: "🟩", color: "from-green-400 to-green-600", shape: "rounded-sm", sound: "¡Como una puerta!" },
-  pentagon: { name: "Pentágono", emoji: "🔷", color: "from-purple-400 to-purple-600", shape: "clip-pentagon", sound: "¡Cinco lados mágicos!" },
+  rectangle: { name: "Rectángulo", emoji: "▬", color: "from-green-400 to-green-600", shape: "rounded-sm", sound: "¡Como una puerta!" },
+  pentagon: { name: "Pentágono", emoji: "⬟", color: "from-purple-400 to-purple-600", shape: "clip-pentagon", sound: "¡Cinco lados mágicos!" },
   hexagon: { name: "Hexágono", emoji: "⬡", color: "from-yellow-400 to-yellow-600", shape: "clip-hexagon", sound: "¡Como un panal de abejas!" },
   octagon: { name: "Octágono", emoji: "🛑", color: "from-pink-400 to-pink-600", shape: "clip-octagon", sound: "¡Como una señal de alto!" },
   star: { name: "Estrella", emoji: "⭐", color: "from-amber-400 to-amber-600", shape: "clip-star", sound: "¡Brilla en el cielo!" },
@@ -66,10 +71,6 @@ interface GameState {
   totalTargets: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 export const useDetectiveFiguras = () => {
   const { toast } = useToast()
   const { user } = useUser()
@@ -86,9 +87,6 @@ export const useDetectiveFiguras = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [roundsCompleted, setRoundsCompleted] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -113,8 +111,23 @@ export const useDetectiveFiguras = () => {
   // Computed values
   const currentGameLevel = detectiveLevels[currentLevel]
   const isLastLevel = currentLevel >= detectiveLevels.length - 1
+  const isLevelComplete = roundsCompleted >= currentGameLevel.figuresPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
   const progress = (roundsCompleted / currentGameLevel.figuresPerLevel) * 100
+  const isGameActive = !isLevelComplete && !isGameComplete
+
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Detectar dispositivo táctil
   useEffect(() => {
@@ -198,7 +211,7 @@ export const useDetectiveFiguras = () => {
   const generateScene = useCallback(() => {
     const level = currentGameLevel
     const targetFigures = level.targetFigures
-    const targetFigure = targetFigures[Math.floor(Math.random() * targetFigures.length)]
+    const targetFigure = targetFigures[Math.floor(Math.random() * targetFigures.length)] as keyof typeof figureTypes
     
     const figures: Figure[] = []
     let figureId = 0
@@ -224,7 +237,7 @@ export const useDetectiveFiguras = () => {
     // Generar distractores
     for (let i = 0; i < level.distractors; i++) {
       const distractorTypes = targetFigures.filter(f => f !== targetFigure)
-      const distractorType = distractorTypes[Math.floor(Math.random() * distractorTypes.length)]
+      const distractorType = distractorTypes[Math.floor(Math.random() * distractorTypes.length)]  as keyof typeof figureTypes
       
       figures.push({
         id: figureId++,
@@ -293,12 +306,8 @@ export const useDetectiveFiguras = () => {
         
         // Verificar si el nivel está completo
         if (roundsCompleted + 1 >= currentGameLevel.figuresPerLevel) {
-          setTimeout(() => {
-            setIsLevelComplete(true)
-            setIsGameActive(false)
-            setCompletedSets([{ id: currentLevel }])
-            showToast("¡Nivel Completado! 🏆", "¡Eres un detective increíble!")
-          }, 1500)
+          setCompletedSets([{ id: currentLevel }])
+          showToast("¡Nivel Completado! 🏆", "¡Eres un detective increíble!")
         } else {
           // Nueva ronda
           setTimeout(() => {
@@ -333,6 +342,7 @@ export const useDetectiveFiguras = () => {
 
   // Timer de ronda
   useEffect(() => {
+    if(gameState.figures.length === 0) return;
     if (isGameActive && roundTime > 0) {
       roundTimer.current = setTimeout(() => {
         setRoundTime(prev => prev - 1)
@@ -350,7 +360,7 @@ export const useDetectiveFiguras = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateScene, showToast])
+  }, [isGameActive, roundTime, generateScene, showToast, gameState.figures.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
@@ -363,24 +373,16 @@ export const useDetectiveFiguras = () => {
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < detectiveLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos(prev => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setRoundsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
-      setIsGameActive(true)
 
       generateScene()
-      showToast("¡Nuevo Desafío! 🔍", `${detectiveLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
+      showToast("¡Nuevo Desafío! 🔍", `${detectiveLevels[currentLevel + 1].name}`)
     }
-  }, [currentLevel, aciertos, generateScene, showToast, detener])
+  }, [isLastLevel, aciertos, generateScene, showToast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -388,12 +390,9 @@ export const useDetectiveFiguras = () => {
     setRoundsCompleted(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
-    setIsGameActive(true)
     setCelebrationParticles([])
 
     generateScene()
@@ -405,47 +404,8 @@ export const useDetectiveFiguras = () => {
   useEffect(() => {
     if (currentGameLevel && gameState.figures.length === 0) {
       generateScene()
-      setIsGameActive(true)
     }
   }, [currentGameLevel, gameState.figures.length, generateScene])
-
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const actividad = "detective-figuras"
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/geometria`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
 
   // Cleanup
   useEffect(() => {

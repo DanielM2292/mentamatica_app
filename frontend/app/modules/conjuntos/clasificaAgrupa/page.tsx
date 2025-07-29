@@ -40,11 +40,12 @@ const GameWrapper = () => {
     <GamesTemplate>
       <div className="max-w-6xl mx-auto pt-4">
         <GameHeader
+          nav="/modules/conjuntos"
           aciertos={aciertos}
           errores={errores}
           completedSets={completedSets.length}
           imagen="/images/icons/conjuntos.png"
-            name="Clasifica y Agrupa"
+          name="Clasifica y Agrupa"
           totalSets={currentGameLevel.sets.length}
           level={currentLevel + 1}
           totalAciertos={totalAciertos + aciertos}

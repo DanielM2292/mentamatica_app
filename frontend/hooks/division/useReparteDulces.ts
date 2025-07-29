@@ -2,11 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from '@/services/convertidorEstrellas';
 
 // Configuración de niveles basada en desarrollo cognitivo
 const reparteDulcesLevels = [
   {
-    name: "Nivel 1 - Reparto Básico",
+    name: "Nivel 1",
+    title: "Reparto Básico",
     description: "Divide entre 2 y 3 personajes",
     difficulty: "Fácil",
     divisors: [2, 3],
@@ -14,7 +17,8 @@ const reparteDulcesLevels = [
     problemsPerLevel: 6,
   },
   {
-    name: "Nivel 2 - Reparto Intermedio",
+    name: "Nivel 2",
+    title: "Reparto Intermedio",
     description: "Divide entre 2, 3 y 4 personajes",
     difficulty: "Medio",
     divisors: [2, 3, 4],
@@ -22,7 +26,8 @@ const reparteDulcesLevels = [
     problemsPerLevel: 8,
   },
   {
-    name: "Nivel 3 - Reparto Avanzado",
+    name: "Nivel 3",
+    title: "Reparto Avanzado",
     description: "Divide entre 2 al 5 personajes",
     difficulty: "Difícil",
     divisors: [2, 3, 4, 5],
@@ -60,10 +65,6 @@ interface Problem {
   totalCandies: number
 }
 
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
-
 // Personajes adorables para niños
 const characters = [
   { name: "Luna", emoji: "🐱", color: "from-pink-400 to-pink-600" },
@@ -95,16 +96,13 @@ export const useReparteDulces = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [problemsCompleted, setProblemsCompleted] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
-  const [completedSets, setCompletedSets] = useState<any[]>([])
-  const [totalAciertos, setTotalAciertos] = useState(0)
-  const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
   const [selectedCandy, setSelectedCandy] = useState(0)
   const [draggedCandy, setDraggedCandy] = useState<number | null>(null)
   const [showHint, setShowHint] = useState(false)
-
+  const [completedSets, setCompletedSets] = useState<any[]>([])
+  const [totalAciertos, setTotalAciertos] = useState(0)
+  const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
+  
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
@@ -114,8 +112,23 @@ export const useReparteDulces = () => {
   // Computed values
   const currentGameLevel = reparteDulcesLevels[currentLevel]
   const isLastLevel = currentLevel >= reparteDulcesLevels.length - 1
+  const isLevelComplete = problemsCompleted >= currentGameLevel.problemsPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
   const progress = (problemsCompleted / currentGameLevel.problemsPerLevel) * 100
+  const isGameActive = !isLevelComplete && !isGameComplete
+
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Initialize timer
   useEffect(() => {
@@ -222,7 +235,8 @@ export const useReparteDulces = () => {
 
     // Verificar si el personaje ya tiene suficientes dulces
     if (character.receivedCandies.length >= character.expectedAmount) {
-      showToast("¡Ya tiene suficientes! 🍭", `${character.name} ya tiene todos sus dulces`)
+      setErrores(prev => prev + 1)
+      showToast("¡Ya tiene suficientes! 🍭", `${character.name} ya tiene todos sus dulces`, 'destructive')
       return
     }
 
@@ -260,12 +274,8 @@ export const useReparteDulces = () => {
       
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
-        setTimeout(() => {
-          setIsLevelComplete(true)
-          setIsGameActive(false)
-          setCompletedSets([{ id: currentLevel }])
-          showToast("¡Nivel Completado! 🏆", "¡Excelente reparto de dulces!")
-        }, 1500)
+        setCompletedSets([{ id: currentLevel }])
+        showToast("¡Nivel Completado! 🏆", "¡Excelente reparto de dulces!")
       } else {
         // Generar nuevo problema
         setTimeout(() => {
@@ -304,14 +314,10 @@ export const useReparteDulces = () => {
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < reparteDulcesLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos(prev => prev + aciertos)
-      setCurrentLevel(newLevel)
+      setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
       
       const newProblem = generateProblem()
@@ -319,26 +325,18 @@ export const useReparteDulces = () => {
       setCharacters(generateCharacters(newProblem))
       setCandies(generateCandies(newProblem))
       setSelectedCandy(Math.floor(Math.random() * candyTypes.length))
-      setIsGameActive(true)
-
-      showToast("¡Nuevo Desafío! 🍭", `${reparteDulcesLevels[newLevel].name}`)
-    } else {
-      setIsGameComplete(true)
-      detener()
+      showToast("¡Nuevo Desafío! 🍭", `${reparteDulcesLevels[currentLevel].name}`)
     }
   }, [currentLevel, aciertos, generateProblem, generateCharacters, generateCandies, showToast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
+    setTiempoFinal(null)
     setCurrentLevel(0)
     setProblemsCompleted(0)
-    setAciertos(0)
-    setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
-    setTiempoFinal(null)
+    setErrores(0)
     setDraggedCandy(null)
     
     const newProblem = generateProblem()
@@ -346,7 +344,6 @@ export const useReparteDulces = () => {
     setCharacters(generateCharacters(newProblem))
     setCandies(generateCandies(newProblem))
     setSelectedCandy(Math.floor(Math.random() * candyTypes.length))
-    setIsGameActive(true)
 
     reiniciar()
     showToast("¡Nueva Partida! 🔄", "¡A repartir dulces!")
@@ -360,49 +357,10 @@ export const useReparteDulces = () => {
       setCharacters(generateCharacters(newProblem))
       setCandies(generateCandies(newProblem))
       setSelectedCandy(Math.floor(Math.random() * candyTypes.length))
-      setIsGameActive(true)
     }
   }, [currentGameLevel, currentProblem, generateProblem, generateCharacters, generateCandies])
 
-  // Enviar resultados
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos: aciertos + errores,
-            errores,
-            tiempo,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempo)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
-
+  
   // Cleanup
   useEffect(() => {
     return () => {

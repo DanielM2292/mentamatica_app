@@ -17,6 +17,7 @@ export const usuarioQueries = {
     usuario_id: string;
     email: string;
     nombre: string;
+    monedas: number;
   }) {
     await db.insert(usuarios).values(data);
     return { success: true, message: "Usuario registrado correctamente" };

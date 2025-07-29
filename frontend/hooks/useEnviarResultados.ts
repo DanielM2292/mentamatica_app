@@ -24,14 +24,17 @@ export const useEnviarResultados = ({
   detener,
   setTiempoFinal,
 }: ResultadosParams) => {
+  console.log("Entra a la funcion")
   useEffect(() => {
+    console.log("Entra al useEfect")
     const enviarResultados = async () => {
+      console.log("Entra al end")
       const usuario_id = user?.id;
       const actividad = window.location.pathname.split('/').pop();
       const intentos = aciertos + errores;
 
       try {
-        const res = await fetch(`http://localhost:3001/api/conjuntos`, {
+        const res = await fetch(`http://localhost:3001/api/juegos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ usuario_id, actividad, estrellas, intentos, errores, tiempo }),
@@ -45,6 +48,7 @@ export const useEnviarResultados = ({
     };
 
     if (isGameComplete && tiempoFinal === null) {
+      console.log("Estra a la validacion antes de ejecutar el envio ")
       detener();
       enviarResultados();
     }

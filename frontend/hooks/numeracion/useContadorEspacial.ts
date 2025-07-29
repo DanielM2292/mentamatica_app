@@ -4,11 +4,14 @@ import { useState, useEffect, useRef, useCallback } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@clerk/nextjs"
 import { useTimer } from "@/context/timer-context"
+import { useEnviarResultados } from '../useEnviarResultados';
+import { convertirErrores } from "@/services/convertidorEstrellas"
 
 // Configuración ultra-simple para niños pequeños (3-6 años)
 const contadorEspacialLevels = [
   {
-    name: "Nivel 1 - Primeros Números",
+    name: "Nivel 1",
+    title: "Primeros Números",
     description: "Aprende a subir y bajar",
     difficulty: "Súper Fácil",
     missions: [
@@ -20,7 +23,8 @@ const contadorEspacialLevels = [
     ],
   },
   {
-    name: "Nivel 2 - Más Aventuras",
+    name: "Nivel 2",
+    title: "Más Aventuras",
     description: "Números un poco más lejos",
     difficulty: "Fácil",
     missions: [
@@ -32,7 +36,8 @@ const contadorEspacialLevels = [
     ],
   },
   {
-    name: "Nivel 3 - Experto en Números",
+    name: "Nivel 3",
+    title: "Experto en Números",
     description: "¡Eres un campeón!",
     difficulty: "Medio",
     missions: [
@@ -44,15 +49,6 @@ const contadorEspacialLevels = [
     ],
   },
 ]
-
-interface Mission {
-  start: number
-  target: number
-}
-
-const convertirErrores = (errores: number) => {
-  return Math.max(1, 5 - Math.floor(errores / 2))
-}
 
 export const useContadorEspacial = () => {
   const { toast } = useToast()
@@ -66,9 +62,7 @@ export const useContadorEspacial = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
-  const [completedSets, setCompletedSets] = useState<any[]>([])
+  const [completedSets, setCompletedSets] = useState<string[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
   const [isMoving, setIsMoving] = useState(false)
@@ -79,10 +73,12 @@ export const useContadorEspacial = () => {
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Computed values
+  // Computed values - Similar a useGameLogic
   const currentGameLevel = contadorEspacialLevels[currentLevel]
   const currentMission = currentGameLevel?.missions[currentMissionIndex]
-  const isLastLevel = currentLevel >= contadorEspacialLevels.length - 1
+  const isLastLevel = currentLevel === contadorEspacialLevels.length - 1
+  const isLevelComplete = completedSets.length === 1 && completedSets.includes(`level-${currentLevel}`)
+  const isGameComplete = isLastLevel && isLevelComplete
   const estrellas = convertirErrores(errores)
 
   // Initialize timer
@@ -122,6 +118,27 @@ export const useContadorEspacial = () => {
     setIsMoving(false)
   }, [currentMission])
 
+  // Handle mission completion
+  const handleMissionComplete = useCallback((newValue: number) => {
+    setAciertos((prev) => prev + 1)
+    showToast("¡Excelente! 🎉", `¡Llegaste al número ${newValue}!`)
+
+    // Check if this was the last mission of the level
+    if (currentMissionIndex >= currentGameLevel.missions.length - 1) {
+      // Level completed
+      setTimeout(() => {
+        setCompletedSets([`level-${currentLevel}`])
+        setIsGameActive(false)
+        showToast("¡Nivel Completado! 🌟", `¡Terminaste ${currentGameLevel.name}!`)
+      }, 1500)
+    } else {
+      // Move to next mission
+      setTimeout(() => {
+        setCurrentMissionIndex((prev) => prev + 1)
+      }, 2000)
+    }
+  }, [currentMissionIndex, currentGameLevel, currentLevel, showToast])
+
   // Move up (increase number by 1)
   const moveUp = useCallback(() => {
     if (isMoving || currentValue >= 10) return
@@ -141,22 +158,7 @@ export const useContadorEspacial = () => {
       // Check if mission is complete
       if (newValue === currentMission?.target) {
         setTimeout(() => {
-          setAciertos((prev) => prev + 1)
-          showToast("¡Excelente! 🎉", `¡Llegaste al número ${newValue}!`)
-
-          // Move to next mission or complete level
-          if (currentMissionIndex < currentGameLevel.missions.length - 1) {
-            setTimeout(() => {
-              setCurrentMissionIndex((prev) => prev + 1)
-            }, 2000)
-          } else {
-            setTimeout(() => {
-              setIsLevelComplete(true)
-              setIsGameActive(false)
-              setCompletedSets([{ id: currentLevel }])
-              showToast("¡Nivel Completado! 🌟", `¡Terminaste ${currentGameLevel.name}!`)
-            }, 2000)
-          }
+          handleMissionComplete(newValue)
         }, 500)
       } else {
         // Give encouraging feedback
@@ -164,12 +166,13 @@ export const useContadorEspacial = () => {
           showToast("¡Muy bien! 👍", "¡Sigue subiendo!")
         } else {
           showToast("¡Ups! 😅", "Te pasaste un poquito")
+          setErrores(prev => prev + 1)
         }
       }
     }, 800)
 
     animationTimeouts.current.push(timeout)
-  }, [currentValue, currentMission, currentMissionIndex, currentGameLevel, isMoving, showToast])
+  }, [currentValue, currentMission, isMoving, showToast, handleMissionComplete])
 
   // Move down (decrease number by 1)
   const moveDown = useCallback(() => {
@@ -190,67 +193,44 @@ export const useContadorEspacial = () => {
       // Check if mission is complete
       if (newValue === currentMission?.target) {
         setTimeout(() => {
-          setAciertos((prev) => prev + 1)
-          showToast("¡Fantástico! 🎉", `¡Llegaste al número ${newValue}!`)
-
-          // Move to next mission or complete level
-          if (currentMissionIndex < currentGameLevel.missions.length - 1) {
-            setTimeout(() => {
-              setCurrentMissionIndex((prev) => prev + 1)
-            }, 2000)
-          } else {
-            setTimeout(() => {
-              setIsLevelComplete(true)
-              setIsGameActive(false)
-              setCompletedSets([{ id: currentLevel }])
-              showToast("¡Nivel Completado! 🌟", `¡Terminaste ${currentGameLevel.name}!`)
-            }, 2000)
-          }
+          handleMissionComplete(newValue)
         }, 500)
       } else {
         // Give encouraging feedback
         if (newValue > currentMission?.target) {
           showToast("¡Muy bien! 👍", "¡Sigue bajando!")
         } else {
-          showToast("¡Ups! 😅", "Te pasaste un poquito")
+          showToast("¡Ups! 😅", "Te pasaste un poquito", "destructive")
+          setErrores(prev => prev + 1)
         }
       }
     }, 800)
 
     animationTimeouts.current.push(timeout)
-  }, [currentValue, currentMission, currentMissionIndex, currentGameLevel, isMoving, showToast])
+  }, [currentValue, currentMission, isMoving, showToast, handleMissionComplete])
 
-  // Handle next level
+  // Handle next level - Similar a useGameLogic
   const handleNextLevel = useCallback(() => {
-    if (currentLevel < contadorEspacialLevels.length - 1) {
-      const newLevel = currentLevel + 1
+    if (!isLastLevel) {
       setTotalAciertos((prev) => prev + aciertos)
-      setCurrentLevel(newLevel)
-      setCurrentMissionIndex(0)
-      setAciertos(0)
-      setErrores(0)
-      setIsLevelComplete(false)
+      setCurrentLevel(prev => prev + 1)
+      setCurrentMissionIndex(0)      
       setCompletedSets([])
 
-      showToast("¡Nuevo Nivel! 🚀", `${contadorEspacialLevels[newLevel].name}`)
+      showToast("¡Nuevo Nivel! 🚀", `${contadorEspacialLevels[currentLevel + 1].name}`)
 
       setTimeout(() => {
         initializeMission()
       }, 1000)
-    } else {
-      setIsGameComplete(true)
-      detener()
     }
-  }, [currentLevel, aciertos, showToast, detener, initializeMission])
+  }, [currentLevel, aciertos, isLastLevel, showToast, initializeMission])
 
-  // Handle restart
+  // Handle restart - Similar a useGameLogic
   const handleRestart = useCallback(() => {
     setCurrentLevel(0)
     setCurrentMissionIndex(0)
     setAciertos(0)
     setErrores(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
@@ -263,46 +243,23 @@ export const useContadorEspacial = () => {
     }, 1000)
   }, [reiniciar, showToast, initializeMission])
 
-  // Results submission
-  useEffect(() => {
-    const enviarResultados = async () => {
-      const usuario_id = user?.id
-      const urlParts = window.location.pathname.split("/")
-      const actividad = urlParts[urlParts.length - 1]
-      const intentos = aciertos + errores
-      const tiempoAEnviar = tiempo
+  // Handle final time - Similar a useGameLogic
+  const handleTiempoFinalizado = (tiempo: number) => {
+    setTiempoFinal(tiempo);
+  };
 
-      try {
-        const res = await fetch(`http://localhost:3001/api/numeracion`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usuario_id,
-            actividad,
-            estrellas,
-            intentos,
-            errores,
-            tiempo: tiempoAEnviar,
-          }),
-        })
-
-        if (!res.ok) {
-          throw new Error("Error al guardar resultados")
-        }
-
-        setTiempoFinal(tiempoAEnviar)
-      } catch (error) {
-        console.error("Error al guardar resultados:", error)
-      }
-    }
-
-    if (isGameComplete && tiempoFinal === null) {
-      detener()
-      enviarResultados()
-    }
-  }, [isGameComplete, tiempoFinal, user?.id, estrellas, aciertos, errores, tiempo, detener])
+  // useEnviarResultados - Igual que useGameLogic
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Auto-start game
   useEffect(() => {
@@ -318,10 +275,10 @@ export const useContadorEspacial = () => {
 
   // Update when mission index changes
   useEffect(() => {
-    if (currentMission && isGameActive) {
+    if (currentMission && isGameActive && !isLevelComplete) {
       initializeMission()
     }
-  }, [currentMissionIndex, currentMission, isGameActive, initializeMission])
+  }, [currentMissionIndex, currentMission, isGameActive, isLevelComplete, initializeMission])
 
   // Cleanup
   useEffect(() => {
@@ -331,7 +288,6 @@ export const useContadorEspacial = () => {
   }, [])
 
   return {
-    // Core game state
     currentLevel,
     currentMissionIndex,
     currentValue,
@@ -350,13 +306,12 @@ export const useContadorEspacial = () => {
     gameContainerRef,
     tiempoFinal,
 
-    // Game actions
     moveUp,
     moveDown,
     handleNextLevel,
     handleRestart,
+    handleTiempoFinalizado,
 
-    // Compatibility with existing interface (dummy values)
     spaceshipPosition: { x: 10, y: 50 },
     targetPosition: { x: 90, y: 50 },
     availableOperations: [],
@@ -366,5 +321,6 @@ export const useContadorEspacial = () => {
     items: [],
     handleDragStart: () => {},
     handleDrop: () => {},
+    score: aciertos * 10,
   }
 }

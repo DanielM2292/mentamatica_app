@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Brain, Star, Trophy, Clock, Settings, User, Volume2, Play, Pause, Coins } from "lucide-react";
 import { UserButton, useUser } from "@clerk/nextjs";
+import Monedas from "@/components/molecules/Monedas";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,7 +23,6 @@ interface Module {
   bgColor: string;
   progress: number;
   stars: number;
-  isUnlocked: boolean;
 }
 
 interface UserStats {
@@ -69,6 +69,8 @@ export default function DashboardPage() {
     name: "Nombre/Apodo",
     totalStars: 0,
     totalCoins: 0,
+    streak: 0,
+    timeSpent: 0,
     level: 1,
   });
 
@@ -82,7 +84,6 @@ export default function DashboardPage() {
       bgColor: "from-pink-200 to-purple-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "numeracion",
@@ -93,7 +94,6 @@ export default function DashboardPage() {
       bgColor: "from-blue-200 to-indigo-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "suma",
@@ -104,7 +104,6 @@ export default function DashboardPage() {
       bgColor: "from-green-200 to-emerald-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "resta",
@@ -115,7 +114,6 @@ export default function DashboardPage() {
       bgColor: "from-orange-200 to-red-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "multiplicacion",
@@ -126,7 +124,6 @@ export default function DashboardPage() {
       bgColor: "from-yellow-200 to-orange-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "division",
@@ -137,7 +134,6 @@ export default function DashboardPage() {
       bgColor: "from-cyan-200 to-teal-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
     {
       id: "geometria",
@@ -148,18 +144,15 @@ export default function DashboardPage() {
       bgColor: "from-purple-200 to-pink-200",
       progress: 0,
       stars: 0,
-      isUnlocked: true,
     },
   ]);
-
-  const [animatingModule, setAnimatingModule] = useState<string | null>(null);
 
   // Animaciones GSAP - Principios de neurociencia cognitiva
   useEffect(() => {
     const tl = gsap.timeline();
 
     // Animación de entrada suave para el header (reduce ansiedad)
-    tl.fromTo(headerRef.current, 
+    tl.fromTo(headerRef.current,
       { y: -100, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" }
     );
@@ -191,12 +184,12 @@ export default function DashboardPage() {
 
     // Módulos con entrada en cascada (mejora la atención selectiva)
     tl.fromTo(modulesRef.current?.children,
-      { 
+      {
         scale: 0.8,
         opacity: 0,
         y: 30
       },
-      { 
+      {
         scale: 1,
         opacity: 1,
         y: 0,
@@ -304,10 +297,11 @@ export default function DashboardPage() {
       const ripple = document.createElement('div');
       ripple.className = 'absolute inset-0 rounded-xl bg-white opacity-30 pointer-events-none';
       moduleElement.appendChild(ripple);
-      
-      gsap.fromTo(ripple, 
+
+      gsap.fromTo(ripple,
         { scale: 0, opacity: 0.3 },
-        { scale: 2, opacity: 0, duration: 0.4, ease: "power1.out",
+        {
+          scale: 2, opacity: 0, duration: 0.4, ease: "power1.out",
           onComplete: () => ripple.remove()
         }
       );
@@ -353,30 +347,19 @@ export default function DashboardPage() {
     isSmallMobile: boolean;
   }) => (
     <Link
-      href={module.isUnlocked ? `/modules/${module.id}` : "#"}
+      href={`/modules/${module.id}`}
       className={`relative group cursor-pointer transform transition-all duration-500 hover:scale-105 active:scale-95
         ${animatingModule === module.id ? "animate-shake" : ""}
-        ${!module.isUnlocked ? "opacity-60" : ""}
       `}
       data-module-id={module.id}
       onMouseEnter={() => !isMobile && handleModuleHover(module.id, true)}
       onMouseLeave={() => !isMobile && handleModuleHover(module.id, false)}
-      onClick={(e) => {
-        if (!module.isUnlocked) {
-          e.preventDefault();
-          setAnimatingModule(module.id);
-          setTimeout(() => setAnimatingModule(null), 600);
-        } else {
-          handleModuleClick(module.id);
-          // REMOVIDO: playFocusAudio(); - Ya no se reproduce automáticamente
-        }
-      }}
+      onClick={(e) => handleModuleClick(module.id)}
     >
       <div
-         className={`bg-gradient-to-br ${module.bgColor} rounded-lg sm:rounded-xl lg:rounded-2xl 
+        className={`bg-gradient-to-br ${module.bgColor} rounded-lg sm:rounded-xl lg:rounded-2xl 
           p-2 sm:p-3 lg:p-4 shadow-xl hover:shadow-2xl transition-all duration-300 
           relative overflow-hidden
-          ${module.isUnlocked ? "hover:-translate-y-1 sm:hover:-translate-y-2" : ""}
           ${isSmallMobile ? 'min-h-[100px]' : isMobile ? 'min-h-[110px]' : 'min-h-[140px] lg:min-h-[180px]'}
           flex flex-col items-center justify-center`}
       >
@@ -386,15 +369,6 @@ export default function DashboardPage() {
         {/* Partículas GSAP */}
         <div className="particle absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full opacity-60"></div>
         <div className="particle absolute bottom-2 left-2 w-1.5 h-1.5 bg-pink-400 rounded-full opacity-60"></div>
-
-        {/* Lock overlay para módulos bloqueados */}
-        {!module.isUnlocked && (
-          <div className="absolute inset-0 bg-black/20 rounded-lg sm:rounded-xl lg:rounded-2xl flex items-center justify-center">
-            <div className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-gray-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs sm:text-sm lg:text-lg">🔒</span>
-            </div>
-          </div>
-        )}
 
         {/* Icono del módulo - Mejorado para móviles */}
         <div className={`${isSmallMobile ? 'text-lg mb-1' : isMobile ? 'text-xl mb-1' : 'text-2xl lg:text-4xl mb-2 lg:mb-3'} animate-bounce-gentle`}>
@@ -437,22 +411,20 @@ export default function DashboardPage() {
         )}
 
         {/* Progreso y estrellas - Compacto para móviles con mejores colores */}
-        {module.isUnlocked && (
-          <div className="flex items-center gap-0.5 sm:gap-1 stars-container">
-            {[...Array(3)].map((_, i) => (
-              <Star
-                key={i}
-                className={`star ${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} ${i < module.stars
-                    ? "text-yellow-500 fill-yellow-500 drop-shadow-lg"
-                    : "text-yellow-500 fill-transparent stroke-yellow-500 stroke-2"
-                  }`}
-              />
-            ))}
-          </div>
-        )}
+        <div className="flex items-center gap-0.5 sm:gap-1 stars-container">
+          {[...Array(3)].map((_, i) => (
+            <Star
+              key={i}
+              className={`star ${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} ${i < module.stars
+                ? "text-yellow-500 fill-yellow-500 drop-shadow-lg"
+                : "text-yellow-500 fill-transparent stroke-yellow-500 stroke-2"
+                }`}
+            />
+          ))}
+        </div>
 
         {/* Efectos de partículas para módulos desbloqueados - Reducidos en móviles */}
-        {module.isUnlocked && !isSmallMobile && (
+        {!isSmallMobile && (
           <>
             <div
               className="absolute top-1 right-1 sm:top-2 sm:right-2 text-xs animate-bounce"
@@ -534,14 +506,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Contenedor de monedas */}
-          <div className={`flex items-center gap-1 bg-amber-100 ${isSmallMobile ? 'px-1.5 py-1' : 'px-2 sm:px-3 lg:px-4 py-1 sm:py-2'} rounded-full`}>
-            <Coins
-              className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'} text-amber-600`}
-            />
-            <span ref={coinsCounterRef} className={`font-bold text-amber-700 ${isSmallMobile ? 'text-xs' : 'text-sm sm:text-base'}`}>
-              0
-            </span>
-          </div>
+          {user && <Monedas userId={user.id} isVisible={true} />}
 
           {/* Botón de Configuración */}
           <Link href="/settings">
@@ -565,11 +530,10 @@ export default function DashboardPage() {
             ) : (
               <Brain className={`${isSmallMobile ? 'w-3 h-3' : 'w-4 h-4 sm:w-5 sm:h-5'}`} />
             )}
-            
+
             {/* Indicador de disponibilidad */}
-            <div className={`absolute -top-1 -right-1 ${isSmallMobile ? 'w-2 h-2' : 'w-3 h-3'} rounded-full ${
-              isAvailable ? 'bg-green-400' : 'bg-red-400'
-            }`}></div>
+            <div className={`absolute -top-1 -right-1 ${isSmallMobile ? 'w-2 h-2' : 'w-3 h-3'} rounded-full ${isAvailable ? 'bg-green-400' : 'bg-red-400'
+              }`}></div>
           </button>
 
           {/* UserButton de Clerk para cerrar sesión */}
@@ -661,7 +625,6 @@ export default function DashboardPage() {
               key={module.id}
               module={module}
               index={index}
-              animatingModule={animatingModule}
               isMobile={isMobile}
               isSmallMobile={isSmallMobile}
             />
@@ -680,11 +643,10 @@ export default function DashboardPage() {
               ) : (
                 <Brain className={`${isSmallMobile ? 'w-5 h-5' : 'w-6 h-6'}`} />
               )}
-              
+
               {/* Indicador de disponibilidad en móvil */}
-              <div className={`absolute -top-1 -right-1 ${isSmallMobile ? 'w-2 h-2' : 'w-3 h-3'} rounded-full ${
-                isAvailable ? 'bg-green-400' : 'bg-red-400'
-              }`}></div>
+              <div className={`absolute -top-1 -right-1 ${isSmallMobile ? 'w-2 h-2' : 'w-3 h-3'} rounded-full ${isAvailable ? 'bg-green-400' : 'bg-red-400'
+                }`}></div>
             </button>
           </div>
         )}
@@ -717,7 +679,7 @@ export default function DashboardPage() {
               <div
                 className={`${isSmallMobile ? 'h-2' : 'h-3 sm:h-4'} bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-full relative`}
                 style={{
-                  width: `${Math.round((modules.filter(m => m.isUnlocked).reduce((acc, m) => acc + m.progress, 0) / modules.filter(m => m.isUnlocked).length) || 0)}%`
+                  width: `${Math.round((modules.reduce((acc, m) => acc + m.progress, 0) / modules.filter.length) || 0)}%`
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shine-progress"></div>
@@ -726,7 +688,7 @@ export default function DashboardPage() {
             </div>
 
             <div className={`grid grid-cols-1 sm:grid-cols-2 ${isSmallMobile ? 'gap-2' : 'gap-3 sm:gap-4'}`}>
-              {modules.filter(m => m.isUnlocked).map((module, index) => (
+              {modules.map((module, index) => (
                 <div
                   key={module.id}
                   className={`flex items-center ${isSmallMobile ? 'gap-2 p-2' : 'gap-3 p-3 sm:p-4'} bg-gradient-to-r from-gray-50 to-white rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-102 relative overflow-hidden`}
@@ -763,8 +725,8 @@ export default function DashboardPage() {
                         <div key={i} className="relative">
                           <Star
                             className={`${isSmallMobile ? 'w-2.5 h-2.5' : 'w-3 h-3 sm:w-4 sm:h-4'} transition-all duration-300 ${i < module.stars
-                                ? "text-yellow-500 fill-yellow-500 drop-shadow-md"
-                                : "text-yellow-500 fill-transparent stroke-yellow-500 stroke-2 opacity-70"
+                              ? "text-yellow-500 fill-yellow-500 drop-shadow-md"
+                              : "text-yellow-500 fill-transparent stroke-yellow-500 stroke-2 opacity-70"
                               }`}
                           />
                         </div>
@@ -871,7 +833,7 @@ export default function DashboardPage() {
                 </span>
               </h4>
               <p className={`${isSmallMobile ? 'text-xs' : 'text-sm'} text-purple-600`}>
-                Haz clic en el botón del cerebro para acceder a audios especializados en estimulación cognitiva. 
+                Haz clic en el botón del cerebro para acceder a audios especializados en estimulación cognitiva.
                 Cada audio está diseñado con principios de neurociencia para mejorar el aprendizaje.
               </p>
             </div>

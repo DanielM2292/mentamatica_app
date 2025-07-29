@@ -26,31 +26,31 @@ const main = async () => {
     await db.insert(schema.modulos).values([
       {
         modulo_id: "MOD0001",
-        nombre_modulo: "Conjuntos",
+        nombre_modulo: "conjuntos",
       },
       {
         modulo_id: "MOD0002",
-        nombre_modulo: "Numeración",
+        nombre_modulo: "numeracion",
       },
       {
         modulo_id: "MOD0003",
-        nombre_modulo: "Suma",
+        nombre_modulo: "suma",
       },
       {
         modulo_id: "MOD0004",
-        nombre_modulo: "Resta",
+        nombre_modulo: "resta",
       },
       {
         modulo_id: "MOD0005",
-        nombre_modulo: "Multiplicación",
+        nombre_modulo: "multiplicacion",
       },
       {
         modulo_id: "MOD0006",
-        nombre_modulo: "División",
+        nombre_modulo: "division",
       },
       {
         modulo_id: "MOD0007",
-        nombre_modulo: "Geometría",
+        nombre_modulo: "geometria",
       },
     ]);
 
@@ -71,7 +71,7 @@ const main = async () => {
       {
         actividad_id: "ACT0003",
         modulo_id: "MOD0001",
-        nombre_actividad: "detectiveConjunto",
+        nombre_actividad: "detectiveConjuntos",
         descripcion: "Encuentra qué conjunto falta para completar una operación.",
       },
       {
@@ -161,7 +161,7 @@ const main = async () => {
       {
         actividad_id: "ACT0018",
         modulo_id: "MOD0006",
-        nombre_actividad: "pulsaCorrecta",
+        nombre_actividad: "pulsaCifraCorrecta",
         descripcion: "Elige entre opciones la división correcta.",
       },
       {
@@ -173,7 +173,7 @@ const main = async () => {
       {
         actividad_id: "ACT0020",
         modulo_id: "MOD0007",
-        nombre_actividad: "construyeFigura",
+        nombre_actividad: "construyeFiguras",
         descripcion: "Usa puntos y líneas para formar figuras.",
       },
       {

@@ -2,8 +2,12 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Play, Star, X, Coins } from "lucide-react";
+import { ArrowLeft, Play, Star, X } from "lucide-react";
 import { gsap } from "gsap";
+import { useUser } from "@clerk/nextjs";
+import Monedas from "@/components/molecules/Monedas";
+import StarRating from "@/components/molecules/StarRating";
+import PromedioStars from "@/components/molecules/PromedioStars";
 
 interface Activity {
   id: number;
@@ -12,8 +16,7 @@ interface Activity {
   type: "drag-drop" | "selection" | "matching";
   difficulty: "easy" | "medium" | "hard";
   completed: boolean;
-  stars: number;
-  coins: number;
+  actividad_id: string;
 }
 
 interface FloatingElement {
@@ -76,6 +79,7 @@ const MultiplicacionPage: React.FC = () => {
   const [animatedElements, setAnimatedElements] = useState<Set<number>>(new Set());
   const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
   const [showVideo, setShowVideo] = useState(false);
+  const { user } = useUser();
 
   // Referencias para animaciones GSAP
   const headerRef = useRef<HTMLDivElement>(null);
@@ -204,8 +208,7 @@ const MultiplicacionPage: React.FC = () => {
       type: "matching",
       difficulty: "easy",
       completed: false,
-      stars: 0,
-      coins: 0,
+      actividad_id: "ACT0013",
     },
     {
       id: 2,
@@ -214,8 +217,7 @@ const MultiplicacionPage: React.FC = () => {
       type: "drag-drop",
       difficulty: "medium",
       completed: false,
-      stars: 0,
-      coins: 0,
+      actividad_id: "ACT0014",
     },
     {
       id: 3,
@@ -224,8 +226,7 @@ const MultiplicacionPage: React.FC = () => {
       type: "matching",
       difficulty: "hard",
       completed: false,
-      stars: 0,
-      coins: 0,
+      actividad_id: "ACT0015",
     },
   ];
 
@@ -238,13 +239,13 @@ const MultiplicacionPage: React.FC = () => {
 
     if (activityId === 1) {
       console.log("Navegando a Rompe la Piñata");
-      router.push("/modules/multiplicacion/RompePinata");
+      router.push("/modules/multiplicacion/rompePinata");
     } else if (activityId === 2) {
       console.log("Navegando a Repeticiones Rápidas");
-      router.push("/modules/multiplicacion/RepeticionesRapidas");
+      router.push("/modules/multiplicacion/repeticionesRapidas");
     } else if (activityId === 3) {
       console.log("Navegando a Desafío de Tablas");
-      router.push("/modules/multiplicacion/DesafioTablas");
+      router.push("/modules/multiplicacion/desafioTablas");
     } else {
       console.log("Navegando a actividad genérica");
       router.push(`/multiplicacion/actividad/${activityId}`);
@@ -390,14 +391,8 @@ const MultiplicacionPage: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-            <div className="flex items-center gap-1 sm:gap-2 bg-yellow-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-yellow-200 transition-colors duration-300">
-              <Star className="w-3 h-3 sm:w-5 sm:h-5 text-yellow-500 animate-pulse" />
-              <span className="font-bold text-yellow-700 text-xs sm:text-base">0</span>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2 bg-amber-100 px-2 sm:px-4 py-1 sm:py-2 rounded-full hover:bg-amber-200 transition-colors duration-300">
-              <Coins className="w-3 h-3 sm:w-5 sm:h-5 text-amber-600 animate-pulse" />
-              <span className="font-bold text-amber-700 text-xs sm:text-base">0</span>
-            </div>
+            <PromedioStars/>
+            {user && <Monedas userId={user.id} isVisible={true} />}
           </div>
         </div>
       </div>
@@ -512,26 +507,12 @@ const MultiplicacionPage: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-between relative z-10">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    {[...Array(3)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 sm:w-4 sm:h-4 transition-all duration-300 hover:scale-125 ${
-                          i < activity.stars
-                            ? "text-yellow-400 fill-current animate-pulse"
-                            : "text-gray-300 group-hover:text-yellow-200"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Coins className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500" />
-                    <span className="text-xs sm:text-sm font-bold text-amber-600">
-                      {activity.coins}
-                    </span>
-                  </div>
-                </div>
+                {typeof window !== "undefined" && (
+                  <StarRating 
+                  activityLocation={window.location.pathname.split("/").pop() as string}
+                  activityId={activity.actividad_id}
+                  />
+                )}
                 
                 <Button
                   onClick={() => handleActivityStart(activity.id)}

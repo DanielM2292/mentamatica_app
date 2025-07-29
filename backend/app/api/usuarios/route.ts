@@ -2,6 +2,7 @@ import { usuarioQueries } from "@/db/queries/queries-usuarios";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { withCors } from "@/utils/withCors";
+import { avatarQueries } from "@/db/queries/queries-avatar";
 
 // Configuración importante
 export const dynamic = "force-dynamic";
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
             clerk_id: userData.id,
             email: userData.email_addresses?.[0]?.email_address || "Sin email",
             nombre: userData.username || "Sin nombre",
+            monedas: 10,
           };
 
           const usuarioExistente = await usuarioQueries.existeUsuario(usuario.clerk_id)
@@ -60,7 +62,11 @@ export async function POST(request: Request) {
           if (usuarioExistente) {
             console.log("El usuario ya existe", usuario.clerk_id);
           } else {
-            await usuarioQueries.crearUsuario({ usuario_id: usuario.clerk_id, email: usuario.email, nombre: usuario.nombre });
+            await usuarioQueries.crearUsuario({ usuario_id: usuario.clerk_id, email: usuario.email, nombre: usuario.nombre, monedas: usuario.monedas });
+            await avatarQueries.registrarAvatarUsuario(userData.id,"AVC0001","AVO0001")
+            await avatarQueries.registrarAvatarUsuario(userData.id,"AVC0002","AVO0019")
+            await avatarQueries.registrarAvatarUsuario(userData.id,"AVC0004","AVO0086")
+            await avatarQueries.registrarAvatarUsuario(userData.id,"AVC0006","AVO0127")
             console.log("Usuario creado:", userData.id);
           }
         } catch (error) {

@@ -55,6 +55,7 @@ export const avatar_personalizado = pgTable("avatar_personalizado", {
     usuario_id: varchar("usuario_id", {length:40}).references(() => usuarios.usuario_id, {onDelete: "cascade"}),
     categoria_id: varchar("categoria_id", {length:10}).references(() => avatar_categoria.categoria_id, {onDelete: "cascade"}),
     opcion_id: varchar("opcion_id", {length: 10}).references(() => avatar_opcion.opcion_id, {onDelete: "cascade"}),
+    estado: varchar("estado", {length: 10}).notNull(),
     fecha_desbloqueo: timestamp("fecha_desbloqueo").defaultNow().notNull(),
 }, (table) => ({
     pk: primaryKey({ columns: [table.usuario_id, table.opcion_id] })

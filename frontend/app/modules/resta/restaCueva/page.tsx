@@ -10,8 +10,7 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Clock, Zap, Mountain, ArrowDown, Target, Flame } from "lucide-react"
+import { Mountain, ArrowDown, Target, Flame } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const Page = () => {
@@ -35,7 +34,6 @@ const GameWrapper = () => {
     selectedAnswer,
     aciertos,
     errores,
-    timeLeft,
     streak,
     estrellas,
     completedSets,
@@ -44,11 +42,9 @@ const GameWrapper = () => {
     isLastLevel,
     isLevelComplete,
     isGameComplete,
-    isGameActive,
     showFeedback,
     isCorrect,
     gameContainerRef,
-    currentOptions,
     handleAnswerSelect,
     handleNextLevel,
     handleRestart,
@@ -119,10 +115,10 @@ const GameWrapper = () => {
               }}
             />
           ))}
-          
+
           {/* Efectos de profundidad */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-          
+
           {/* Partículas de polvo */}
           {Array.from({ length: 15 }).map((_, i) => (
             <div
@@ -186,6 +182,7 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-4xl mx-auto pt-4 relative z-10">
           <GameHeader
+            nav="/modules/resta"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
@@ -201,24 +198,19 @@ const GameWrapper = () => {
           <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
 
           {isGameComplete ? (
-            <JuegoCompletado aciertos={aciertos} estrellas={estrellas} errores={errores} onRestart={handleRestart} />
+            <JuegoCompletado aciertos={aciertos} estrellas={estrellas} onRestart={handleRestart} />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-6 space-y-6" ref={gameContainerRef}>
               {/* Medidor de profundidad */}
               <Card
-                className={`bg-gray-800/95 backdrop-blur-lg border-4 border-blue-400 shadow-2xl ${
-                  animatedElements.has("cave") ? "animate-slide-up-cave" : "opacity-0"
-                } ${depthAnimation ? "animate-depth-pulse" : ""}`}
+                className={`bg-gray-800/95 backdrop-blur-lg border-4 border-blue-400 shadow-2xl ${animatedElements.has("cave") ? "animate-slide-up-cave" : "opacity-0"
+                  } ${depthAnimation ? "animate-depth-pulse" : ""}`}
               >
                 <CardContent className="p-4 sm:p-6">
                   <div className="text-center mb-4">
@@ -237,7 +229,7 @@ const GameWrapper = () => {
                         <span className="font-bold text-orange-300 text-sm sm:text-base">Racha: {streak}</span>
                       </div>
                     </div>
-                    
+
                     {/* Barra de profundidad visual */}
                     <div className="relative w-full max-w-md mx-auto">
                       <div className="w-full bg-gray-700 rounded-full h-4 mb-2">
@@ -257,28 +249,18 @@ const GameWrapper = () => {
               {/* Problema actual */}
               {currentProblem && (
                 <Card
-                  className={`bg-gray-900/95 backdrop-blur-lg border-4 border-yellow-400 shadow-2xl ${
-                    animatedElements.has("problem") ? "animate-slide-up-cave" : "opacity-0"
-                  }`}
+                  className={`bg-gray-900/95 backdrop-blur-lg border-4 border-yellow-400 shadow-2xl ${animatedElements.has("problem") ? "animate-slide-up-cave" : "opacity-0"
+                    }`}
                   style={{ animationDelay: "0.2s" }}
                 >
                   <CardContent className="p-6 sm:p-8">
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-4 mb-6">
-                        <Clock className={`w-6 h-6 sm:w-8 sm:h-8 ${timeLeft <= 5 ? 'text-red-400 animate-pulse' : 'text-yellow-400'}`} />
-                        <span className={`text-2xl sm:text-3xl font-bold ${timeLeft <= 5 ? 'text-red-300' : 'text-yellow-300'}`}>
-                          {timeLeft}s
-                        </span>
+                    <div className="bg-gray-800 rounded-2xl text-center p-6 sm:p-8 mb-6 border-2 border-gray-600">
+                      <div className="text-4xl sm:text-6xl font-bold text-white mb-2">
+                        {currentProblem.minuend} - {currentProblem.subtrahend} = ?
                       </div>
-                      
-                      <div className="bg-gray-800 rounded-2xl p-6 sm:p-8 mb-6 border-2 border-gray-600">
-                        <div className="text-4xl sm:text-6xl font-bold text-white mb-2">
-                          {currentProblem.minuend} - {currentProblem.subtrahend} = ?
-                        </div>
-                        <p className="text-gray-400 text-sm sm:text-base">
-                          Resuelve para continuar explorando
-                        </p>
-                      </div>
+                      <p className="text-gray-400 text-sm sm:text-base">
+                        Resuelve para continuar explorando
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -286,9 +268,8 @@ const GameWrapper = () => {
 
               {/* Opciones de respuesta */}
               <Card
-                className={`bg-gray-800/95 backdrop-blur-lg border-4 border-green-400 shadow-2xl ${
-                  animatedElements.has("options") ? "animate-slide-up-cave" : "opacity-0"
-                }`}
+                className={`bg-gray-800/95 backdrop-blur-lg border-4 border-green-400 shadow-2xl ${animatedElements.has("options") ? "animate-slide-up-cave" : "opacity-0"
+                  }`}
                 style={{ animationDelay: "0.4s" }}
               >
                 <CardContent className="p-4 sm:p-6">
@@ -305,8 +286,8 @@ const GameWrapper = () => {
                               ? 'bg-green-600 hover:bg-green-600 text-white border-4 border-green-400'
                               : 'bg-red-600 hover:bg-red-600 text-white border-4 border-red-400'
                             : showFeedback && option === currentProblem?.result
-                            ? 'bg-green-600 hover:bg-green-600 text-white border-4 border-green-400'
-                            : 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-2 border-gray-500'
+                              ? 'bg-green-600 hover:bg-green-600 text-white border-4 border-green-400'
+                              : 'bg-gray-700 hover:bg-gray-600 text-gray-100 border-2 border-gray-500'
                           }
                         `}
                         style={{ animationDelay: `${index * 0.1}s` }}
@@ -315,7 +296,7 @@ const GameWrapper = () => {
                       </Button>
                     ))}
                   </div>
-                  
+
                   {showFeedback && (
                     <div className="mt-4 text-center">
                       <div className={`text-lg sm:text-xl font-bold ${isCorrect ? 'text-green-300' : 'text-red-300'}`}>

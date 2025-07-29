@@ -217,6 +217,7 @@ const GameWrapper = () => {
       <GamesTemplate>
         <div className="max-w-4xl mx-auto pt-4 relative z-10">
           <GameHeader
+            nav="/modules/division"
             aciertos={aciertos}
             errores={errores}
             completedSets={completedSets.length}
@@ -234,19 +235,14 @@ const GameWrapper = () => {
           {isGameComplete ? (
             <JuegoCompletado 
               aciertos={aciertos} 
-              estrellas={estrellas} 
-              errores={errores} 
+              estrellas={estrellas}
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-6 space-y-6" ref={gameContainerRef}>
@@ -380,59 +376,6 @@ const GameWrapper = () => {
                         </div>
                       </button>
                     ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Estadísticas */}
-              <Card
-                className={`bg-white/95 backdrop-blur-lg border-4 border-green-400 shadow-2xl ${
-                  animatedElements.has("stats") ? "animate-slide-velocity" : "opacity-0"
-                }`}
-                style={{ animationDelay: "0.3s" }}
-              >
-                <CardContent className="p-4 sm:p-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="text-center bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-3 border-2 border-green-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        <span className="font-bold text-green-800">Aciertos</span>
-                      </div>
-                      <div className="text-xl font-bold text-green-700">{aciertos}</div>
-                    </div>
-                    
-                    <div className="text-center bg-gradient-to-r from-red-100 to-red-200 rounded-xl p-3 border-2 border-red-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <X className="w-5 h-5 text-red-600" />
-                        <span className="font-bold text-red-800">Errores</span>
-                      </div>
-                      <div className="text-xl font-bold text-red-700">{errores}</div>
-                    </div>
-                    
-                    <div className="text-center bg-gradient-to-r from-blue-100 to-blue-200 rounded-xl p-3 border-2 border-blue-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Zap className="w-5 h-5 text-blue-600" />
-                        <span className="font-bold text-blue-800">Velocidad</span>
-                      </div>
-                      <div className="text-xl font-bold text-blue-700">
-                        {aciertos + errores > 0 ? Math.round((aciertos / (aciertos + errores)) * 100) : 0}%
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Barra de progreso */}
-                  <div className="mt-4">
-                    <div className="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 h-full rounded-full transition-all duration-500 animate-glow-velocity"
-                        style={{ width: `${progress}%` }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse" />
-                      </div>
-                    </div>
-                    <div className="text-center mt-2 text-sm font-bold text-orange-700">
-                      {Math.round(progress)}% completado
-                    </div>
                   </div>
                 </CardContent>
               </Card>

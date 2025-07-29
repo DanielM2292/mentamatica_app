@@ -8,7 +8,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 // Configuración de niveles
 const perimetroLevels = [
   {
-    name: "Nivel 1 - Perímetros Básicos",
+    name: "Nivel 1",
+    title: "Perímetros Básicos",
     description: "Cuadrados y rectángulos simples",
     difficulty: "Fácil",
     problemsPerLevel: 4,
@@ -17,7 +18,8 @@ const perimetroLevels = [
     timeLimit: 120,
   },
   {
-    name: "Nivel 2 - Perímetros Intermedios",
+    name: "Nivel 2",
+    title: "Perímetros Intermedios",
     description: "Incluye triángulos y hexágonos",
     difficulty: "Medio",
     problemsPerLevel: 6,
@@ -26,7 +28,8 @@ const perimetroLevels = [
     timeLimit: 150,
   },
   {
-    name: "Nivel 3 - Perímetros Avanzados",
+    name: "Nivel 3",
+    title: "Perímetros Avanzados",
     description: "Figuras complejas y múltiples lados",
     difficulty: "Difícil",
     problemsPerLevel: 8,
@@ -48,7 +51,7 @@ const shapeTypes = {
   },
   rectangle: {
     name: "Rectángulo",
-    emoji: "🟩",
+    emoji: "▭",
     color: "from-green-400 to-green-600",
     sidesCount: 2,
     formula: "2 × (largo + ancho)",
@@ -66,7 +69,7 @@ const shapeTypes = {
   },
   pentagon: {
     name: "Pentágono",
-    emoji: "🔷",
+    emoji: "⬟",
     color: "from-purple-400 to-purple-600",
     sidesCount: 5,
     formula: "5 × lado",
@@ -413,6 +416,7 @@ export const usePerimetroMagico = () => {
 
   // Timer de ronda
   useEffect(() => {
+    if(gameState.problems.length === 0) return;
     if (isGameActive && roundTime > 0) {
       roundTimer.current = setTimeout(() => {
         setRoundTime(prev => prev - 1)
@@ -430,7 +434,7 @@ export const usePerimetroMagico = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateProblems, showToast])
+  }, [isGameActive, roundTime, generateProblems, showToast, gameState.problems.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
@@ -467,8 +471,6 @@ export const usePerimetroMagico = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
 
       generateProblems()

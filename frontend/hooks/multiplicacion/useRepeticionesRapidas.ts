@@ -5,10 +5,10 @@ import { useTimer } from "@/context/timer-context"
 import { useEnviarResultados } from "@/hooks/useEnviarResultados"
 import { convertirErrores } from "@/services/convertidorEstrellas"
 
-// Configuración de niveles basada en desarrollo cognitivo
 const repeticionesLevels = [
   {
-    name: "Nivel 1 - Agrupaciones Básicas",
+    name: "Nivel 1",
+    title: "Agrupaciones Básicas",
     description: "Multiplica por 2 y 3",
     difficulty: "Fácil",
     tables: [2, 3],
@@ -16,7 +16,8 @@ const repeticionesLevels = [
     problemsPerLevel: 6,
   },
   {
-    name: "Nivel 2 - Grupos Medianos",
+    name: "Nivel 2",
+    title: "Grupos Medianos",
     description: "Multiplica por 2, 3 y 4",
     difficulty: "Medio",
     tables: [2, 3, 4],
@@ -24,7 +25,8 @@ const repeticionesLevels = [
     problemsPerLevel: 8,
   },
   {
-    name: "Nivel 3 - Agrupaciones Avanzadas",
+    name: "Nivel 3",
+    title: "Agrupaciones Avanzadas",
     description: "Multiplica por 2 al 5",
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
@@ -209,7 +211,8 @@ export const useRepeticionesRapidas = () => {
 
     // Verificar si la zona no está llena
     if (zone.placedItems.length >= zone.expectedCount) {
-      showToast("¡Grupo lleno! 📦", "Este grupo ya tiene suficientes elementos")
+      setErrores(prev => prev + 1);
+      showToast("¡Grupo lleno! 📦", "Este grupo ya tiene suficientes elementos", "destructive")
       return
     }
 
@@ -306,8 +309,6 @@ export const useRepeticionesRapidas = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(newLevel)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
       
       const newProblem = generateProblem()

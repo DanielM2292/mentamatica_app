@@ -251,16 +251,12 @@ const GameWrapper = () => {
           <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
 
           {isGameComplete ? (
-            <JuegoCompletado aciertos={aciertos} estrellas={estrellas} errores={errores} onRestart={handleRestart} />
+            <JuegoCompletado aciertos={aciertos} estrellas={estrellas} onRestart={handleRestart} />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-6 space-y-6" ref={gameContainerRef}>

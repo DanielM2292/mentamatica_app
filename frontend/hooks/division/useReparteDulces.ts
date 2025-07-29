@@ -8,7 +8,8 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 // Configuración de niveles basada en desarrollo cognitivo
 const reparteDulcesLevels = [
   {
-    name: "Nivel 1 - Reparto Básico",
+    name: "Nivel 1",
+    title: "Reparto Básico",
     description: "Divide entre 2 y 3 personajes",
     difficulty: "Fácil",
     divisors: [2, 3],
@@ -16,7 +17,8 @@ const reparteDulcesLevels = [
     problemsPerLevel: 6,
   },
   {
-    name: "Nivel 2 - Reparto Intermedio",
+    name: "Nivel 2",
+    title: "Reparto Intermedio",
     description: "Divide entre 2, 3 y 4 personajes",
     difficulty: "Medio",
     divisors: [2, 3, 4],
@@ -24,7 +26,8 @@ const reparteDulcesLevels = [
     problemsPerLevel: 8,
   },
   {
-    name: "Nivel 3 - Reparto Avanzado",
+    name: "Nivel 3",
+    title: "Reparto Avanzado",
     description: "Divide entre 2 al 5 personajes",
     difficulty: "Difícil",
     divisors: [2, 3, 4, 5],
@@ -232,7 +235,8 @@ export const useReparteDulces = () => {
 
     // Verificar si el personaje ya tiene suficientes dulces
     if (character.receivedCandies.length >= character.expectedAmount) {
-      showToast("¡Ya tiene suficientes! 🍭", `${character.name} ya tiene todos sus dulces`)
+      setErrores(prev => prev + 1)
+      showToast("¡Ya tiene suficientes! 🍭", `${character.name} ya tiene todos sus dulces`, 'destructive')
       return
     }
 
@@ -314,8 +318,6 @@ export const useReparteDulces = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
       
       const newProblem = generateProblem()
@@ -329,13 +331,12 @@ export const useReparteDulces = () => {
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
+    setTiempoFinal(null)
     setCurrentLevel(0)
     setProblemsCompleted(0)
-    setAciertos(0)
-    setErrores(0)
     setCompletedSets([])
     setTotalAciertos(0)
-    setTiempoFinal(null)
+    setErrores(0)
     setDraggedCandy(null)
     
     const newProblem = generateProblem()

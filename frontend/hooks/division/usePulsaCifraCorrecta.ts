@@ -8,31 +8,34 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 // Configuración de niveles basada en velocidad de procesamiento
 const pulsaCifraLevels = [
   {
-    name: "Nivel 1 - Velocidad Básica",
+    name: "Nivel 1",
+    title: "Velocidad Básica",
     description: "Divisiones simples entre 2 y 3",
     difficulty: "Fácil",
     divisors: [2, 3],
     maxDividend: 12,
-    problemsPerLevel: 2,
-    timePerProblem: 8,
+    problemsPerLevel: 8,
+    timePerProblem: 12,
   },
   {
-    name: "Nivel 2 - Velocidad Media",
+    name: "Nivel 2",
+    title: "Velocidad Media",
     description: "Divisiones entre 2, 3 y 4",
     difficulty: "Medio",
     divisors: [2, 3, 4],
     maxDividend: 20,
-    problemsPerLevel: 2,
-    timePerProblem: 6,
+    problemsPerLevel: 10,
+    timePerProblem: 10,
   },
   {
-    name: "Nivel 3 - Velocidad Extrema",
+    name: "Nivel 3",
+    title: "Velocidad Extrema",
     description: "Divisiones entre 2 al 5",
     difficulty: "Difícil",
     divisors: [2, 3, 4, 5],
     maxDividend: 30,
-    problemsPerLevel: 2,
-    timePerProblem: 4,
+    problemsPerLevel: 12,
+    timePerProblem: 8,
   },
 ]
 
@@ -212,6 +215,7 @@ export const usePulsaCifraCorrecta = () => {
 
   // Inicializar timer del problema
   const initializeProblemTimer = useCallback(() => {
+    if (isGameComplete) return;
     setTimeRemaining(currentGameLevel.timePerProblem)
 
     if (problemTimerRef.current) {
@@ -228,7 +232,9 @@ export const usePulsaCifraCorrecta = () => {
 
           // Generar nuevo problema
           setTimeout(() => {
-            generateNewProblem()
+            if (!isGameComplete) {
+              generateNewProblem()
+            }
           }, 1000)
 
           return 0
@@ -314,8 +320,6 @@ export const usePulsaCifraCorrecta = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setStreak(0)
       setSelectedOption(null)
 
@@ -329,7 +333,6 @@ export const usePulsaCifraCorrecta = () => {
     if (problemTimerRef.current) {
       clearInterval(problemTimerRef.current)
     }
-
     setCurrentLevel(0)
     setProblemsCompleted(0)
     setAciertos(0)
@@ -363,6 +366,14 @@ export const usePulsaCifraCorrecta = () => {
       animationTimeouts.current.forEach(timeout => clearTimeout(timeout))
     }
   }, [])
+
+  useEffect(() => {
+    if (isGameComplete && problemTimerRef.current) {
+      clearInterval(problemTimerRef.current)
+      problemTimerRef.current = null
+    }
+  }, [isGameComplete])
+
 
   return {
     // Core game state

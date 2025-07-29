@@ -8,7 +8,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas";
 // Configuración de niveles para Resta en la Cueva con generación aleatoria
 const restaEnLaCuevaLevels = [
   {
-    name: "Nivel 1 - Entrada de la Cueva",
+    name: "Nivel 1",
+    title: "Entrada de la Cueva",
     description: "Primeros pasos en la oscuridad",
     difficulty: "Fácil",
     minNumber: 3,
@@ -16,7 +17,8 @@ const restaEnLaCuevaLevels = [
     targetDepth: 10,
   },
   {
-    name: "Nivel 2 - Túneles Profundos",
+    name: "Nivel 2",
+    title: "Túneles Profundos",
     description: "Más adentro en la cueva",
     difficulty: "Medio",
     minNumber: 5,
@@ -24,7 +26,8 @@ const restaEnLaCuevaLevels = [
     targetDepth: 15,
   },
   {
-    name: "Nivel 3 - Corazón de la Cueva",
+    name: "Nivel 3",
+    title: "Corazón de la Cueva",
     description: "El desafío final",
     difficulty: "Difícil",
     minNumber: 8,
@@ -54,7 +57,6 @@ export const useRestaEnLaCueva = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [vidas, setVidas] = useState(3)
-  const [timeLeft, setTimeLeft] = useState(15)
   const [streak, setStreak] = useState(0)
   const [isGameOver, setIsGameOver] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
@@ -277,8 +279,6 @@ export const useRestaEnLaCueva = () => {
       setCurrentLevel(prev => prev + 1)
       setCurrentDepth(0)
       setMaxDepthReached(0)
-      setAciertos(0)
-      setErrores(0)
       setVidas(3)
       setStreak(0)
       setIsGameOver(false)
@@ -349,7 +349,6 @@ export const useRestaEnLaCueva = () => {
     aciertos,
     errores,
     vidas,
-    timeLeft,
     streak,
     estrellas,
     completedSets,

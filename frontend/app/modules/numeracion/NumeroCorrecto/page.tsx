@@ -56,10 +56,8 @@ const GameWrapper = () => {
         <TiempoJuego position="top-right" formato="minutos" />
         <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
 
-        {/* Área de Juego con altura fija para evitar interferencia con footer */}
         <div className="pb-20">
           {" "}
-          {/* Espacio para el footer */}
           {isGameComplete ? (
             <JuegoCompletado aciertos={aciertos} estrellas={estrellas} onRestart={handleRestart} />
           ) : isLevelComplete ? (

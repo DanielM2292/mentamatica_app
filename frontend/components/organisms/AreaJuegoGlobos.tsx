@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Sparkles, Target } from 'lucide-react';
+import { Sparkles, Target, Trophy } from 'lucide-react';
 
 interface Balloon {
   id: string;
@@ -16,6 +16,9 @@ interface AreaJuegoGlobosProps {
   balloons: Balloon[];
   nextExpectedNumber: number;
   isGameActive: boolean;
+  isLevelComplete?: boolean; // NUEVO: Estado del nivel
+  balloonsPopped?: number;   // NUEVO: Contador de globos reventados
+  totalBalloons?: number;    // NUEVO: Total de globos en el nivel
   onBalloonPop: (balloonId: string) => void;
   gameContainerRef: React.RefObject<HTMLDivElement>;
 }
@@ -27,21 +30,22 @@ const BalloonComponent: React.FC<{
   screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   totalBalloons: number;
   nextExpectedNumber: number;
-}> = ({ balloon, isGameActive, onPop, screenSize, totalBalloons, nextExpectedNumber }) => {
+  isLevelComplete: boolean;
+}> = ({ balloon, isGameActive, onPop, screenSize, totalBalloons, nextExpectedNumber, isLevelComplete }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const handleInteraction = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isGameActive && balloon.isClickable && !balloon.isPopped && !balloon.isExploding) {
+    if (isGameActive && balloon.isClickable && !balloon.isPopped && !balloon.isExploding && !isLevelComplete) {
       setIsPressed(true);
       setTimeout(() => setIsPressed(false), 150);
       onPop(balloon.id);
     }
   };
 
-  // Determinar si este globo es el siguiente esperado
-  const isNextExpected = balloon.number === nextExpectedNumber;
+  // Determinar si este globo es el siguiente esperado - SOLO SI EL NIVEL NO ESTÁ COMPLETO
+  const isNextExpected = !isLevelComplete && balloon.number === nextExpectedNumber;
 
   // Improved responsive sizing system
   const getSizeClasses = () => {
@@ -98,10 +102,10 @@ const BalloonComponent: React.FC<{
     <div
       id={balloon.id}
       className={`balloon absolute select-none transition-all duration-300 ease-out ${
-        balloon.isClickable ? 'cursor-pointer z-20' : 'cursor-default z-10'
+        balloon.isClickable && !isLevelComplete ? 'cursor-pointer z-20' : 'cursor-default z-10'
       } ${balloon.isPopped ? 'opacity-0 pointer-events-none scale-0' : ''} ${
         balloon.isExploding ? 'animate-explode' : ''
-      } ${isPressed ? 'scale-110' : balloon.isClickable ? 'hover:scale-105 active:scale-110' : ''}`}
+      } ${isPressed ? 'scale-110' : balloon.isClickable && !isLevelComplete ? 'hover:scale-105 active:scale-110' : ''}`}
       style={{
         left: balloon.x,
         top: balloon.y,
@@ -130,7 +134,9 @@ const BalloonComponent: React.FC<{
               : `radial-gradient(circle at 30% 30%, ${balloon.color}dd, ${balloon.color}aa, ${balloon.color}88)`,
             filter: isNextExpected
               ? 'brightness(1.2) saturate(1.4) drop-shadow(0 4px 20px rgba(255,215,0,0.5))'
-              : 'brightness(0.9) saturate(0.8) drop-shadow(0 2px 10px rgba(0,0,0,0.2))',
+              : isLevelComplete 
+                ? 'brightness(0.6) saturate(0.6) drop-shadow(0 2px 10px rgba(0,0,0,0.1))'
+                : 'brightness(0.9) saturate(0.8) drop-shadow(0 2px 10px rgba(0,0,0,0.2))',
             animation: isNextExpected
               ? 'gentleBounce 1.5s ease-in-out infinite'
               : 'gentleFloat 3s ease-in-out infinite',
@@ -156,7 +162,7 @@ const BalloonComponent: React.FC<{
             </span>
           </div>
 
-          {/* Active indicators - solo para el siguiente número esperado */}
+          {/* Active indicators - solo para el siguiente número esperado Y si el nivel no está completo */}
           {isNextExpected && (
             <>
               <div className="absolute -top-1 -right-1 animate-spin">
@@ -187,10 +193,16 @@ const AreaJuegoGlobos: React.FC<AreaJuegoGlobosProps> = ({
   balloons,
   nextExpectedNumber,
   isGameActive,
+  isLevelComplete = false, // VALOR POR DEFECTO
+  balloonsPopped = 0,      // VALOR POR DEFECTO
+  totalBalloons,           // CALCULADO DINÁMICAMENTE SI NO SE PROPORCIONA
   onBalloonPop,
   gameContainerRef,
 }) => {
   const [screenSize, setScreenSize] = useState<'xs' | 'sm' | 'md' | 'lg' | 'xl'>('lg');
+
+  // CALCULAR TOTAL DE GLOBOS SI NO SE PROPORCIONA
+  const calculatedTotalBalloons = totalBalloons || balloons.length;
 
   useEffect(() => {
     const updateScreenSize = () => {
@@ -218,12 +230,31 @@ const AreaJuegoGlobos: React.FC<AreaJuegoGlobosProps> = ({
     }
   };
 
+  // DETERMINAR QUÉ MOSTRAR EN LA INFORMACIÓN DE DEBUG
+  const getDisplayInfo = () => {
+    if (isLevelComplete) {
+      return {
+        status: "¡COMPLETADO!",
+        nextNumber: "✓",
+        progress: `${balloonsPopped}/${calculatedTotalBalloons}`
+      };
+    } else {
+      return {
+        status: "En progreso",
+        nextNumber: nextExpectedNumber,
+        progress: `${balloonsPopped}/${calculatedTotalBalloons}`
+      };
+    }
+  };
+
+  const displayInfo = getDisplayInfo();
+
   return (
     <div className={`relative w-full ${getContainerHeight()} bg-gradient-to-b from-sky-300 via-sky-200 to-green-200 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/30`}>
-      {/* Debug info - hidden on small screens */}
+      {/* Debug info mejorada - hidden on small screens */}
       {screenSize !== 'xs' && (
         <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs z-50">
-          Globos: {balloons.length} | Siguiente: {nextExpectedNumber} | Pantalla: {screenSize}
+          Progreso: {displayInfo.progress} | Siguiente: {displayInfo.nextNumber} | Estado: {displayInfo.status} | Pantalla: {screenSize}
         </div>
       )}
 
@@ -254,14 +285,26 @@ const AreaJuegoGlobos: React.FC<AreaJuegoGlobosProps> = ({
         </div>
       </div>
 
-      {/* Enhanced instructions */}
-      {isGameActive && nextExpectedNumber <= 3 && (
+      {/* INSTRUCCIONES MEJORADAS */}
+      {isGameActive && !isLevelComplete && nextExpectedNumber <= 3 && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
           <div className={`bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-2 rounded-full shadow-lg font-bold ${
             screenSize === 'xs' ? 'text-xs' : 'text-sm'
           } flex items-center space-x-2`}>
             <Sparkles className={screenSize === 'xs' ? 'w-3 h-3' : 'w-4 h-4'} />
             <span>¡Busca el {nextExpectedNumber}!</span>
+          </div>
+        </div>
+      )}
+
+      {/* MENSAJE DE NIVEL COMPLETADO */}
+      {isLevelComplete && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
+          <div className={`bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-full shadow-lg font-bold ${
+            screenSize === 'xs' ? 'text-xs' : 'text-sm'
+          } flex items-center space-x-2 animate-pulse`}>
+            <Trophy className={screenSize === 'xs' ? 'w-3 h-3' : 'w-4 h-4'} />
+            <span>¡Nivel Completado! 🎉</span>
           </div>
         </div>
       )}
@@ -284,8 +327,9 @@ const AreaJuegoGlobos: React.FC<AreaJuegoGlobosProps> = ({
             isGameActive={isGameActive}
             onPop={onBalloonPop}
             screenSize={screenSize}
-            totalBalloons={balloons.length}
+            totalBalloons={calculatedTotalBalloons}
             nextExpectedNumber={nextExpectedNumber}
+            isLevelComplete={isLevelComplete}
           />
         ))}
       </div>

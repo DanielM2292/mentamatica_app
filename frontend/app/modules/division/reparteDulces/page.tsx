@@ -10,8 +10,7 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Users, Lightbulb, Sparkles, Gift, Share, CheckCircle, Smartphone, Hand } from "lucide-react"
+import { Heart, Users, Lightbulb, Gift, Share, CheckCircle, Smartphone, Hand } from "lucide-react"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 const Page = () => {
@@ -378,18 +377,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-6 space-y-6" ref={gameContainerRef}>
@@ -437,55 +431,6 @@ const GameWrapper = () => {
                         )}
                       </div>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Progreso */}
-              <Card
-                className={`bg-white/95 backdrop-blur-lg border-4 border-purple-400 shadow-2xl ${
-                  animatedElements.has("progress") ? "animate-slide-share" : "opacity-0"
-                }`}
-                style={{ animationDelay: "0.1s" }}
-              >
-                <CardContent className="p-4 sm:p-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="text-center bg-gradient-to-r from-pink-100 to-pink-200 rounded-xl p-3 border-2 border-pink-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Gift className="w-5 h-5 text-pink-600" />
-                        <span className="font-bold text-pink-800">Repartos</span>
-                      </div>
-                      <div className="text-xl font-bold text-pink-700">
-                        {problemsCompleted}/{currentGameLevel?.problemsPerLevel}
-                      </div>
-                    </div>
-                    
-                    <div className="text-center bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-3 border-2 border-green-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        <span className="font-bold text-green-800">Aciertos</span>
-                      </div>
-                      <div className="text-xl font-bold text-green-700">{aciertos}</div>
-                    </div>
-                    
-                    <div className="text-center bg-gradient-to-r from-blue-100 to-blue-200 rounded-xl p-3 border-2 border-blue-300">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Sparkles className="w-5 h-5 text-blue-600" />
-                        <span className="font-bold text-blue-800">Progreso</span>
-                      </div>
-                      <div className="text-xl font-bold text-blue-700">{Math.round(progress)}%</div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <div className="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                      <div
-                        className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 h-full rounded-full transition-all duration-1000 animate-glow-sweet"
-                        style={{ width: `${progress}%` }}
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>

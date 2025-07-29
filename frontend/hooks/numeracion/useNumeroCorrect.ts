@@ -95,33 +95,26 @@ export const useNumeroCorrect = () => {
     const numbers = Array.from({ length: count }, (_, i) => i + 1)
     const shuffledNumbers = [...numbers].sort(() => Math.random() - 0.5)
 
-    let positions: { x: string; y: string }[] = []
-    if (count === 10) {
-      positions = [
-        { x: "25%", y: "20%" }, { x: "50%", y: "18%" }, { x: "75%", y: "20%" },
-        { x: "15%", y: "40%" }, { x: "40%", y: "38%" }, { x: "65%", y: "40%" },
-        { x: "85%", y: "38%" }, { x: "30%", y: "60%" }, { x: "55%", y: "58%" },
-        { x: "80%", y: "60%" },
-      ]
-    } else if (count === 15) {
-      positions = [
-        { x: "10%", y: "20%" }, { x: "30%", y: "18%" }, { x: "50%", y: "20%" },
-        { x: "70%", y: "18%" }, { x: "90%", y: "20%" }, { x: "15%", y: "40%" },
-        { x: "35%", y: "38%" }, { x: "55%", y: "40%" }, { x: "75%", y: "38%" },
-        { x: "85%", y: "40%" }, { x: "20%", y: "60%" }, { x: "40%", y: "58%" },
-        { x: "60%", y: "60%" }, { x: "80%", y: "58%" }, { x: "45%", y: "78%" },
-      ]
-    } else if (count === 20) {
-      positions = [
-        { x: "10%", y: "15%" }, { x: "30%", y: "13%" }, { x: "50%", y: "15%" },
-        { x: "70%", y: "13%" }, { x: "90%", y: "15%" }, { x: "15%", y: "32%" },
-        { x: "35%", y: "30%" }, { x: "55%", y: "32%" }, { x: "75%", y: "30%" },
-        { x: "85%", y: "32%" }, { x: "20%", y: "50%" }, { x: "40%", y: "48%" },
-        { x: "60%", y: "50%" }, { x: "80%", y: "48%" }, { x: "25%", y: "50%" },
-        { x: "25%", y: "68%" }, { x: "45%", y: "66%" }, { x: "65%", y: "68%" },
-        { x: "85%", y: "66%" }, { x: "50%", y: "78%" },
-      ]
-    }
+    const positions = Array.from({ length: count }, (_, i) => {
+      const rows = Math.ceil(Math.sqrt(count))
+      const cols = Math.ceil(count / rows)
+
+      const row = Math.floor(i / cols)
+      const col = i % cols
+
+      const xPadding = 20
+      const yPadding = 20
+      const xSpacing = (100 - 2 * xPadding) / (cols - 1)
+      const ySpacing = (100 - 2 * yPadding) / (rows - 1)
+
+      const xBase = xPadding + col * xSpacing
+      const yBase = yPadding + row * ySpacing
+
+      return {
+        x: `${xBase + (Math.random() * 10 - 5)}%`,
+        y: `${yBase + (Math.random() * 10 - 5)}%`
+      }
+    })
 
     return shuffledNumbers.map((number, i) => ({
       id: `balloon-${number}-${Date.now()}-${i}`,
@@ -258,10 +251,8 @@ export const useNumeroCorrect = () => {
     if (!isLastLevel) {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
-      setAciertos(0)
-      setErrores(0)
       showToast("¡Nuevo nivel desbloqueado! 🚀", `${numeroCorrectoLevels[currentLevel + 1].name}`)
-      
+
       // Start the new level immediately
       startGame()
     }
@@ -278,7 +269,7 @@ export const useNumeroCorrect = () => {
 
     reiniciar()
     showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
-    
+
     // Start the game immediately
     startGame()
   }, [reiniciar, showToast, startGame])
@@ -343,7 +334,7 @@ export const useNumeroCorrect = () => {
     handleNextLevel,
     handleRestart,
     items: [],
-    handleDragStart: () => {},
-    handleDrop: () => {},
+    handleDragStart: () => { },
+    handleDrop: () => { },
   }
 }

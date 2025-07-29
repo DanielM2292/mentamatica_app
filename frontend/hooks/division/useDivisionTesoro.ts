@@ -8,30 +8,33 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 // Configuración de niveles basada en narrativa pirata
 const divisionTesoroLevels = [
   {
-    name: "Nivel 1 - Isla del Tesoro",
+    name: "Nivel 1",
+    title: "Isla del Tesoro",
     description: "Divisiones básicas entre 2 y 3 piratas",
     difficulty: "Fácil",
     divisors: [2, 3],
     maxDividend: 15,
-    problemsPerLevel: 6,
+    problemsPerLevel: 2,
     theme: "island",
   },
   {
-    name: "Nivel 2 - Cueva Misteriosa",
+    name: "Nivel 2",
+    title: "Cueva Misteriosa",
     description: "Divisiones entre 2, 3 y 4 piratas",
     difficulty: "Medio",
     divisors: [2, 3, 4],
     maxDividend: 24,
-    problemsPerLevel: 8,
+    problemsPerLevel: 2,
     theme: "cave",
   },
   {
-    name: "Nivel 3 - Barco Fantasma",
+    name: "Nivel 3",
+    title: "Barco Fantasma",
     description: "Divisiones entre 2 al 5 piratas",
     difficulty: "Difícil",
     divisors: [2, 3, 4, 5],
     maxDividend: 35,
-    problemsPerLevel: 10,
+    problemsPerLevel: 2,
     theme: "ship",
   },
 ]
@@ -313,8 +316,6 @@ export const useDivisionTesoro = () => {
       setCurrentLevel(prev => prev + 1)
       setProblemsCompleted(0)
       setCurrentMapIndex(0)
-      setAciertos(0)
-      setErrores(0)
       setUserAnswer("")
 
       const newMaps = generateTreasureMaps()
@@ -362,6 +363,7 @@ export const useDivisionTesoro = () => {
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
+    setTiempoFinal(null)
     setCurrentLevel(0)
     setProblemsCompleted(0)
     setCurrentMapIndex(0)
@@ -369,7 +371,6 @@ export const useDivisionTesoro = () => {
     setErrores(0)
     setCompletedSets([])
     setTotalAciertos(0)
-    setTiempoFinal(null)
     setUserAnswer("")
 
     const newMaps = generateTreasureMaps()

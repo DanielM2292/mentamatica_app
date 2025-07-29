@@ -9,7 +9,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 
 const desafioTablasLevels = [
   {
-    name: "Nivel 1 - Tablas Básicas",
+    name: "Nivel 1",
+    title: "Tablas Básicas",
     description: "Tablas del 2 y 3",
     difficulty: "Fácil",
     tables: [2, 3],
@@ -17,7 +18,8 @@ const desafioTablasLevels = [
     problemsPerLevel: 8,
   },
   {
-    name: "Nivel 2 - Tablas Intermedias",
+    name: "Nivel 2",
+    title: "Tablas Intermedias",
     description: "Tablas del 2, 3 y 4",
     difficulty: "Medio",
     tables: [2, 3, 4],
@@ -25,7 +27,8 @@ const desafioTablasLevels = [
     problemsPerLevel: 10,
   },
   {
-    name: "Nivel 3 - Desafío Completo",
+    name: "Nivel 3",
+    title: "Desafío Completo",
     description: "Tablas del 2 al 5",
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
@@ -232,8 +235,6 @@ export const useDesafioTablas = () => {
       setCurrentLevel(prev => prev + 1)
       setCompletedCells(0)
       setCurrentCellIndex(0)
-      setAciertos(0)
-      setErrores(0)
       setStreak(0)
       setInputValue("")
       
@@ -318,7 +319,6 @@ export const useDesafioTablas = () => {
   })
 
   return {
-    // Estados del juego
     currentLevel,
     tableCells,
     currentCell,
@@ -337,7 +337,6 @@ export const useDesafioTablas = () => {
     isLastLevel,
     isLevelComplete,
     isGameComplete,
-    timeRemaining: 0, // Ya no se usa
     inputValue,
     gameContainerRef,
     inputRef,

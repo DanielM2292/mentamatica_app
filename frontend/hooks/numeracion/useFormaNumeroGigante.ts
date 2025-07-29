@@ -11,21 +11,24 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 const formaNumeroLevels = [
   {
     name: "Nivel 1",
+    title: "Números de 4 cifras",
     digits: 4,
-    description: "Números de 4 cifras",
-    numbersPerLevel: 5,
+    description: "Número formado por 4 digitos",
+    numbersPerLevel: 6,
   },
   {
     name: "Nivel 2",
+    title: "Números de 5 cifras",
     digits: 5,
-    description: "Números de 5 cifras",
-    numbersPerLevel: 5,
+    description: "Número formado por 5 digitos",
+    numbersPerLevel: 8,
   },
   {
     name: "Nivel 3",
+    title: "Números de 5 cifras",
     digits: 5,
-    description: "Números complejos de 5 cifras",
-    numbersPerLevel: 5,
+    description: "Número formado por 5 digitos",
+    numbersPerLevel: 10,
   },
 ]
 
@@ -93,6 +96,8 @@ export const useFormaNumeroGigante = () => {
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
   const [randomNumbers, setRandomNumbers] = useState<number[]>([])
+  // NUEVO: Estado para controlar cuando necesitamos preparar el siguiente número
+  const [needsNewNumber, setNeedsNewNumber] = useState(false)
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
@@ -100,7 +105,7 @@ export const useFormaNumeroGigante = () => {
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Valores calculados - SIGUIENDO EL PATRÓN DE useGameLogic
+  // Valores calculados
   const currentGameLevel = formaNumeroLevels[currentLevel]
   const currentTargetNumber = randomNumbers[currentNumberIndex]
   const isLastLevel = currentLevel === formaNumeroLevels.length - 1
@@ -165,6 +170,7 @@ export const useFormaNumeroGigante = () => {
     setDigitCards(newDigitCards)
     setDropSlots(newDropSlots)
     setIsGameActive(true)
+    setNeedsNewNumber(false) // IMPORTANTE: Marcamos que ya no necesitamos nuevo número
   }, [currentTargetNumber, initializeDropSlots])
 
   // Manejar inicio de arrastre
@@ -219,7 +225,7 @@ export const useFormaNumeroGigante = () => {
     return formedNum === currentTargetNumber
   }, [dropSlots, currentTargetNumber])
 
-  // Enviar número
+  // Enviar número - CORREGIDO
   const submitNumber = useCallback(() => {
     const isCorrect = checkNumber()
 
@@ -227,40 +233,54 @@ export const useFormaNumeroGigante = () => {
       setAciertos((prev) => prev + 1)
       showToast("¡Excelente!", `¡Formaste correctamente ${currentTargetNumber?.toLocaleString()}!`)
 
-      // Mover al siguiente número o completar nivel
+      // Limpiar inmediatamente las tarjetas y slots
+      setDigitCards([])
+      setDropSlots([])
+      setIsGameActive(false)
+
+      // Verificar si hay más números en este nivel
       if (currentNumberIndex < currentGameLevel.numbersPerLevel - 1) {
+        // Hay más números, preparar el siguiente
         setTimeout(() => {
           setCurrentNumberIndex((prev) => prev + 1)
+          setNeedsNewNumber(true) // Marcar que necesitamos nuevo número
         }, 1500)
       } else {
         // Nivel completado
         setTimeout(() => {
           setCompletedSets(prev => [...prev, currentLevel.toString()])
           showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
-          setIsGameActive(false)
         }, 1500)
       }
     } else {
       setErrores((prev) => prev + 1)
       showToast("¡Inténtalo de nuevo!", "El número no es correcto", "destructive")
+      clearNumber();
     }
   }, [checkNumber, currentTargetNumber, currentNumberIndex, currentGameLevel, showToast, currentLevel])
 
   // Limpiar número
   const clearNumber = useCallback(() => {
     setDropSlots((prev) => prev.map((slot) => ({ ...slot, digit: null })))
-    setDigitCards((prev) => prev.map((card) => ({ ...card, isUsed: false, position: undefined })))
+    setDigitCards((prev) =>
+      prev.map((card) => ({
+        ...card,
+        isUsed: false,
+        position: undefined
+      }))
+    )
   }, [])
 
-  // Siguiente nivel - SIGUIENDO EL PATRÓN DE useGameLogic
+  // Siguiente nivel
   const handleNextLevel = useCallback(() => {
     if (!isLastLevel) {
       setTotalAciertos((prev) => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setCurrentNumberIndex(0)
-      setAciertos(0)
-      setErrores(0)
       setRandomNumbers([])
+      setDigitCards([])
+      setDropSlots([])
+      setNeedsNewNumber(false) // Reset del flag
 
       showToast("¡Nuevo nivel desbloqueado! 🚀", `${formaNumeroLevels[currentLevel + 1].name}`)
     }
@@ -276,6 +296,7 @@ export const useFormaNumeroGigante = () => {
     setTotalAciertos(0)
     setTiempoFinal(null)
     setRandomNumbers([])
+    setNeedsNewNumber(false) // Reset del flag
 
     reiniciar()
     showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
@@ -286,19 +307,26 @@ export const useFormaNumeroGigante = () => {
     if (currentGameLevel && randomNumbers.length === 0) {
       const newRandomNumbers = generateRandomNumbers(currentGameLevel.digits, currentGameLevel.numbersPerLevel)
       setRandomNumbers(newRandomNumbers)
+      setNeedsNewNumber(true) // Necesitamos preparar el primer número
     }
   }, [currentGameLevel, randomNumbers.length])
 
-  // Efecto para iniciar nuevo número cuando cambia el índice
+  // EFECTO CORREGIDO: Para iniciar nuevo número
   useEffect(() => {
-    if (currentTargetNumber && !isGameActive && !isLevelComplete && !isGameComplete) {
+    // Condiciones para iniciar un nuevo número:
+    // 1. Tenemos un número objetivo
+    // 2. El juego no está activo actualmente
+    // 3. Necesitamos un nuevo número (después de completar uno o al inicio)
+    // 4. El nivel no está completo
+    // 5. El juego no está completo
+    if (currentTargetNumber && !isGameActive && needsNewNumber && !isLevelComplete && !isGameComplete) {
       const timeout = setTimeout(() => {
         startNewNumber()
-      }, 1000)
+      }, 100) // Reducido el timeout para que sea más responsivo
 
       return () => clearTimeout(timeout)
     }
-  }, [currentTargetNumber, isGameActive, isLevelComplete, isGameComplete, startNewNumber])
+  }, [currentTargetNumber, isGameActive, needsNewNumber, isLevelComplete, isGameComplete, startNewNumber])
 
   // Efecto para manejar la finalización del juego
   useEffect(() => {

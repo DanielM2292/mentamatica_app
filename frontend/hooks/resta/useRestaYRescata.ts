@@ -7,7 +7,8 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 
 const restaYRescataLevels = [
   {
-    name: "Nivel 1 - Puente Corto",
+    name: "Nivel 1",
+    title: "Puente Corto",
     description: "Cruza el primer puente",
     difficulty: "Fácil",
     segmentCount: 5,
@@ -15,7 +16,8 @@ const restaYRescataLevels = [
     maxNumber: 10,
   },
   {
-    name: "Nivel 2 - Puente Medio",
+    name: "Nivel 2",
+    title: "Puente Medio",
     description: "Un puente más largo",
     difficulty: "Medio",
     segmentCount: 7,
@@ -23,10 +25,11 @@ const restaYRescataLevels = [
     maxNumber: 15,
   },
   {
-    name: "Nivel 3 - Puente Largo",
+    name: "Nivel 3",
+    title: "Puente Largo",
     description: "El puente más desafiante",
     difficulty: "Difícil",
-    segmentCount: 8,
+    segmentCount: 9,
     minNumber: 8,
     maxNumber: 20,
   },
@@ -212,8 +215,6 @@ export const useRestaYRescata = () => {
       setCurrentLevel(prev => prev + 1)
       setCurrentSegmentIndex(0)
       setSegments(generateRandomSegments(newLevel))
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
       setShowFeedback(false)
       setSelectedAnswer(null)

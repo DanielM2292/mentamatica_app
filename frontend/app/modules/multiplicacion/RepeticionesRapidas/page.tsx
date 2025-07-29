@@ -10,7 +10,7 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Package, Target, Lightbulb, Sparkles, Grid3X3, CheckCircle, Move, Hand, Star, Smartphone, Zap, Trophy, Trash2 } from "lucide-react"
+import { Package, Lightbulb, Grid3X3, CheckCircle, Hand, Star, Smartphone, Trash2 } from "lucide-react"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 const Page = () => {
@@ -468,18 +468,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-3 sm:mt-6 space-y-3 sm:space-y-6" ref={gameContainerRef}>

@@ -10,8 +10,7 @@ import TiempoJuego from "@/components/molecules/TiempoJuego"
 import { TimerProvider } from "@/context/timer-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Clock, Zap, Target, Trophy, Flame, Timer, CheckCircle, X, Keyboard, Smartphone } from "lucide-react"
+import { Clock, Zap, CheckCircle, X, Keyboard, Smartphone } from "lucide-react"
 import { useState, useEffect } from "react"
 
 const Page = () => {
@@ -27,14 +26,10 @@ const GameWrapper = () => {
     currentLevel,
     tableCells,
     currentCell,
-    currentCellIndex,
     aciertos,
     errores,
-    completedCells,
     streak,
-    maxStreak,
-    estrellas,
-    progress,
+    estrellas,    
     completedSets,
     totalAciertos,
     currentGameLevel,
@@ -42,7 +37,6 @@ const GameWrapper = () => {
     isLevelComplete,
     isGameComplete,
     isGameActive,
-    timeRemaining,
     inputValue,
     gameContainerRef,
     inputRef,
@@ -328,18 +322,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-3 sm:mt-6 space-y-3 sm:space-y-6" ref={gameContainerRef}>

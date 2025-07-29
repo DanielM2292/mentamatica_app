@@ -48,6 +48,7 @@ export const useEnviarResultados = ({
     };
 
     if (isGameComplete && tiempoFinal === null) {
+      console.log("Estra a la validacion antes de ejecutar el envio ")
       detener();
       enviarResultados();
     }

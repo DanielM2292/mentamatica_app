@@ -8,7 +8,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas";
 // Configuración de niveles para Memoria Inversa con generación aleatoria
 const memoriaInversaLevels = [
   {
-    name: "Nivel 1 - Memoria Básica",
+    name: "Nivel 1",
+    title: "Memoria Básica",
     description: "Encuentra 4 pares",
     difficulty: "Fácil",
     pairs: 4,
@@ -16,7 +17,8 @@ const memoriaInversaLevels = [
     maxNumber: 10,
   },
   {
-    name: "Nivel 2 - Memoria Intermedia",
+    name: "Nivel 2",
+    title: "Memoria Intermedia",
     description: "Encuentra 6 pares",
     difficulty: "Medio",
     pairs: 6,
@@ -24,7 +26,8 @@ const memoriaInversaLevels = [
     maxNumber: 15,
   },
   {
-    name: "Nivel 3 - Memoria Avanzada",
+    name: "Nivel 3",
+    title: "Memoria Avanzada",
     description: "Encuentra 8 pares",
     difficulty: "Difícil",
     pairs: 8,
@@ -111,7 +114,7 @@ export const useMemoriaInversa = () => {
     for (let i = 0; i < gameLevel.pairs; i++) {
       // Generar números aleatorios dentro del rango del nivel
       const minuend = Math.floor(Math.random() * (gameLevel.maxNumber - gameLevel.minNumber + 1)) + gameLevel.minNumber
-      const subtrahend = Math.floor(Math.random() * (minuend - 1)) + 1 // Asegurar que subtrahend < minuend
+      const subtrahend = Math.floor(Math.random() * (minuend - 1)) + 1
       const result = minuend - subtrahend
 
       // Carta de resta
@@ -243,8 +246,6 @@ export const useMemoriaInversa = () => {
       setCurrentLevel(prev => prev + 1)
       setMatchedPairs(0)
       setAttempts(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
       setFlippedCards([])
       setCards(generateRandomCards(newLevel))

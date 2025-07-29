@@ -8,26 +8,29 @@ import { convertirErrores } from '@/services/convertidorEstrellas';
 // Configuración de niveles
 const construccionLevels = [
   {
-    name: "Nivel 1 - Figuras Básicas",
+    name: "Nivel 1",
+    title: "Figuras Básicas",
     description: "Construye triángulos y cuadrados",
     difficulty: "Fácil",
-    figuresPerLevel: 4,
+    figuresPerLevel: 2,
     targetFigures: ["triangle", "square"],
     maxPoints: 4,
   },
   {
-    name: "Nivel 2 - Figuras Intermedias",
+    name: "Nivel 2",
+    title: "Figuras Intermedias",
     description: "Incluye pentágonos y hexágonos",
     difficulty: "Medio", 
-    figuresPerLevel: 6,
+    figuresPerLevel: 2,
     targetFigures: ["triangle", "square", "pentagon", "hexagon"],
     maxPoints: 6,
   },
   {
-    name: "Nivel 3 - Figuras Avanzadas",
+    name: "Nivel 3",
+    title: "Figuras Avanzadas",
     description: "Construye cualquier figura geométrica",
     difficulty: "Difícil",
-    figuresPerLevel: 8,
+    figuresPerLevel: 2,
     targetFigures: ["triangle", "square", "pentagon", "hexagon", "octagon", "star"],
     maxPoints: 8,
   },
@@ -54,7 +57,7 @@ const figureTemplates = {
   },
   pentagon: {
     name: "Pentágono",
-    emoji: "🔷",
+    emoji: "⬟",
     color: "from-purple-400 to-purple-600", 
     points: 5,
     lines: 5,
@@ -509,8 +512,6 @@ export const useConstruyeFigura = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(newLevel)
       setFiguresCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
 
       generateConstructionArea()

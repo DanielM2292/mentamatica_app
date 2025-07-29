@@ -43,10 +43,8 @@ const GameWrapper = () => {
         ) : levelUpPending ? (
           <NivelCompletado
               aciertos={gameState.correctAnswers}
-              nivel={gameState.level + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={resetGame}
             />
         ) : (
           <GameBoard

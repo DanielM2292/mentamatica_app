@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Play, Star, Circle, X } from "lucide-react";
+import { ArrowLeft, Play, Circle, X } from "lucide-react";
 import { gsap } from "gsap";
 import Monedas from "@/components/molecules/Monedas";
 import { useUser } from "@clerk/nextjs";
@@ -72,7 +72,7 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-const ConjuntosPage: React.FC = () => {
+const Page: React.FC = () => {
   const router = useRouter();
   const [currentActivity, setCurrentActivity] = useState<number>(1);
   const [isVisible, setIsVisible] = useState(false);
@@ -607,4 +607,4 @@ const ConjuntosPage: React.FC = () => {
   );
 };
 
-export default ConjuntosPage;
+export default Page;

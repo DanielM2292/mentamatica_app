@@ -8,7 +8,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 // Configuración de niveles basada en desarrollo cognitivo infantil
 const rompePinataLevels = [
   {
-    name: "Nivel 1 - Primeras Multiplicaciones",
+    name: "Nivel 1",
+    title: "Primeras Multiplicaciones",
     description: "Tablas del 2 y 3",
     difficulty: "Fácil",
     tables: [2, 3],
@@ -17,7 +18,8 @@ const rompePinataLevels = [
     timeLimit: 60,
   },
   {
-    name: "Nivel 2 - Multiplicaciones Básicas",
+    name: "Nivel 2",
+    title: "Multiplicaciones Básicas",
     description: "Tablas del 2, 3 y 4",
     difficulty: "Medio",
     tables: [2, 3, 4],
@@ -26,7 +28,8 @@ const rompePinataLevels = [
     timeLimit: 90,
   },
   {
-    name: "Nivel 3 - Desafío Multiplicativo",
+    name: "Nivel 3",
+    title: "Desafio Multiplicativo",
     description: "Tablas del 2 al 5",
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
@@ -107,9 +110,6 @@ export const useRompePinata = () => {
   const [aciertos, setAciertos] = useState(0)
   const [errores, setErrores] = useState(0)
   const [piñatasRotas, setPiñatasRotas] = useState(0)
-  const [isGameActive, setIsGameActive] = useState(false)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [isGameComplete, setIsGameComplete] = useState(false)
   const [completedSets, setCompletedSets] = useState<any[]>([])
   const [totalAciertos, setTotalAciertos] = useState(0)
   const [tiempoFinal, setTiempoFinal] = useState<number | null>(null)
@@ -124,11 +124,27 @@ export const useRompePinata = () => {
   const lastToastTime = useRef<number>(0)
   const lastToastMessage = useRef<string>("")
 
-  // Computed values
+  // Computed values - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const currentGameLevel = rompePinataLevels[currentLevel]
   const isLastLevel = currentLevel >= rompePinataLevels.length - 1
+  const isLevelComplete = piñatasRotas >= currentGameLevel.piñatasPerLevel
+  const isGameComplete = isLastLevel && isLevelComplete
+  const isGameActive = !isLevelComplete && !isGameComplete
   const estrellas = convertirErrores(errores)
   const progress = (piñatasRotas / currentGameLevel.piñatasPerLevel) * 100
+
+  // ENVIAR RESULTADOS - COLOCADO EN LA MISMA POSICIÓN QUE useConstruyeFiguras
+  useEnviarResultados({
+    user: user ? { id: user.id } : {},
+    aciertos,
+    errores,
+    estrellas,
+    tiempo,
+    isGameComplete,
+    tiempoFinal,
+    detener,
+    setTiempoFinal
+  })
 
   // Initialize timer
   useEffect(() => {
@@ -292,25 +308,18 @@ export const useRompePinata = () => {
 
         setTimeout(() => setShowCelebration(false), 1500)
 
-        // *** ARREGLO PRINCIPAL: Verificar si el nivel está completo usando el valor actualizado ***
+        // LÓGICA DE FINALIZACIÓN MEJORADA - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
         if (newPiñatasRotas >= currentGameLevel.piñatasPerLevel) {
-          setTimeout(() => {
-            // *** VERIFICAR SI ES EL ÚLTIMO NIVEL ANTES DE MARCAR COMO COMPLETO ***
-            if (currentLevel >= rompePinataLevels.length - 1) {
-              // Es el último nivel, marcar juego como completado
-              setIsGameComplete(true)
-              setIsGameActive(false)
-              setTiempoFinal(tiempo)
-              detener()
-              showToast("¡Juego Completado! 🏆🎉", `¡Has completado todos los niveles!`)
-            } else {
-              // No es el último nivel, marcar solo nivel como completo
-              setIsLevelComplete(true)
-              setIsGameActive(false)
-              setCompletedSets([{ id: currentLevel }])
-              showToast("¡Nivel Completado! 🏆", `¡Rompiste todas las piñatas!`)
-            }
-          }, 1000)
+          // Marcar nivel como completado
+          setCompletedSets([{ id: currentGameLevel.piñatasPerLevel }])
+          
+          if (isLastLevel) {
+            // Es el último nivel - finalizamos el juego completamente
+            showToast("¡Juego Completado! 🏆🎉", `¡Has completado todos los niveles!`)
+          } else {
+            // No es el último nivel - solo completamos el nivel actual
+            showToast("¡Nivel Completado! 🏆", `¡Rompiste todas las piñatas!`)
+          }
         } else {
           // Generar nuevo problema después de un breve delay
           setTimeout(() => {
@@ -351,24 +360,19 @@ export const useRompePinata = () => {
           ))
         }, 800)
       }
-    }, 400) // Delay mejorado para percepción de impacto
-  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, showToast, currentLevel, tiempo, detener, getNextProblem, generatePinatas])
+    }, 400)
+  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, showToast, isLastLevel, getNextProblem, generatePinatas])
 
-  // *** ARREGLO: Mejorar la lógica de handleNextLevel ***
+  // MANEJAR SIGUIENTE NIVEL - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const handleNextLevel = useCallback(() => {
-    // *** VERIFICACIÓN ADICIONAL: Solo proceder si no estamos en el último nivel ***
     if (currentLevel < rompePinataLevels.length - 1) {
       const newLevel = currentLevel + 1
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(newLevel)
       setPiñatasRotas(0)
-      setAciertos(0)
-      setErrores(0)
       setCombo(0)
-      setIsLevelComplete(false)
       setCompletedSets([])
 
-      // Generar nuevos problemas para el nivel
       const newProblems = generateUniqueProblems(rompePinataLevels[newLevel], rompePinataLevels[newLevel].piñatasPerLevel)
       setLevelProblems(newProblems)
       setCurrentProblemIndex(0)
@@ -376,18 +380,10 @@ export const useRompePinata = () => {
 
       setCurrentProblem(firstProblem)
       setPinatas(generatePinatas(firstProblem))
-      setIsGameActive(true)
 
       showToast("¡Nuevo Desafío! 🎪", `${rompePinataLevels[newLevel].name}`)
-    } else {
-      // *** SI YA ESTAMOS EN EL ÚLTIMO NIVEL, MARCAR COMO JUEGO COMPLETADO ***
-      setIsGameComplete(true)
-      setIsGameActive(false)
-      setTiempoFinal(tiempo)
-      detener()
-      showToast("¡Juego Completado! 🏆🎉", `¡Has completado todos los niveles!`)
     }
-  }, [currentLevel, aciertos, generatePinatas, showToast, detener, tiempo])
+  }, [currentLevel, aciertos, generatePinatas, showToast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -397,8 +393,6 @@ export const useRompePinata = () => {
     setErrores(0)
     setCombo(0)
     setMaxCombo(0)
-    setIsLevelComplete(false)
-    setIsGameComplete(false)
     setCompletedSets([])
     setTotalAciertos(0)
     setTiempoFinal(null)
@@ -411,7 +405,6 @@ export const useRompePinata = () => {
 
     setCurrentProblem(firstProblem)
     setPinatas(generatePinatas(firstProblem))
-    setIsGameActive(true)
 
     reiniciar()
     showToast("¡Nueva Fiesta! 🎉", "¡A romper piñatas!")
@@ -423,22 +416,8 @@ export const useRompePinata = () => {
       const firstProblem = generateLevelProblems()
       setCurrentProblem(firstProblem)
       setPinatas(generatePinatas(firstProblem))
-      setIsGameActive(true)
     }
   }, [currentGameLevel, currentProblem, generateLevelProblems, generatePinatas])
-
-  // Enviar resultados
-  useEnviarResultados({
-    user: user ? { id: user.id } : {},
-    aciertos,
-    errores,
-    estrellas,
-    tiempo,
-    isGameComplete,
-    tiempoFinal,
-    detener,
-    setTiempoFinal
-  })
 
   // Cleanup
   useEffect(() => {
@@ -448,7 +427,6 @@ export const useRompePinata = () => {
   }, [])
 
   return {
-    // Core game state
     currentLevel,
     currentProblem,
     pinatas,
@@ -469,8 +447,7 @@ export const useRompePinata = () => {
     showCelebration,
     gameContainerRef,
     tiempoFinal,
-
-    // Game actions
+        
     handlePinataHit,
     handleNextLevel,
     handleRestart,

@@ -39,9 +39,7 @@ const GameWrapper = () => {
     isGameActive,
     showHint,
     gameContainerRef,
-    figuresRefs,
     sceneRef,
-    progressBarRef,
     timerRef,
     figureTypes,
     roundTime,
@@ -165,18 +163,13 @@ const GameWrapper = () => {
             <JuegoCompletado 
               aciertos={aciertos} 
               estrellas={estrellas} 
-              errores={errores} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
               aciertos={aciertos}
-              estrellas={estrellas}
-              errores={errores}
-              nivel={currentLevel + 1}
               isLastLevel={isLastLevel}
               onNextLevel={handleNextLevel}
-              onRestart={handleRestart}
             />
           ) : (
             <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6" ref={gameContainerRef}>
@@ -249,8 +242,8 @@ const GameWrapper = () => {
                 </Card>
               )}
 
-              {/* Timer y progreso */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Timer */}
+              <div className="gap-4 sm:gap-6">
                 <Card
                   className={`bg-white/95 backdrop-blur-lg border-4 border-orange-400 shadow-2xl ${
                     animatedElements.has("timer") ? "animate-slide-detective" : "opacity-0"
@@ -271,62 +264,13 @@ const GameWrapper = () => {
                     <div className="mt-2 sm:mt-3 w-full bg-gray-200 rounded-full h-2 sm:h-3">
                       <div
                         className={`h-full rounded-full transition-all duration-1000 ${
-                          roundTime <= 10 ? 'bg-red-500 animate-pulse' : 'bg-orange-500'
+                          roundTime <= 30 ? 'bg-red-500 animate-pulse' : 'bg-orange-500'
                         }`}
                         style={{ width: `${(roundTime / currentGameLevel.timeLimit) * 100}%` }}
                       />
                     </div>
                   </CardContent>
-                </Card>
-
-                <Card
-                  className={`bg-white/95 backdrop-blur-lg border-4 border-green-400 shadow-2xl ${
-                    animatedElements.has("progress") ? "animate-slide-detective" : "opacity-0"
-                  }`}
-                  style={{ animationDelay: "0.2s" }}
-                >
-                  <CardContent className="p-3 sm:p-6">
-                    <div className="grid grid-cols-3 gap-2 sm:gap-3 text-center">
-                      <div className="bg-gradient-to-r from-green-100 to-green-200 rounded-xl p-2 sm:p-3 border-2 border-green-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <Target className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                          <span className="font-bold text-green-800 text-xs sm:text-sm">Casos</span>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold text-green-700">
-                          {roundsCompleted}/{currentGameLevel?.figuresPerLevel}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-blue-100 to-blue-200 rounded-xl p-2 sm:p-3 border-2 border-blue-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
-                          <span className="font-bold text-blue-800 text-xs sm:text-sm">Aciertos</span>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold text-blue-700">{aciertos}</div>
-                      </div>
-                      
-                      <div className="bg-gradient-to-r from-purple-100 to-purple-200 rounded-xl p-2 sm:p-3 border-2 border-purple-300">
-                        <div className="flex items-center justify-center gap-1 mb-1">
-                          <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
-                          <span className="font-bold text-purple-800 text-xs sm:text-sm">Progreso</span>
-                        </div>
-                        <div className="text-sm sm:text-lg font-bold text-purple-700">{Math.round(progress)}%</div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-2 sm:mt-3">
-                      <div className="relative w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
-                        <div
-                          ref={progressBarRef}
-                          className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 h-full rounded-full transition-all duration-1000 animate-glow-detective"
-                          style={{ width: `${progress}%` }}
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                </Card>                
               </div>
 
               {/* Escena de búsqueda */}
@@ -356,8 +300,6 @@ const GameWrapper = () => {
                       const figureData = figureTypes[figure.type]
                       return (
                         <div
-                          key={figure.id}
-                          ref={(el) => (figuresRefs.current[figure.id] = el)}
                           onClick={(e) => handleFigureClick(figure.id, e)}
                           onTouchEnd={(e) => {
                             e.preventDefault()

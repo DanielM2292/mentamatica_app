@@ -8,7 +8,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 // Configuración de niveles
 const detectiveLevels = [
   {
-    name: "Nivel 1 - Figuras Básicas",
+    name: "Nivel 1",
+    title: "Figuras Básicas",
     description: "Encuentra círculos, cuadrados y triángulos",
     difficulty: "Fácil",
     figuresPerLevel: 4,
@@ -17,7 +18,8 @@ const detectiveLevels = [
     distractors: 3,
   },
   {
-    name: "Nivel 2 - Figuras Intermedias", 
+    name: "Nivel 2", 
+    title: "Figuras Intermedias",
     description: "Incluye rectángulos, pentágonos y hexágonos",
     difficulty: "Medio",
     figuresPerLevel: 6,
@@ -26,7 +28,8 @@ const detectiveLevels = [
     distractors: 5,
   },
   {
-    name: "Nivel 3 - Figuras Avanzadas",
+    name: "Nivel 3",
+    title: "Figuras Avanzadas",
     description: "Todas las figuras geométricas",
     difficulty: "Difícil", 
     figuresPerLevel: 8,
@@ -40,8 +43,8 @@ const figureTypes = {
   circle: { name: "Círculo", emoji: "🟠", color: "from-orange-400 to-orange-600", shape: "rounded-full", sound: "¡Redondo como una pelota!" },
   square: { name: "Cuadrado", emoji: "🟦", color: "from-blue-400 to-blue-600", shape: "rounded-none", sound: "¡Cuatro lados iguales!" },
   triangle: { name: "Triángulo", emoji: "🔺", color: "from-red-400 to-red-600", shape: "clip-triangle", sound: "¡Tres puntas como una montaña!" },
-  rectangle: { name: "Rectángulo", emoji: "🟩", color: "from-green-400 to-green-600", shape: "rounded-sm", sound: "¡Como una puerta!" },
-  pentagon: { name: "Pentágono", emoji: "🔷", color: "from-purple-400 to-purple-600", shape: "clip-pentagon", sound: "¡Cinco lados mágicos!" },
+  rectangle: { name: "Rectángulo", emoji: "▬", color: "from-green-400 to-green-600", shape: "rounded-sm", sound: "¡Como una puerta!" },
+  pentagon: { name: "Pentágono", emoji: "⬟", color: "from-purple-400 to-purple-600", shape: "clip-pentagon", sound: "¡Cinco lados mágicos!" },
   hexagon: { name: "Hexágono", emoji: "⬡", color: "from-yellow-400 to-yellow-600", shape: "clip-hexagon", sound: "¡Como un panal de abejas!" },
   octagon: { name: "Octágono", emoji: "🛑", color: "from-pink-400 to-pink-600", shape: "clip-octagon", sound: "¡Como una señal de alto!" },
   star: { name: "Estrella", emoji: "⭐", color: "from-amber-400 to-amber-600", shape: "clip-star", sound: "¡Brilla en el cielo!" },
@@ -339,6 +342,7 @@ export const useDetectiveFiguras = () => {
 
   // Timer de ronda
   useEffect(() => {
+    if(gameState.figures.length === 0) return;
     if (isGameActive && roundTime > 0) {
       roundTimer.current = setTimeout(() => {
         setRoundTime(prev => prev - 1)
@@ -356,7 +360,7 @@ export const useDetectiveFiguras = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateScene, showToast])
+  }, [isGameActive, roundTime, generateScene, showToast, gameState.figures.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
@@ -373,8 +377,6 @@ export const useDetectiveFiguras = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setRoundsCompleted(0)
-      setAciertos(0)
-      setErrores(0)
       setCompletedSets([])
 
       generateScene()

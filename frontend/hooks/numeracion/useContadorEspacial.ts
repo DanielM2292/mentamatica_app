@@ -10,7 +10,8 @@ import { convertirErrores } from "@/services/convertidorEstrellas"
 // Configuración ultra-simple para niños pequeños (3-6 años)
 const contadorEspacialLevels = [
   {
-    name: "Nivel 1 - Primeros Números",
+    name: "Nivel 1",
+    title: "Primeros Números",
     description: "Aprende a subir y bajar",
     difficulty: "Súper Fácil",
     missions: [
@@ -22,7 +23,8 @@ const contadorEspacialLevels = [
     ],
   },
   {
-    name: "Nivel 2 - Más Aventuras",
+    name: "Nivel 2",
+    title: "Más Aventuras",
     description: "Números un poco más lejos",
     difficulty: "Fácil",
     missions: [
@@ -34,7 +36,8 @@ const contadorEspacialLevels = [
     ],
   },
   {
-    name: "Nivel 3 - Experto en Números",
+    name: "Nivel 3",
+    title: "Experto en Números",
     description: "¡Eres un campeón!",
     difficulty: "Medio",
     missions: [
@@ -46,11 +49,6 @@ const contadorEspacialLevels = [
     ],
   },
 ]
-
-interface Mission {
-  start: number
-  target: number
-}
 
 export const useContadorEspacial = () => {
   const { toast } = useToast()
@@ -202,7 +200,7 @@ export const useContadorEspacial = () => {
         if (newValue > currentMission?.target) {
           showToast("¡Muy bien! 👍", "¡Sigue bajando!")
         } else {
-          showToast("¡Ups! 😅", "Te pasaste un poquito")
+          showToast("¡Ups! 😅", "Te pasaste un poquito", "destructive")
           setErrores(prev => prev + 1)
         }
       }
@@ -216,9 +214,7 @@ export const useContadorEspacial = () => {
     if (!isLastLevel) {
       setTotalAciertos((prev) => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
-      setCurrentMissionIndex(0)
-      setAciertos(0)
-      setErrores(0)
+      setCurrentMissionIndex(0)      
       setCompletedSets([])
 
       showToast("¡Nuevo Nivel! 🚀", `${contadorEspacialLevels[currentLevel + 1].name}`)
@@ -292,7 +288,6 @@ export const useContadorEspacial = () => {
   }, [])
 
   return {
-    // Core game state - Compatible con useGameLogic
     currentLevel,
     currentMissionIndex,
     currentValue,
@@ -311,14 +306,12 @@ export const useContadorEspacial = () => {
     gameContainerRef,
     tiempoFinal,
 
-    // Game actions - Compatible con useGameLogic
     moveUp,
     moveDown,
     handleNextLevel,
     handleRestart,
     handleTiempoFinalizado,
 
-    // Compatibility with existing interface (dummy values)
     spaceshipPosition: { x: 10, y: 50 },
     targetPosition: { x: 90, y: 50 },
     availableOperations: [],
@@ -328,6 +321,6 @@ export const useContadorEspacial = () => {
     items: [],
     handleDragStart: () => {},
     handleDrop: () => {},
-    score: aciertos * 10, // Equivalente al score de useGameLogic
+    score: aciertos * 10,
   }
 }

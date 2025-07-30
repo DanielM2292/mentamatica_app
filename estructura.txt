@@ -8,7 +8,9 @@
 |   |   `-- api/
 |   |       |-- avatar/
 |   |       |   `-- route.ts
-|   |       |-- conjuntos/
+|   |       |-- juegos/
+|   |       |   `-- route.ts
+|   |       |-- metricas/
 |   |       |   `-- route.ts
 |   |       `-- usuarios/
 |   |           `-- route.ts
@@ -41,65 +43,94 @@
 |   |-- app/
 |   |   |-- dashboard/
 |   |   |   |-- layout.tsx
+|   |   |   |-- loading.tsx
 |   |   |   `-- page.tsx
 |   |   |-- globals.css
 |   |   |-- layout.tsx
 |   |   |-- modules/
 |   |   |   |-- conjuntos/
 |   |   |   |   |-- clasificaAgrupa/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
-|   |   |   |   |-- detectiveConjunto/
+|   |   |   |   |-- detectiveConjuntos/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   |-- page.tsx
 |   |   |   |   `-- unionInterseccion/
+|   |   |   |       |-- loading.tsx
 |   |   |   |       `-- page.tsx
 |   |   |   |-- division/
 |   |   |   |   |-- divisionTesoro/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   |-- page.tsx
 |   |   |   |   |-- pulsaCifraCorrecta/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   `-- reparteDulces/
+|   |   |   |       |-- loading.tsx
 |   |   |   |       `-- page.tsx
 |   |   |   |-- geometria/
 |   |   |   |   |-- construyeFiguras/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- detectiveFiguras/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   |-- page.tsx
 |   |   |   |   `-- perimetroMagico/
+|   |   |   |       |-- loading.tsx
 |   |   |   |       `-- page.tsx
 |   |   |   |-- multiplicacion/
 |   |   |   |   |-- DesafioTablas/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- RepeticionesRapidas/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- RompePinata/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   `-- page.tsx
 |   |   |   |-- numeracion/
 |   |   |   |   |-- ContadorEspacial/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- FormaNumeroGigante/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- NumeroCorrecto/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   `-- page.tsx
 |   |   |   |-- resta/
-|   |   |   |   |-- RestaYRescata/
-|   |   |   |   |   `-- page.tsx
+|   |   |   |   |-- loading.tsx
 |   |   |   |   |-- memoriaInversa/
+|   |   |   |   |   |-- loading.tsx
 |   |   |   |   |   `-- page.tsx
 |   |   |   |   |-- page.tsx
-|   |   |   |   `-- restaCueva/
+|   |   |   |   |-- restaCueva/
+|   |   |   |   |   |-- loading.tsx
+|   |   |   |   |   `-- page.tsx
+|   |   |   |   `-- restaRescata/
+|   |   |   |       |-- loading.tsx
 |   |   |   |       `-- page.tsx
 |   |   |   `-- suma/
 |   |   |       |-- carreraNumeros/
+|   |   |       |   |-- loading.tsx
 |   |   |       |   `-- page.tsx
 |   |   |       |-- dragDropNumerico/
+|   |   |       |   |-- loading.tsx
 |   |   |       |   `-- page.tsx
+|   |   |       |-- loading.tsx
 |   |   |       |-- page.tsx
 |   |   |       `-- sumandoEstrellas/
+|   |   |           |-- loading.tsx
 |   |   |           `-- page.tsx
 |   |   |-- page.tsx
 |   |   `-- settings/
@@ -148,15 +179,18 @@
 |   |   |   |-- ModuleSidebar.tsx
 |   |   |   |-- Monedas.tsx
 |   |   |   |-- ProgressTrack.tsx
+|   |   |   |-- PromedioStars.tsx
+|   |   |   |-- StarRating.tsx
 |   |   |   |-- SumDisplay.tsx
 |   |   |   |-- TiempoJuego.tsx
 |   |   |   |-- UserStats.tsx
-|   |   |   `-- index.ts
+|   |   |   |-- index.ts
+|   |   |   `-- monedas-updated.tsx
 |   |   |-- organisms/
 |   |   |   |-- AreaJuego.tsx
 |   |   |   |-- AreaJuegoDetective.tsx
 |   |   |   |-- AreaJuegoGlobos.tsx
-|   |   |   |-- CognitiveAudioPanel.tsx
+|   |   |   |-- EnhancedCognitiveModal.tsx
 |   |   |   |-- GameBoard.tsx
 |   |   |   |-- GameBoard2.tsx
 |   |   |   |-- JuegoCompletado.tsx
@@ -168,6 +202,23 @@
 |   |   |   |-- LevelPage.tsx
 |   |   |   |-- ModulePage.tsx
 |   |   |   `-- SettingsPage.tsx
+|   |   |-- skeletons/
+|   |   |   |-- AreaJuegoSkeleton.tsx
+|   |   |   |-- DashboardModulesSkeleton.tsx
+|   |   |   |-- DashboardProgressSkeleton.tsx
+|   |   |   |-- DashboardSkeleton.tsx
+|   |   |   |-- DashboardStatsSkeleton.tsx
+|   |   |   |-- DashboardTipsSkeleton.tsx
+|   |   |   |-- GameHeaderSkeleton.tsx
+|   |   |   |-- GamesSkeleton.tsx
+|   |   |   |-- InformacionNivelSkeleton.tsx
+|   |   |   |-- ModulosActivitiesSkeleton.tsx
+|   |   |   |-- ModulosFunFactSkeleton.tsx
+|   |   |   |-- ModulosHeaderSkeleton.tsx
+|   |   |   |-- ModulosProgressSkeleton.tsx
+|   |   |   |-- ModulosSkeleton.tsx
+|   |   |   |-- ModulosVideoSkeleton.tsx
+|   |   |   `-- index.ts
 |   |   |-- templates/
 |   |   |   |-- conjuntos/
 |   |   |   |   |-- ConjuntosTemplate.tsx
@@ -176,22 +227,24 @@
 |   |   |       |-- GamesTemplate.tsx
 |   |   |       `-- SumaTemplate.tsx
 |   |   |-- theme-provider.tsx
-|   |   `-- ui/
-|   |       |-- avatar.tsx
-|   |       |-- badge.tsx
-|   |       |-- button.tsx
-|   |       |-- card.tsx
-|   |       |-- dialog.tsx
-|   |       |-- dropdown-menu.tsx
-|   |       |-- input.tsx
-|   |       |-- progress.tsx
-|   |       |-- tabs.tsx
-|   |       |-- toast.tsx
-|   |       `-- toaster.tsx
+|   |   |-- ui/
+|   |   |   |-- avatar.tsx
+|   |   |   |-- badge.tsx
+|   |   |   |-- button.tsx
+|   |   |   |-- card.tsx
+|   |   |   |-- dialog.tsx
+|   |   |   |-- dropdown-menu.tsx
+|   |   |   |-- input.tsx
+|   |   |   |-- progress.tsx
+|   |   |   |-- tabs.tsx
+|   |   |   |-- toast.tsx
+|   |   |   `-- toaster.tsx
+|   |   `-- unlock-confirmation-dialog.tsx
 |   |-- components.json
 |   |-- context/
 |   |   |-- AuthContext.tsx
 |   |   |-- AvatarContext.tsx
+|   |   |-- StarsContext.tsx
 |   |   |-- UserContext.tsx
 |   |   `-- timer-context.tsx
 |   |-- hooks/
@@ -220,14 +273,16 @@
 |   |   |   |-- useRestaEnLaCueva.ts
 |   |   |   `-- useRestaYRescata.ts
 |   |   |-- suma/
-|   |   |   |-- useGameLogic.ts
-|   |   |   `-- useGameLogic2.ts
+|   |   |   |-- useCarreraNumeros.ts
+|   |   |   |-- useDragDropNumero.ts
+|   |   |   `-- useSumandoEstrellas.ts
 |   |   |-- use-toast.ts
 |   |   |-- useCognitiveAudio.ts
 |   |   |-- useEnviarResultados.ts
 |   |   |-- useProgress.ts
 |   |   `-- useTimer.ts
 |   |-- lib/
+|   |   |-- cognitive-scripts.ts
 |   |   |-- constants.ts
 |   |   |-- dicebear.ts
 |   |   |-- gsap-config.ts
@@ -243,6 +298,8 @@
 |   |   |   `-- lottie/
 |   |   |       |-- counting-animation.json
 |   |   |       `-- math-operations.json
+|   |   |-- audios/
+|   |   |   `-- README.md
 |   |   |-- data/
 |   |   |   |-- conjuntos/
 |   |   |   |   |-- gameLevels.ts
@@ -324,17 +381,16 @@
 |   |   |   |-- modules.ts
 |   |   |   `-- numeracion/
 |   |   |       `-- numeroCorrect.ts
-|   |   |-- images/
-|   |   |   |-- icons/
-|   |   |   |   |-- conjuntos.png
-|   |   |   |   |-- division.png
-|   |   |   |   |-- geometria.png
-|   |   |   |   |-- multiplicacion.png
-|   |   |   |   |-- numeracion.png
-|   |   |   |   |-- resta.png
-|   |   |   |   `-- suma.png
-|   |   |   `-- logo.png
-|   |   `-- sounds/
+|   |   `-- images/
+|   |       |-- icons/
+|   |       |   |-- conjuntos.png
+|   |       |   |-- division.png
+|   |       |   |-- geometria.png
+|   |       |   |-- multiplicacion.png
+|   |       |   |-- numeracion.png
+|   |       |   |-- resta.png
+|   |       |   `-- suma.png
+|   |       `-- logo.png
 |   |-- services/
 |   |   `-- convertidorEstrellas.ts
 |   |-- tailwind.config.js
@@ -352,4 +408,4 @@
 |-- package-lock.json
 `-- package.json
 
-80 directories, 272 files
+82 directories, 326 files

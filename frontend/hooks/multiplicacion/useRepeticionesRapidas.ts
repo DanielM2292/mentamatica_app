@@ -13,7 +13,7 @@ const repeticionesLevels = [
     difficulty: "Fácil",
     tables: [2, 3],
     maxMultiplier: 4,
-    problemsPerLevel: 6,
+    problemsPerLevel: 5,
   },
   {
     name: "Nivel 2",
@@ -22,7 +22,7 @@ const repeticionesLevels = [
     difficulty: "Medio",
     tables: [2, 3, 4],
     maxMultiplier: 6,
-    problemsPerLevel: 8,
+    problemsPerLevel: 5,
   },
   {
     name: "Nivel 3",
@@ -31,7 +31,7 @@ const repeticionesLevels = [
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
     maxMultiplier: 8,
-    problemsPerLevel: 10,
+    problemsPerLevel: 5,
   },
 ]
 

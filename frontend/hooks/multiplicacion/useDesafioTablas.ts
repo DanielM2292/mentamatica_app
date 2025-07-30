@@ -15,7 +15,7 @@ const desafioTablasLevels = [
     difficulty: "Fácil",
     tables: [2, 3],
     maxMultiplier: 5,
-    problemsPerLevel: 8,
+    problemsPerLevel: 5,
   },
   {
     name: "Nivel 2",
@@ -24,7 +24,7 @@ const desafioTablasLevels = [
     difficulty: "Medio",
     tables: [2, 3, 4],
     maxMultiplier: 7,
-    problemsPerLevel: 10,
+    problemsPerLevel: 5,
   },
   {
     name: "Nivel 3",
@@ -33,7 +33,7 @@ const desafioTablasLevels = [
     difficulty: "Difícil",
     tables: [2, 3, 4, 5],
     maxMultiplier: 10,
-    problemsPerLevel: 12,
+    problemsPerLevel: 5,
   },
 ]
 

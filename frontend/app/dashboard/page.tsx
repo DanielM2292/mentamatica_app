@@ -473,10 +473,11 @@ export default function DashboardPage() {
   // Los audios ahora solo se reproducen cuando el usuario los solicita explícitamente
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 relative overflow-hidden">
+    <div className="w-full">
 
       {/* Header - Ultra optimizado para móviles */}
-      <header ref={headerRef} className="relative z-10 flex justify-between items-center p-2 sm:p-4 lg:p-6 bg-white/80 backdrop-blur-sm shadow-lg">
+      <header ref={headerRef} className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm shadow-lg">
+        <div className="w-full max-w-7xl mx-auto flex justify-between items-center px-2 sm:px-4 lg:px-8 py-2 sm:py-4 lg:py-6">
         <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-1 min-w-0">
           <div className="relative flex-shrink-0">
             <img
@@ -553,6 +554,7 @@ export default function DashboardPage() {
             />
           </div>
         </div>
+        </div>
       </header>
 
       {/* Modal de Audio Cognitivo Mejorado */}
@@ -570,7 +572,7 @@ export default function DashboardPage() {
       />
 
       {/* Main Content */}
-      <main className={`relative z-10 container mx-auto ${isSmallMobile ? 'px-1 py-2' : 'px-2 sm:px-4 lg:px-6 py-3 sm:py-6 lg:py-8'} pb-20 sm:pb-8`}>
+      <main className={`w-full max-w-7xl mx-auto ${isSmallMobile ? 'px-2 py-2' : 'px-2 sm:px-4 lg:px-8 py-3 sm:py-6 lg:py-8'} pb-20 sm:pb-8`}>
         {/* Welcome Section - Optimizado para móviles */}
         <div ref={welcomeRef} className={`text-center ${isSmallMobile ? 'mb-3' : 'mb-4 sm:mb-8 lg:mb-12'}`}>
           <h2 className={`${isSmallMobile ? 'text-lg' : 'text-xl sm:text-2xl lg:text-4xl'} font-bold ${isSmallMobile ? 'mb-1' : 'mb-1 sm:mb-2 lg:mb-4'} text-gray-800 px-2`}>
@@ -591,7 +593,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Bar - Compacto para móviles */}
-        <div ref={statsRef} className={`grid grid-cols-2 lg:grid-cols-4 ${isSmallMobile ? 'gap-1 mb-3' : 'gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-8 lg:mb-12'}`}>
+        <div ref={statsRef} className={`grid grid-cols-2 lg:grid-cols-4 ${isSmallMobile ? 'gap-2 mb-3' : 'gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-8 lg:mb-12'}`}>
           <StatsCard
             icon={<Star />}
             title="Estrellas"
@@ -619,7 +621,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Modules Grid - Optimizado para móviles */}
-        <div ref={modulesRef} className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${isSmallMobile ? 'gap-1' : 'gap-2 sm:gap-4 lg:gap-6'} max-w-7xl mx-auto`}>
+        <div ref={modulesRef} className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${isSmallMobile ? 'gap-2' : 'gap-3 sm:gap-4 lg:gap-6'}`}>
           {modules.map((module, index) => (
             <ModuleCard
               key={module.id}
@@ -653,7 +655,7 @@ export default function DashboardPage() {
 
         {/* Progress Indicator - Responsive mejorado */}
         <div ref={progressRef} className={`${isSmallMobile ? 'mt-4 px-2' : 'mt-8 lg:mt-12 px-4 sm:px-6 lg:px-0'}`}>
-          <div className={`bg-white/90 backdrop-blur-sm rounded-xl lg:rounded-2xl ${isSmallMobile ? 'p-3' : 'p-4 sm:p-6'} shadow-lg max-w-4xl mx-auto transform hover:scale-102 transition-all duration-500 relative overflow-hidden`}>
+          <div className={`bg-white/90 backdrop-blur-sm rounded-xl lg:rounded-2xl ${isSmallMobile ? 'p-3' : 'p-4 sm:p-6'} shadow-lg transform hover:scale-102 transition-all duration-500 relative overflow-hidden`}>
             {/* Estrellas flotantes decorativas - Reducidas en móviles */}
             {!isSmallMobile && (
               <div className="absolute -top-2 -right-2 flex gap-1">
@@ -777,7 +779,7 @@ export default function DashboardPage() {
 
         {/* Tips para padres - Responsive mejorado */}
         <div ref={tipsRef} className={`${isSmallMobile ? 'mt-4 px-2' : 'mt-6 lg:mt-8 px-4 sm:px-6 lg:px-0'}`}>
-          <div className={`bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl lg:rounded-2xl ${isSmallMobile ? 'p-3' : 'p-4 sm:p-6'} shadow-lg max-w-4xl mx-auto transform hover:scale-102 transition-all duration-500 relative overflow-hidden`}>
+          <div className={`bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl lg:rounded-2xl ${isSmallMobile ? 'p-3' : 'p-4 sm:p-6'} shadow-lg transform hover:scale-102 transition-all duration-500 relative overflow-hidden`}>
             <h3 className={`${isSmallMobile ? 'text-base' : 'text-lg sm:text-xl'} font-bold text-gray-800 ${isSmallMobile ? 'mb-2' : 'mb-4'} flex items-center gap-1 sm:gap-2 relative z-10`}>
               <span className={`${isSmallMobile ? 'text-lg' : 'text-xl sm:text-2xl'}`}>💡</span>
               <span className={isSmallMobile ? 'text-sm' : ''}>

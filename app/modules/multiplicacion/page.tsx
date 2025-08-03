@@ -403,13 +403,13 @@ const MultiplicacionPage: React.FC = () => {
 
     if (activityId === 1) {
       console.log("Navegando a Rompe la Piñata");
-      router.push("/modules/multiplicacion/RompePinata");
+      router.push("/modules/multiplicacion/rompePinata");
     } else if (activityId === 2) {
       console.log("Navegando a Repeticiones Rápidas");
-      router.push("/modules/multiplicacion/RepeticionesRapidas");
+      router.push("/modules/multiplicacion/repeticionesRapidas");
     } else if (activityId === 3) {
       console.log("Navegando a Desafío de Tablas");
-      router.push("/modules/multiplicacion/DesafioTablas");
+      router.push("/modules/multiplicacion/desafioTablas");
     } else {
       console.log("Navegando a actividad genérica");
       router.push(`/multiplicacion/actividad/${activityId}`);

@@ -40,6 +40,7 @@ dist/
 build/
 *.log
 
-*.env
+.env
 */out
+.vercel
 

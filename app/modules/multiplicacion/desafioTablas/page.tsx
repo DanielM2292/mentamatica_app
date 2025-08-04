@@ -150,7 +150,7 @@ const GameWrapper = () => {
     return (
       <div className="bg-white/95 backdrop-blur-lg rounded-xl p-3 sm:p-4 border-2 border-purple-300 shadow-xl">
         <div className="grid grid-cols-3 gap-2 mb-3">
-          {numbers.slice(1, 4).map((num) => (
+          {numbers.slice(0, 3).map((num) => (
             <button
               key={num}
               onClick={() => handleNumberClick(num)}
@@ -161,7 +161,7 @@ const GameWrapper = () => {
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2 mb-3">
-          {numbers.slice(4, 7).map((num) => (
+          {numbers.slice(3, 6).map((num) => (
             <button
               key={num}
               onClick={() => handleNumberClick(num)}
@@ -172,7 +172,7 @@ const GameWrapper = () => {
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2 mb-3">
-          {numbers.slice(7, 10).map((num) => (
+          {numbers.slice(6, 9).map((num) => (
             <button
               key={num}
               onClick={() => handleNumberClick(num)}

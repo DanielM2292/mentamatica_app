@@ -21,7 +21,7 @@ const construccionLevels = [
     title: "Figuras Intermedias",
     description: "Incluye pentágonos y hexágonos",
     difficulty: "Medio", 
-    figuresPerLevel: 2,
+    figuresPerLevel: 4,
     targetFigures: ["triangle", "square", "pentagon", "hexagon"],
     maxPoints: 6,
   },
@@ -30,9 +30,9 @@ const construccionLevels = [
     title: "Figuras Avanzadas",
     description: "Construye cualquier figura geométrica",
     difficulty: "Difícil",
-    figuresPerLevel: 2,
+    figuresPerLevel: 6,
     targetFigures: ["triangle", "square", "pentagon", "hexagon", "octagon", "star"],
-    maxPoints: 8,
+    maxPoints: 10,
   },
 ]
 
@@ -291,14 +291,19 @@ export const useConstruyeFigura = () => {
     const template = figureTemplates[targetFigure]
     
     const points: Point[] = []
-    const maxPoints = Math.min(level.maxPoints, template.points + 3) // Algunos puntos extra
+    const maxPoints = Math.min(level.maxPoints, template.points + 2) // Algunos puntos extra
+
+    // Dimensiones del área de construcción adaptadas a pantalla
+    const canvasWidth = isTouchDevice ? 280 : 400
+    const canvasHeight = isTouchDevice ? 280 : 350
+    const centerX = canvasWidth / 2
+    const centerY = canvasHeight / 2
+    const minDistance = isTouchDevice ? 60 : 80 // Distancia mínima entre puntos
 
     // Generar puntos necesarios para la figura objetivo
     for (let i = 0; i < template.points; i++) {
       const angle = (i * 2 * Math.PI) / template.points
-      const radius = isTouchDevice ? 120 : 150 // Más pequeño para móviles
-      const centerX = isTouchDevice ? 150 : 200
-      const centerY = isTouchDevice ? 150 : 200
+      const radius = isTouchDevice ? 80 : 120
       
       points.push({
         id: i,
@@ -313,12 +318,29 @@ export const useConstruyeFigura = () => {
       })
     }
 
-    // Agregar puntos adicionales (distractores)
+    // Agregar puntos adicionales (distractores) con mejor distribución
     for (let i = template.points; i < maxPoints; i++) {
+      let x: number, y: number
+      let attempts = 0
+      const maxAttempts = 50
+      
+      // Intentar encontrar una posición que no esté muy cerca de otros puntos
+      do {
+        x = 40 + Math.random() * (canvasWidth - 80)
+        y = 40 + Math.random() * (canvasHeight - 80)
+        attempts++
+      } while (
+        attempts < maxAttempts &&
+        points.some(point => {
+          const distance = Math.sqrt((point.x - x) ** 2 + (point.y - y) ** 2)
+          return distance < minDistance
+        })
+      )
+      
       points.push({
         id: i,
-        x: 80 + Math.random() * (isTouchDevice ? 140 : 240),
-        y: 80 + Math.random() * (isTouchDevice ? 140 : 240),
+        x,
+        y,
         isConnected: false,
         connections: [],
         isSelected: false,

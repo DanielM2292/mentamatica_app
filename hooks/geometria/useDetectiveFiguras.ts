@@ -207,6 +207,45 @@ export const useDetectiveFiguras = () => {
     }, 2000)
   }, [])
 
+  // Función para verificar colisiones entre figuras
+  const checkCollision = useCallback((newFigure: { x: number; y: number; scale: number }, existingFigures: Figure[]) => {
+    const minDistance = 12 // Distancia mínima entre figuras (en porcentaje)
+    
+    return existingFigures.some(existing => {
+      const dx = newFigure.x - existing.x
+      const dy = newFigure.y - existing.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      const requiredDistance = minDistance * (newFigure.scale + existing.scale) / 2
+      return distance < requiredDistance
+    })
+  }, [])
+
+  // Función para generar posición sin colisiones
+  const generateSafePosition = useCallback((existingFigures: Figure[], scale: number) => {
+    let attempts = 0
+    const maxAttempts = 50
+    
+    while (attempts < maxAttempts) {
+      const position = {
+        x: Math.random() * 70 + 15, // Margen del 15% en cada lado
+        y: Math.random() * 65 + 15, // Margen del 15% arriba y abajo
+        scale
+      }
+      
+      if (!checkCollision(position, existingFigures)) {
+        return position
+      }
+      attempts++
+    }
+    
+    // Si no encuentra posición segura, usar una posición aleatoria
+    return {
+      x: Math.random() * 70 + 15,
+      y: Math.random() * 65 + 15,
+      scale
+    }
+  }, [checkCollision])
+
   // Generar escena con figuras
   const generateScene = useCallback(() => {
     const level = currentGameLevel
@@ -217,15 +256,18 @@ export const useDetectiveFiguras = () => {
     let figureId = 0
 
     // Generar figuras objetivo (2-4 por ronda)
-    const targetCount = Math.floor(Math.random() * 3) + 2
+    const targetCount = Math.min(Math.floor(Math.random() * 3) + 2, 4) // Máximo 4 objetivos
     for (let i = 0; i < targetCount; i++) {
+      const scale = isTouchDevice ? 1.1 + Math.random() * 0.3 : 0.9 + Math.random() * 0.3
+      const position = generateSafePosition(figures, scale)
+      
       figures.push({
         id: figureId++,
         type: targetFigure,
-        x: Math.random() * 70 + 15, // Más margen para pantallas pequeñas
-        y: Math.random() * 70 + 15,
+        x: position.x,
+        y: position.y,
         rotation: Math.random() * 360,
-        scale: 0.9 + Math.random() * 0.3, // Figuras más grandes para táctil
+        scale: position.scale,
         isFound: false,
         isTarget: true,
         isDistractor: false,
@@ -234,18 +276,22 @@ export const useDetectiveFiguras = () => {
       })
     }
 
-    // Generar distractores
-    for (let i = 0; i < level.distractors; i++) {
+    // Generar distractores (reducir cantidad para evitar amontonamiento)
+    const distractorCount = Math.min(level.distractors, isTouchDevice ? 4 : 6)
+    for (let i = 0; i < distractorCount; i++) {
       const distractorTypes = targetFigures.filter(f => f !== targetFigure)
       const distractorType = distractorTypes[Math.floor(Math.random() * distractorTypes.length)]  as keyof typeof figureTypes
+      
+      const scale = isTouchDevice ? 1.0 + Math.random() * 0.2 : 0.8 + Math.random() * 0.3
+      const position = generateSafePosition(figures, scale)
       
       figures.push({
         id: figureId++,
         type: distractorType,
-        x: Math.random() * 70 + 15,
-        y: Math.random() * 70 + 15,
+        x: position.x,
+        y: position.y,
         rotation: Math.random() * 360,
-        scale: 0.9 + Math.random() * 0.3,
+        scale: position.scale,
         isFound: false,
         isTarget: false,
         isDistractor: true,
@@ -265,7 +311,7 @@ export const useDetectiveFiguras = () => {
     })
 
     setRoundTime(level.timeLimit)
-  }, [currentGameLevel])
+  }, [currentGameLevel, generateSafePosition, isTouchDevice])
 
   // Manejar click en figura
   const handleFigureClick = useCallback((figureId: number, event?: React.MouseEvent | React.TouchEvent) => {

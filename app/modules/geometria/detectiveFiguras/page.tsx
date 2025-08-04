@@ -293,28 +293,113 @@ const GameWrapper = () => {
                   
                   <div 
                     ref={sceneRef}
-                    className="relative min-h-[300px] sm:min-h-[400px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-3 border-purple-300 p-2 sm:p-4 overflow-hidden touch-manipulation"
+                    className="relative min-h-[350px] sm:min-h-[450px] md:min-h-[500px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-3 border-purple-300 p-3 sm:p-6 overflow-hidden touch-manipulation"
                     style={{ touchAction: 'manipulation' }}
                   >
+                    {/* Fondo decorativo del área de juego */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-xl">
+                      {/* Patrón de círculos decorativos */}
+                      <div className="absolute inset-0 opacity-20">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                          <div
+                            key={`circle-${i}`}
+                            className="absolute rounded-full bg-gradient-to-br from-blue-300 to-purple-300"
+                            style={{
+                              width: `${20 + Math.random() * 40}px`,
+                              height: `${20 + Math.random() * 40}px`,
+                              left: `${Math.random() * 90}%`,
+                              top: `${Math.random() * 90}%`,
+                              animation: `float-gentle ${4 + Math.random() * 3}s ease-in-out infinite`,
+                              animationDelay: `${Math.random() * 2}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      
+                      {/* Formas geométricas decorativas */}
+                      <div className="absolute inset-0 opacity-15">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                          <div
+                            key={`shape-${i}`}
+                            className={`absolute ${
+                              i % 4 === 0 ? 'bg-gradient-to-br from-green-200 to-emerald-300 rounded-none' :
+                              i % 4 === 1 ? 'bg-gradient-to-br from-yellow-200 to-orange-300 rounded-full' :
+                              i % 4 === 2 ? 'bg-gradient-to-br from-pink-200 to-rose-300 clip-triangle' :
+                              'bg-gradient-to-br from-indigo-200 to-blue-300 clip-hexagon'
+                            }`}
+                            style={{
+                              width: `${15 + Math.random() * 25}px`,
+                              height: `${15 + Math.random() * 25}px`,
+                              left: `${5 + Math.random() * 85}%`,
+                              top: `${5 + Math.random() * 85}%`,
+                              animation: `rotate-gentle ${6 + Math.random() * 4}s linear infinite`,
+                              animationDelay: `${Math.random() * 3}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      
+                      {/* Estrellas brillantes */}
+                      <div className="absolute inset-0 opacity-30">
+                        {Array.from({ length: 15 }).map((_, i) => (
+                          <div
+                            key={`star-${i}`}
+                            className="absolute text-yellow-400"
+                            style={{
+                              left: `${Math.random() * 95}%`,
+                              top: `${Math.random() * 95}%`,
+                              fontSize: `${8 + Math.random() * 8}px`,
+                              animation: `twinkle-star ${2 + Math.random() * 2}s ease-in-out infinite`,
+                              animationDelay: `${Math.random() * 2}s`,
+                            }}
+                          >
+                            ✨
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Ondas suaves */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="absolute top-0 left-0 w-full h-full">
+                          <div 
+                            className="absolute bg-gradient-to-r from-transparent via-blue-300 to-transparent h-1 w-full animate-wave-1"
+                            style={{ top: '20%' }}
+                          />
+                          <div 
+                            className="absolute bg-gradient-to-r from-transparent via-purple-300 to-transparent h-1 w-full animate-wave-2"
+                            style={{ top: '50%' }}
+                          />
+                          <div 
+                            className="absolute bg-gradient-to-r from-transparent via-pink-300 to-transparent h-1 w-full animate-wave-3"
+                            style={{ top: '80%' }}
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Gradiente sutil superpuesto */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/10 rounded-xl" />
+                    </div>
+
                     {gameState.figures.map((figure) => {
                       const figureData = figureTypes[figure.type]
                       return (
                         <div
+                          key={figure.id}
                           onClick={(e) => handleFigureClick(figure.id, e)}
                           onTouchEnd={(e) => {
                             e.preventDefault()
                             handleFigureClick(figure.id, e)
                           }}
                           className={`
-                            absolute cursor-pointer transition-all duration-300 select-none touch-manipulation
-                            ${figure.isFound ? 'opacity-50 cursor-not-allowed animate-figure-found' : 'hover:scale-110 active:scale-95 animate-figure-pulse'}
+                            absolute cursor-pointer transition-all duration-300 select-none touch-manipulation z-10
+                            ${figure.isFound ? 'opacity-60 cursor-not-allowed animate-figure-found' : 'hover:scale-110 active:scale-95 animate-figure-pulse hover:z-20'}
                             ${figure.isTarget && !figure.isFound && showHint ? 'animate-figure-hint' : ''}
                             ${figure.isAnimating && !figure.isFound ? 'animate-figure-error' : ''}
                           `}
                           style={{
                             left: `${figure.x}%`,
                             top: `${figure.y}%`,
-                            transform: `rotate(${figure.rotation}deg) scale(${figure.scale})`,
+                            transform: `translate(-50%, -50%) rotate(${figure.rotation}deg) scale(${figure.scale})`,
                             animationDelay: `${figure.pulseDelay}s`,
                             touchAction: 'manipulation',
                             userSelect: 'none',
@@ -324,24 +409,27 @@ const GameWrapper = () => {
                         >
                           <div
                             className={`
-                              ${isTouchDevice ? 'w-14 h-14 sm:w-16 sm:h-16' : 'w-12 h-12 sm:w-16 sm:h-16'} 
-                              border-4 transition-all duration-300
+                              ${figure.type === 'rectangle' 
+                                ? (isTouchDevice ? 'w-20 h-12 sm:w-24 sm:h-16 md:w-28 md:h-20' : 'w-16 h-10 sm:w-20 sm:h-12 md:w-24 md:h-16')
+                                : (isTouchDevice ? 'w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24' : 'w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20')
+                              } 
+                              border-3 sm:border-4 transition-all duration-300
                               bg-gradient-to-br ${figureData.color} ${figureData.shape}
-                              ${figure.isFound ? 'border-green-500 ring-4 ring-green-300 animate-success-glow' : 'border-gray-300 hover:border-gray-500'}
-                              ${figure.isTarget && showHint && !figure.isFound ? 'ring-2 ring-yellow-400 animate-hint-glow' : ''}
-                              shadow-lg hover:shadow-xl
+                              ${figure.isFound ? 'border-green-500 ring-2 sm:ring-4 ring-green-300 animate-success-glow' : 'border-gray-300 hover:border-gray-500'}
+                              ${figure.isTarget && showHint && !figure.isFound ? 'ring-2 sm:ring-3 ring-yellow-400 animate-hint-glow' : ''}
+                              shadow-lg hover:shadow-xl active:shadow-2xl
                             `}
                           >
                             {figure.isFound && (
                               <div className="absolute inset-0 flex items-center justify-center">
-                                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 animate-bounce" />
+                                <CheckCircle className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 text-green-600 animate-bounce" />
                               </div>
                             )}
                           </div>
                           
                           {figure.isFound && (
-                            <div className="absolute -top-2 -right-2 text-xl sm:text-2xl animate-bounce">
-                              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500 animate-spin" />
+                            <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 animate-bounce">
+                              <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-500 animate-spin" />
                             </div>
                           )}
                         </div>
@@ -349,11 +437,23 @@ const GameWrapper = () => {
                     })}
                     
                     {/* Indicador de progreso en la escena */}
-                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/90 rounded-full px-2 sm:px-3 py-1 border-2 border-purple-300">
+                    <div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-white/95 backdrop-blur-sm rounded-full px-3 sm:px-4 py-1 sm:py-2 border-2 border-purple-300 shadow-lg z-20">
                       <span className="text-xs sm:text-sm font-bold text-purple-700">
                         {gameState.foundCount} / {gameState.totalTargets}
                       </span>
                     </div>
+                    
+                    {/* Grid de ayuda visual (solo en modo debug - comentado por defecto) */}
+                    {/* 
+                    <div className="absolute inset-0 pointer-events-none opacity-10">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <div key={i} className="absolute border-l border-gray-400" style={{ left: `${12.5 * (i + 1)}%`, height: '100%' }} />
+                      ))}
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="absolute border-t border-gray-400" style={{ top: `${16.66 * (i + 1)}%`, width: '100%' }} />
+                      ))}
+                    </div>
+                    */}
                   </div>
                 </CardContent>
               </Card>
@@ -477,6 +577,10 @@ const GameWrapper = () => {
           clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
         }
         
+        .rectangle-shape {
+          aspect-ratio: 3/2;
+        }
+        
         .animate-figure-found {
           animation: figure-found 1s ease-in-out;
         }
@@ -511,6 +615,37 @@ const GameWrapper = () => {
         
         .animate-encouragement-bounce {
           animation: encouragement-bounce 2s ease-in-out;
+        }
+        
+        @keyframes float-gentle {
+          0%, 100% { transform: translateY(0px) translateX(0px); }
+          33% { transform: translateY(-10px) translateX(5px); }
+          66% { transform: translateY(5px) translateX(-3px); }
+        }
+        
+        @keyframes rotate-gentle {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes twinkle-star {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes wave-1 {
+          0%, 100% { transform: translateX(-100%); }
+          50% { transform: translateX(100%); }
+        }
+        
+        @keyframes wave-2 {
+          0%, 100% { transform: translateX(100%); }
+          50% { transform: translateX(-100%); }
+        }
+        
+        @keyframes wave-3 {
+          0%, 100% { transform: translateX(-50%); }
+          50% { transform: translateX(50%); }
         }
       `}</style>
     </div>

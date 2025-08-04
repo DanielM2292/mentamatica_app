@@ -81,38 +81,82 @@ const GameWrapper = () => {
     })
   }, [])
 
-  const currentTemplate = constructionState.targetFigure ? figureTemplates[constructionState.targetFigure] : null
+  const currentTemplate = constructionState?.targetFigure ? figureTemplates?.[constructionState.targetFigure] : null
+
+  // Manejo seguro de eventos táctiles
+  const handleSafePointClick = (pointId: string, event: React.MouseEvent | React.TouchEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (handlePointClick) {
+      handlePointClick(Number(pointId), event)
+    }
+  }
+
+  const handleSafeRemoveLine = (lineId: number, event: React.MouseEvent | React.TouchEvent) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (handleRemoveLine) {
+        handleRemoveLine(lineId)
+      }
+    }
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Fondo animado mejorado */}
-      <div className="fixed inset-0 bg-gradient-to-br from-green-300 via-blue-300 to-purple-400">
+      {/* Fondo animado mejorado y más llamativo */}
+      <div className="fixed inset-0 bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-500">
+        {/* Ondas animadas de fondo */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="wave wave1"></div>
+            <div className="wave wave2"></div>
+            <div className="wave wave3"></div>
+          </div>
+        </div>
+        
+        {/* Círculos flotantes */}
         <div className="absolute inset-0">
-          {Array.from({ length: 15 }).map((_, i) => (
+          {Array.from({ length: 12 }).map((_, i) => (
             <div
               key={i}
-              className="absolute text-3xl sm:text-4xl opacity-20"
+              className="absolute w-4 h-4 sm:w-6 sm:h-6 bg-white/20 rounded-full"
               style={{
-                left: `${10 + i * 6}%`,
-                top: `${5 + (i % 3) * 30}%`,
-                animation: `float-construction ${5 + Math.random() * 2}s ease-in-out infinite`,
+                left: `${5 + i * 8}%`,
+                top: `${10 + (i % 4) * 25}%`,
+                animation: `float-circles ${4 + Math.random() * 3}s ease-in-out infinite`,
                 animationDelay: `${i * 0.4}s`,
               }}
+            />
+          ))}
+        </div>
+        
+        {/* Iconos de herramientas flotantes */}
+        <div className="absolute inset-0">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute text-2xl sm:text-3xl opacity-25 text-white"
+              style={{
+                left: `${15 + i * 10}%`,
+                top: `${8 + (i % 3) * 30}%`,
+                animation: `float-tools ${6 + Math.random() * 2}s ease-in-out infinite`,
+                animationDelay: `${i * 0.5}s`,
+              }}
             >
-              🔧
+              {['🔧', '⚒️', '🛠️', '📐', '📏', '✏️', '🎯', '⭐'][i]}
             </div>
           ))}
         </div>
         
+        {/* Estrellas parpadeantes */}
         <div className="absolute inset-0">
           {backgroundSparkles.map((sparkle) => (
             <div
               key={sparkle.id}
-              className="absolute text-yellow-300 text-xl sm:text-2xl opacity-40"
+              className="absolute text-yellow-200 text-lg sm:text-xl opacity-60"
               style={{
                 left: `${sparkle.x}%`,
                 top: `${sparkle.y}%`,
-                animation: `construction-twinkle ${2.5 + Math.random()}s ease-in-out infinite`,
+                animation: `sparkle-twinkle ${2 + Math.random()}s ease-in-out infinite`,
                 animationDelay: `${sparkle.delay}s`,
               }}
             >
@@ -120,10 +164,13 @@ const GameWrapper = () => {
             </div>
           ))}
         </div>
+        
+        {/* Gradiente overlay para mejor legibilidad */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/5"></div>
       </div>
 
       {/* Partículas de celebración */}
-      {celebrationParticles.map((particle) => (
+      {celebrationParticles?.map((particle) => (
         <div
           key={particle.id}
           className="fixed pointer-events-none z-50 text-3xl sm:text-4xl"
@@ -138,7 +185,7 @@ const GameWrapper = () => {
       ))}
 
       {/* Chispas de construcción */}
-      {constructionSparkles.map((sparkle) => (
+      {constructionSparkles?.map((sparkle) => (
         <div
           key={sparkle.id}
           className="fixed pointer-events-none z-40 text-2xl"
@@ -153,7 +200,7 @@ const GameWrapper = () => {
       ))}
 
       {/* Mensaje de aliento */}
-      {showEncouragement && (
+      {showEncouragement && encouragementMessage && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none">
           <div className="bg-gradient-to-r from-green-400 to-blue-400 text-white px-6 py-3 rounded-full text-xl sm:text-2xl font-bold shadow-2xl animate-encouragement-bounce">
             {encouragementMessage}
@@ -165,30 +212,30 @@ const GameWrapper = () => {
         <div className="max-w-6xl mx-auto pt-2 sm:pt-4 relative z-10 px-2 sm:px-4">
           <GameHeader
             nav="/modules/geometria"
-            aciertos={aciertos}
-            errores={errores}
-            completedSets={completedSets.length}
+            aciertos={aciertos || 0}
+            errores={errores || 0}
+            completedSets={completedSets?.length || 0}
             imagen="/images/icons/geometria.png"
             name="Construye tu Figura"
             totalSets={currentGameLevel?.figuresPerLevel || 1}
-            level={currentLevel + 1}
-            totalAciertos={totalAciertos + aciertos}
+            level={(currentLevel || 0) + 1}
+            totalAciertos={(totalAciertos || 0) + (aciertos || 0)}
           />
 
           <TiempoJuego position="top-right" formato="minutos" />
 
-          <InformacionNivel currentLevel={currentLevel} gameLevel={currentGameLevel as any} />
+          <InformacionNivel currentLevel={currentLevel || 0} gameLevel={currentGameLevel as any} />
 
           {isGameComplete ? (
             <JuegoCompletado 
-              aciertos={aciertos} 
-              estrellas={estrellas} 
+              aciertos={aciertos || 0} 
+              estrellas={estrellas || 0} 
               onRestart={handleRestart} 
             />
           ) : isLevelComplete ? (
             <NivelCompletado
-              aciertos={aciertos}
-              isLastLevel={isLastLevel}
+              aciertos={aciertos || 0}
+              isLastLevel={isLastLevel || false}
               onNextLevel={handleNextLevel}
             />
           ) : (
@@ -241,7 +288,7 @@ const GameWrapper = () => {
                           </Button>
                         </div>
                         
-                        {showHint && (
+                        {showHint && currentTemplate.sound && (
                           <div className="p-3 sm:p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200 animate-hint-appear">
                             <p className="text-sm sm:text-base text-yellow-800">
                               💡 <strong>Pista:</strong> {currentTemplate.sound}
@@ -290,14 +337,14 @@ const GameWrapper = () => {
                       <div className="flex justify-between items-center bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-2 sm:p-3 border border-purple-200">
                         <span className="text-xs sm:text-sm font-medium text-purple-700">Puntos Conectados:</span>
                         <Badge variant="outline" className="bg-purple-100 text-purple-800 text-xs sm:text-sm">
-                          {constructionState.points.filter(p => p.isConnected).length}
+                          {constructionState?.points?.filter(p => p.isConnected).length || 0}
                         </Badge>
                       </div>
                       
                       <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-2 sm:p-3 border border-blue-200">
                         <span className="text-xs sm:text-sm font-medium text-blue-700">Líneas Trazadas:</span>
                         <Badge variant="outline" className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
-                          {constructionState.lines.length}
+                          {constructionState?.lines?.length || 0}
                         </Badge>
                       </div>
                       
@@ -305,9 +352,9 @@ const GameWrapper = () => {
                         <span className="text-xs sm:text-sm font-medium text-green-700">Estado:</span>
                         <Badge 
                           variant="outline" 
-                          className={`text-xs sm:text-sm ${constructionState.isComplete ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
+                          className={`text-xs sm:text-sm ${constructionState?.isComplete ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
                         >
-                          {constructionState.isComplete ? "¡Completa!" : "En Progreso"}
+                          {constructionState?.isComplete ? "¡Completa!" : "En Progreso"}
                         </Badge>
                       </div>
                     </div>
@@ -335,76 +382,188 @@ const GameWrapper = () => {
                   
                   <div 
                     ref={canvasRef}
-                    className="relative w-full h-80 sm:h-96 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-3 border-yellow-300 overflow-hidden touch-manipulation"
-                    style={{ touchAction: 'manipulation' }}
+                    className="relative w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-4 border-yellow-300 overflow-hidden touch-manipulation shadow-inner"
+                    style={{ 
+                      height: isTouchDevice ? '320px' : '400px',
+                      maxWidth: isTouchDevice ? '320px' : '450px',
+                      margin: '0 auto',
+                      touchAction: 'manipulation' 
+                    }}
                   >
+                    {/* Fondo decorativo mejorado */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/30 via-purple-50/40 to-pink-100/30"></div>
+                    
+                    {/* Círculos decorativos de fondo */}
+                    <div className="absolute inset-0 overflow-hidden">
+                      {Array.from({ length: 8 }).map((_, i) => (
+                        <div
+                          key={`bg-circle-${i}`}
+                          className="absolute rounded-full bg-gradient-to-br from-blue-200/20 to-purple-200/20 animate-float-slow"
+                          style={{
+                            width: `${30 + i * 15}px`,
+                            height: `${30 + i * 15}px`,
+                            left: `${10 + i * 12}%`,
+                            top: `${5 + (i % 3) * 30}%`,
+                            animationDelay: `${i * 0.8}s`,
+                            animationDuration: `${4 + i * 0.5}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                    
+                    {/* Estrellas decorativas */}
+                    <div className="absolute inset-0">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <div
+                          key={`star-${i}`}
+                          className="absolute text-yellow-300/40 animate-twinkle"
+                          style={{
+                            left: `${8 + i * 8}%`,
+                            top: `${10 + (i % 4) * 20}%`,
+                            fontSize: `${12 + Math.random() * 8}px`,
+                            animationDelay: `${i * 0.3}s`,
+                            animationDuration: `${2 + Math.random() * 2}s`,
+                          }}
+                        >
+                          ✨
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Bordes decorativos internos */}
+                    <div className="absolute inset-2 rounded-lg border-2 border-gradient-to-r from-blue-200/30 via-purple-200/30 to-pink-200/30 pointer-events-none"></div>
+                    <div className="absolute inset-4 rounded-lg border border-white/40 pointer-events-none"></div>
+
                     {/* SVG para las líneas */}
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                      {constructionState.lines.map((line) => {
-                        const startPoint = constructionState.points.find(p => p.id === line.startPoint)
-                        const endPoint = constructionState.points.find(p => p.id === line.endPoint)
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+                      {/* Patrón de fondo sutil */}
+                      <defs>
+                        <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+                          <circle cx="12.5" cy="12.5" r="1" fill="#e0e7ff" opacity="0.3"/>
+                          <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#e0e7ff" strokeWidth="0.5" opacity="0.2"/>
+                        </pattern>
+                        <filter id="glow">
+                          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                          <feMerge> 
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                          </feMerge>
+                        </filter>
+                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#3b82f6" />
+                          <stop offset="25%" stopColor="#8b5cf6" />
+                          <stop offset="75%" stopColor="#ec4899" />
+                          <stop offset="100%" stopColor="#f59e0b" />
+                        </linearGradient>
+                        <linearGradient id="shadowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="rgba(0,0,0,0.3)" />
+                          <stop offset="100%" stopColor="rgba(0,0,0,0.1)" />
+                        </linearGradient>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#grid)" />
+                      
+                      {constructionState?.lines?.map((line) => {
+                        const startPoint = constructionState.points?.find(p => p.id === line.startPoint)
+                        const endPoint = constructionState.points?.find(p => p.id === line.endPoint)
                         
                         if (!startPoint || !endPoint) return null
                         
                         return (
-                          <line
-                            key={line.id}
-                            x1={startPoint.x}
-                            y1={startPoint.y}
-                            x2={endPoint.x}
-                            y2={endPoint.y}
-                            stroke="#3b82f6"
-                            strokeWidth={isTouchDevice ? "4" : "3"}
-                            className={`animate-line-draw ${line.isAnimating ? 'animate-line-glow' : ''}`}
-                            style={{ animationDelay: `${line.id * 0.2}s` }}
-                          />
+                          <g key={line.id}>
+                            {/* Sombra de la línea */}
+                            <line
+                              x1={startPoint.x + 2}
+                              y1={startPoint.y + 2}
+                              x2={endPoint.x + 2}
+                              y2={endPoint.y + 2}
+                              stroke="url(#shadowGradient)"
+                              strokeWidth={isTouchDevice ? "6" : "5"}
+                              className="animate-line-draw"
+                              style={{ animationDelay: `${line.id * 0.2}s` }}
+                            />
+                            {/* Línea principal */}
+                            <line
+                              x1={startPoint.x}
+                              y1={startPoint.y}
+                              x2={endPoint.x}
+                              y2={endPoint.y}
+                              stroke="url(#lineGradient)"
+                              strokeWidth={isTouchDevice ? "5" : "4"}
+                              filter="url(#glow)"
+                              className={`animate-line-draw animate-line-pulse ${line.isAnimating ? 'animate-line-glow' : ''}`}
+                              style={{ animationDelay: `${line.id * 0.2}s` }}
+                            />
+                            {/* Línea de brillo superior */}
+                            <line
+                              x1={startPoint.x}
+                              y1={startPoint.y}
+                              x2={endPoint.x}
+                              y2={endPoint.y}
+                              stroke="rgba(255,255,255,0.6)"
+                              strokeWidth={isTouchDevice ? "2" : "1.5"}
+                              className="animate-line-draw"
+                              style={{ animationDelay: `${line.id * 0.2}s` }}
+                            />
+                          </g>
                         )
                       })}
                     </svg>
                     
                     {/* Puntos */}
-                    {constructionState.points.map((point) => (
-                      <div
+                    {constructionState?.points?.map((point) => (
+                      <button
                         key={point.id}
-                        onClick={(e) => handlePointClick(point.id, e)}
-                        onTouchEnd={(e) => {
-                          e.preventDefault()
-                          handlePointClick(point.id, e)
-                        }}
+                        onClick={(e) => handleSafePointClick(String(point.id), e)}
                         className={`
-                          absolute ${isTouchDevice ? 'w-8 h-8' : 'w-6 h-6'} rounded-full border-4 cursor-pointer transition-all duration-300
+                          absolute rounded-full border-4 cursor-pointer transition-all duration-300 shadow-2xl z-20
+                          ${isTouchDevice ? 'w-12 h-12' : 'w-10 h-10'}
                           ${point.isSelected 
-                            ? 'bg-yellow-400 border-yellow-600 ring-4 ring-yellow-300 animate-point-selected' 
+                            ? 'bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-500 border-yellow-600 ring-4 ring-yellow-300/60 animate-point-selected shadow-yellow-400/70' 
                             : point.isConnected 
-                              ? 'bg-blue-400 border-blue-600 hover:bg-blue-500 animate-point-connected' 
-                              : 'bg-gray-300 border-gray-500 hover:bg-gray-400 hover:animate-point-hover'
+                              ? 'bg-gradient-to-br from-emerald-400 via-blue-400 to-purple-500 border-emerald-500 hover:from-emerald-500 hover:to-purple-600 animate-point-connected shadow-emerald-400/60' 
+                              : 'bg-gradient-to-br from-slate-300 via-slate-400 to-slate-500 border-slate-600 hover:from-slate-400 hover:to-slate-600 hover:animate-point-hover shadow-slate-400/60'
                           }
-                          hover:scale-125 active:scale-95 select-none animate-point-entry touch-manipulation
+                          hover:scale-125 active:scale-95 select-none animate-point-entry touch-manipulation focus:outline-none focus:ring-4 focus:ring-blue-300/50
                           ${point.isAnimating ? 'animate-point-pulse' : ''}
                         `}
                         style={{
-                          left: `${point.x - (isTouchDevice ? 16 : 12)}px`,
-                          top: `${point.y - (isTouchDevice ? 16 : 12)}px`,
+                          left: `${point.x - (isTouchDevice ? 24 : 20)}px`,
+                          top: `${point.y - (isTouchDevice ? 24 : 20)}px`,
                           transform: point.isSelected ? 'scale(1.3)' : 'scale(1)',
-                          animationDelay: `${point.pulseDelay}s`,
+                          animationDelay: `${point.pulseDelay || 0}s`,
                           touchAction: 'manipulation',
                           userSelect: 'none',
                           WebkitUserSelect: 'none',
                           WebkitTouchCallout: 'none',
                         }}
                       >
+                        {/* Efectos de brillo mejorados */}
+                        <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/60 to-white/20"></div>
+                        <div className="absolute inset-2 rounded-full bg-white/40"></div>
+                        
+                        {/* Punto central brillante */}
+                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-lg"></div>
+                        
                         {point.isConnected && (
-                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-bounce">
-                            <Sparkles className="w-2 h-2 text-white" />
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full animate-bounce shadow-xl border-2 border-white">
+                            <Sparkles className="w-3 h-3 text-white absolute top-0.5 left-0.5" />
                           </div>
                         )}
-                      </div>
+                        
+                        {/* Efecto de ondas cuando está seleccionado */}
+                        {point.isSelected && (
+                          <>
+                            <div className="absolute inset-0 rounded-full border-2 border-yellow-400/60 animate-ping"></div>
+                            <div className="absolute inset-0 rounded-full border-2 border-yellow-300/40 animate-ping" style={{ animationDelay: '0.2s' }}></div>
+                          </>
+                        )}
+                      </button>
                     ))}
                     
-                    {/* Indicador de líneas */}
-                    {constructionState.lines.map((line) => {
-                      const startPoint = constructionState.points.find(p => p.id === line.startPoint)
-                      const endPoint = constructionState.points.find(p => p.id === line.endPoint)
+                    {/* Indicador de líneas mejorado */}
+                    {constructionState?.lines?.map((line) => {
+                      const startPoint = constructionState.points?.find(p => p.id === line.startPoint)
+                      const endPoint = constructionState.points?.find(p => p.id === line.endPoint)
                       
                       if (!startPoint || !endPoint) return null
                       
@@ -414,46 +573,59 @@ const GameWrapper = () => {
                       return (
                         <button
                           key={`remove-${line.id}`}
-                          onClick={() => handleRemoveLine(line.id)}
-                          onTouchEnd={(e) => {
-                            e.preventDefault()
-                            handleRemoveLine(line.id)
-                          }}
-                          className={`absolute ${isTouchDevice ? 'w-8 h-8' : 'w-6 h-6'} bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 touch-manipulation`}
+                          onClick={(e) => handleSafeRemoveLine(line.id, e)}
+                          className={`absolute bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:to-red-800 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 touch-manipulation shadow-2xl border-3 border-white z-30 focus:outline-none focus:ring-4 focus:ring-red-300/50
+                            ${isTouchDevice ? 'w-10 h-10' : 'w-8 h-8'}
+                          `}
                           style={{
-                            left: `${midX - (isTouchDevice ? 16 : 12)}px`,
-                            top: `${midY - (isTouchDevice ? 16 : 12)}px`,
+                            left: `${midX - (isTouchDevice ? 20 : 16)}px`,
+                            top: `${midY - (isTouchDevice ? 20 : 16)}px`,
                             touchAction: 'manipulation',
                           }}
                         >
-                          <Trash2 className={`${isTouchDevice ? 'w-4 h-4' : 'w-3 h-3'} text-white`} />
+                          <Trash2 className={`${isTouchDevice ? 'w-5 h-5' : 'w-4 h-4'} text-white drop-shadow-lg`} />
                         </button>
                       )
                     })}
                     
-                    {/* Indicador de progreso en la construcción */}
-                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/90 rounded-full px-2 sm:px-3 py-1 border-2 border-yellow-300">
-                      <span className="text-xs sm:text-sm font-bold text-yellow-700">
-                        {constructionState.lines.length} / {currentTemplate?.lines || 0}
-                      </span>
+                    {/* Indicador de progreso en la construcción mejorado */}
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-white/95 via-blue-50/95 to-purple-50/95 backdrop-blur-md rounded-full px-4 py-2 border-3 border-blue-300 shadow-2xl z-20">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse shadow-lg"></div>
+                        <span className="text-xs sm:text-sm font-bold text-blue-800 drop-shadow-sm">
+                          {constructionState?.lines?.length || 0} / {currentTemplate?.lines || 0}
+                        </span>
+                      </div>
                     </div>
                     
-                    {/* Efectos de construcción completada */}
-                    {constructionState.isComplete && (
-                      <div className="absolute inset-0 pointer-events-none">
-                        {Array.from({ length: 8 }).map((_, i) => (
+                    {/* Efectos de construcción completada mejorados */}
+                    {constructionState?.isComplete && (
+                      <div className="absolute inset-0 pointer-events-none z-40">
+                        {/* Efecto de resplandor */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 via-green-400/30 to-blue-400/30 animate-pulse rounded-xl"></div>
+                        <div className="absolute inset-2 bg-gradient-to-br from-white/20 to-transparent rounded-lg animate-pulse"></div>
+                        
+                        {/* Partículas de celebración */}
+                        {Array.from({ length: 12 }).map((_, i) => (
                           <div
-                            key={i}
-                            className="absolute text-2xl animate-construction-celebration"
+                            key={`celebration-${i}`}
+                            className="absolute text-4xl animate-construction-celebration drop-shadow-lg"
                             style={{
-                              left: `${20 + i * 10}%`,
-                              top: `${20 + (i % 3) * 20}%`,
-                              animationDelay: `${i * 0.2}s`
+                              left: `${15 + i * 7}%`,
+                              top: `${15 + (i % 4) * 20}%`,
+                              animationDelay: `${i * 0.15}s`
                             }}
                           >
-                            <Zap className="w-6 h-6 text-yellow-500" />
+                            {['⭐', '✨', '🎉', '🔥', '💫', '🌟'][i % 6]}
                           </div>
                         ))}
+                        
+                        {/* Ondas de celebración */}
+                        <div className="absolute inset-0 rounded-xl">
+                          <div className="absolute inset-0 border-4 border-yellow-400/60 rounded-xl animate-ping"></div>
+                          <div className="absolute inset-2 border-4 border-green-400/60 rounded-xl animate-ping" style={{ animationDelay: '0.3s' }}></div>
+                          <div className="absolute inset-4 border-4 border-blue-400/60 rounded-xl animate-ping" style={{ animationDelay: '0.6s' }}></div>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -484,14 +656,24 @@ const GameWrapper = () => {
       </GamesTemplate>
 
       <style jsx>{`
-        @keyframes float-construction {
+        @keyframes float-circles {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-25px) rotate(15deg); }
+          50% { transform: translateY(-20px) rotate(10deg); }
         }
         
-        @keyframes construction-twinkle {
+        @keyframes float-tools {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(20deg); }
+        }
+        
+        @keyframes sparkle-twinkle {
           0%, 100% { opacity: 0.4; transform: scale(1); }
           50% { opacity: 0.8; transform: scale(1.3); }
+        }
+        
+        @keyframes wave {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
         }
         
         @keyframes glow-construction {
@@ -514,41 +696,56 @@ const GameWrapper = () => {
           50% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.8)); }
         }
         
+        @keyframes line-pulse {
+          0%, 100% { opacity: 0.8; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+          50% { transform: translateY(-15px) rotate(5deg); opacity: 0.6; }
+        }
+        
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+          50% { opacity: 0.8; transform: scale(1.2) rotate(180deg); }
+        }
+        
         @keyframes point-entry {
           from { transform: scale(0) rotate(180deg); opacity: 0; }
           to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         
         @keyframes point-selected {
-          0%, 100% { transform: scale(1.3); box-shadow: 0 0 15px rgba(255, 255, 0, 0.6); }
-          50% { transform: scale(1.5); box-shadow: 0 0 25px rgba(255, 255, 0, 0.9); }
+          0%, 100% { transform: scale(1.3); box-shadow: 0 0 20px rgba(255, 193, 7, 0.8), 0 0 40px rgba(255, 193, 7, 0.4); }
+          50% { transform: scale(1.5); box-shadow: 0 0 30px rgba(255, 193, 7, 1), 0 0 60px rgba(255, 193, 7, 0.6); }
         }
         
         @keyframes point-connected {
-          0%, 100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0.4); }
-          50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.7); }
+          0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.6), 0 0 30px rgba(59, 130, 246, 0.4); }
+          50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.9), 0 0 50px rgba(59, 130, 246, 0.6); }
         }
         
         @keyframes point-hover {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
+          0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(100, 116, 139, 0.4); }
+          50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(100, 116, 139, 0.7); }
         }
         
         @keyframes point-pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.2); }
+          0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(59, 130, 246, 0.3); }
+          50% { transform: scale(1.2); box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
         }
         
         @keyframes construction-celebration {
-          0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 1; }
-          50% { transform: translateY(-30px) scale(1.2) rotate(180deg); opacity: 0.8; }
-          100% { transform: translateY(-60px) scale(0) rotate(360deg); opacity: 0; }
+          0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 1; filter: brightness(1); }
+          50% { transform: translateY(-40px) scale(1.3) rotate(180deg); opacity: 0.9; filter: brightness(1.5); }
+          100% { transform: translateY(-80px) scale(0) rotate(360deg); opacity: 0; filter: brightness(2); }
         }
         
         @keyframes construction-sparkle {
-          0% { transform: scale(0) rotate(0deg); opacity: 1; }
-          50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
-          100% { transform: scale(0) rotate(360deg); opacity: 0; }
+          0% { transform: scale(0) rotate(0deg); opacity: 1; filter: brightness(1); }
+          50% { transform: scale(1.3) rotate(180deg); opacity: 0.9; filter: brightness(1.8); }
+          100% { transform: scale(0) rotate(360deg); opacity: 0; filter: brightness(2.5); }
         }
         
         @keyframes target-bounce {
@@ -562,14 +759,44 @@ const GameWrapper = () => {
         }
         
         @keyframes celebration-burst {
-          0% { transform: scale(0) rotate(0deg); opacity: 1; }
-          50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
-          100% { transform: scale(0) rotate(360deg); opacity: 0; }
+          0% { transform: scale(0) rotate(0deg); opacity: 1; filter: brightness(1); }
+          50% { transform: scale(1.4) rotate(180deg); opacity: 0.9; filter: brightness(1.8); }
+          100% { transform: scale(0) rotate(360deg); opacity: 0; filter: brightness(2.5); }
         }
         
         @keyframes encouragement-bounce {
           0%, 100% { transform: scale(1) translateY(0); }
           50% { transform: scale(1.1) translateY(-10px); }
+        }
+        
+        .wave {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 200%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+          animation: wave 8s linear infinite;
+        }
+        
+        .wave1 {
+          animation-delay: 0s;
+        }
+        
+        .wave2 {
+          animation-delay: 2s;
+        }
+        
+        .wave3 {
+          animation-delay: 4s;
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 4s ease-in-out infinite;
+        }
+        
+        .animate-twinkle {
+          animation: twinkle 2s ease-in-out infinite;
         }
         
         .animate-point-entry {
@@ -602,6 +829,10 @@ const GameWrapper = () => {
         
         .animate-line-glow {
           animation: line-glow 1s ease-in-out infinite;
+        }
+        
+        .animate-line-pulse {
+          animation: line-pulse 2s ease-in-out infinite;
         }
         
         .animate-target-bounce {

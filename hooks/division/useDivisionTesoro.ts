@@ -14,7 +14,7 @@ const divisionTesoroLevels = [
     difficulty: "Fácil",
     divisors: [2, 3],
     maxDividend: 15,
-    problemsPerLevel: 2,
+    problemsPerLevel: 5,
     theme: "island",
   },
   {
@@ -24,7 +24,7 @@ const divisionTesoroLevels = [
     difficulty: "Medio",
     divisors: [2, 3, 4],
     maxDividend: 24,
-    problemsPerLevel: 2,
+    problemsPerLevel: 5,
     theme: "cave",
   },
   {
@@ -34,7 +34,7 @@ const divisionTesoroLevels = [
     difficulty: "Difícil",
     divisors: [2, 3, 4, 5],
     maxDividend: 35,
-    problemsPerLevel: 2,
+    problemsPerLevel: 5,
     theme: "ship",
   },
 ]

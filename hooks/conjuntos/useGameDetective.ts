@@ -64,11 +64,11 @@ export const useGameDetective = () => {
     }
   }, [isLevelComplete, isLastLevel]);
 
-  const handleDragStart = useCallback((item: UnifiedGameItem) => {
+  const handleDragStart = (item: UnifiedGameItem) => {
     dragItem.current = item;
-  }, []);
+  };
 
-  const handleDrop = useCallback((setId: string) => {
+  const handleDrop = (setId: string) => {
     if (!dragItem.current) return;
 
     const item = dragItem.current;
@@ -81,10 +81,9 @@ export const useGameDetective = () => {
     }
 
     dragItem.current = null;
-  }, []);
+  };
 
-  const handleCorrectClassification = (item: UnifiedGameItem, setId: string) => {
-    // Eliminar item
+  const handleCorrectClassification = (item: UnifiedGameItem, setId: string) => {    
     setItems(prev => prev.filter(i => i.id !== item.id));
 
     // Verificar si el conjunto fue completado

@@ -48,12 +48,12 @@ export const useGameUnion = () => {
     return !currentItems.some(item => itemBelongsToSet(item, setId));
   };
 
-  const handleDragStart = useCallback((item: UnifiedGameItem) => {
+  const handleDragStart = (item: UnifiedGameItem) => {
     dragItem.current = item;
     console.log('Iniciando arrastre:', item.name, 'Categorías:', item.category);
-  }, []);
+  };
 
-  const handleDrop = useCallback((setId: string) => {
+  const handleDrop = (setId: string) => {
     if (!dragItem.current) return;
     
     const item = dragItem.current;
@@ -122,7 +122,7 @@ export const useGameUnion = () => {
     }
 
     dragItem.current = null;
-  }, []);
+  };
 
   const handleNextLevel = () => {
     if (!isLastLevel) {

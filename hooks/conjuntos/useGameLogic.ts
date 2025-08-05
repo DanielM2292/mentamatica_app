@@ -30,11 +30,11 @@ export const useGameLogic = () => {
     iniciar();
   }, []);
 
-  const handleDragStart = useCallback((item: GameItem) => {
+  const handleDragStart = (item: GameItem) => {
     dragItem.current = item;
-  }, []);
+  };
 
-  const handleDrop = useCallback((setId: string) => {
+  const handleDrop = (setId: string) => {
     if (!dragItem.current) return;
 
     const item = dragItem.current;
@@ -73,7 +73,7 @@ export const useGameLogic = () => {
     }
 
     dragItem.current = null;
-  }, []);
+  };
 
   const handleNextLevel = () => {
     if (!isLastLevel) {

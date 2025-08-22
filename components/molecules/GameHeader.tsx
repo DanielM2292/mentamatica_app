@@ -164,7 +164,7 @@ export default function GameHeader({ nav, aciertos, errores, completedSets, imag
           >
             <Target className="w-5 h-5 text-blue-600 animate-pulse" />
             <span className="font-bold text-blue-800">
-              {completedSets}/{totalSets} conjuntos
+              {completedSets}/{totalSets}
             </span>
           </div>
         </div>

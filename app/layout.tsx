@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   authors: [{ name: "MentaMática Team" }],
   viewport: "width=device-width, initial-scale=1.0",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/images/logo.png",
   },
 }
 

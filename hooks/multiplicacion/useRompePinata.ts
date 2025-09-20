@@ -121,9 +121,7 @@ export const useRompePinata = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const currentGameLevel = rompePinataLevels[currentLevel]
   const isLastLevel = currentLevel >= rompePinataLevels.length - 1
@@ -150,29 +148,6 @@ export const useRompePinata = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function optimizado para evitar spam
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar problemas únicos para el nivel
   const generateLevelProblems = useCallback(() => {
@@ -304,7 +279,10 @@ export const useRompePinata = () => {
           "¡Genial! 🚀"
         ]
         const randomMessage = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)]
-        showToast(randomMessage, `${currentProblem.expression} = ${currentProblem.result}`)
+        toast({
+          title: randomMessage,
+          description: `${currentProblem.expression} = ${currentProblem.result}`,
+        })
 
         setTimeout(() => setShowCelebration(false), 1500)
 
@@ -314,11 +292,15 @@ export const useRompePinata = () => {
           setCompletedSets([{ id: currentGameLevel.piñatasPerLevel }])
           
           if (isLastLevel) {
-            // Es el último nivel - finalizamos el juego completamente
-            showToast("¡Juego Completado! 🏆🎉", `¡Has completado todos los niveles!`)
+            toast({
+              title: "¡Juego Completado! 🏆🎉",
+              description: "¡Has completado todos los niveles!",
+            })
           } else {
-            // No es el último nivel - solo completamos el nivel actual
-            showToast("¡Nivel Completado! 🏆", `¡Rompiste todas las piñatas!`)
+            toast({
+              title: "¡Nivel Completado! 🏆",
+              description: `¡Rompiste todas las piñatas!`,
+            })
           }
         } else {
           // Generar nuevo problema después de un breve delay
@@ -349,7 +331,11 @@ export const useRompePinata = () => {
           "¡Sigue intentando! 💪"
         ]
         const randomErrorMessage = errorMessages[Math.floor(Math.random() * errorMessages.length)]
-        showToast(randomErrorMessage, "Esa no es la piñata correcta", "destructive")
+        toast({
+          title: randomErrorMessage,
+          description: "Esa no es la piñata correcta",
+          variant: "destructive",
+        })
 
         // Restaurar escala después de feedback
         setTimeout(() => {
@@ -361,7 +347,7 @@ export const useRompePinata = () => {
         }, 800)
       }
     }, 400)
-  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, showToast, isLastLevel, getNextProblem, generatePinatas])
+  }, [isGameActive, currentProblem, pinatas, piñatasRotas, currentGameLevel, combo, toast, isLastLevel, getNextProblem, generatePinatas])
 
   // MANEJAR SIGUIENTE NIVEL - SIGUIENDO EL PATRÓN DE useConstruyeFiguras
   const handleNextLevel = useCallback(() => {
@@ -381,9 +367,12 @@ export const useRompePinata = () => {
       setCurrentProblem(firstProblem)
       setPinatas(generatePinatas(firstProblem))
 
-      showToast("¡Nuevo Desafío! 🎪", `${rompePinataLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🎪",
+        description: `${rompePinataLevels[newLevel].name}!`,
+      })
     }
-  }, [currentLevel, aciertos, generatePinatas, showToast])
+  }, [currentLevel, aciertos, generatePinatas, toast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -407,8 +396,11 @@ export const useRompePinata = () => {
     setPinatas(generatePinatas(firstProblem))
 
     reiniciar()
-    showToast("¡Nueva Fiesta! 🎉", "¡A romper piñatas!")
-  }, [generatePinatas, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Fiesta! 🎉",
+      description: "¡A romper piñatas!",
+    })
+  }, [generatePinatas, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

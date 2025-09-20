@@ -69,9 +69,7 @@ export const useRestaEnLaCueva = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = restaEnLaCuevaLevels[currentLevel]
   const isLastLevel = currentLevel >= restaEnLaCuevaLevels.length - 1
@@ -83,29 +81,6 @@ export const useRestaEnLaCueva = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function to prevent duplicates
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generate random problem based on depth and level
   const generateRandomProblem = useCallback((depth: number): CaveProblem => {
@@ -165,7 +140,12 @@ export const useRestaEnLaCueva = () => {
       const newVidas = prev - 1
       if (newVidas <= 0) {
         setIsGameOver(true)
-        showToast("¡Perdido en la Cueva! 💀", `Profundidad máxima: ${maxDepthReached}m`, "destructive")
+        toast({
+          title: "¡Perdido en la Cueva! 💀",
+          description: `Profundidad máxima: ${maxDepthReached}m`,
+          duration: 3000,
+          variant: "destructive"
+        })
       } else {
         // Retroceder en la cueva
         setCurrentDepth(prev => Math.max(0, prev - 2))
@@ -180,11 +160,16 @@ export const useRestaEnLaCueva = () => {
           "¡El tiempo vuela! 🕐"
         ]
         const randomMessage = timeUpMessages[Math.floor(Math.random() * timeUpMessages.length)]
-        showToast(randomMessage, `Retrocedes en la cueva. Vidas: ${newVidas}`, "destructive")
+        toast({
+          title: randomMessage,
+          description: `Retrocedes en la cueva. Vidas: ${newVidas}`,
+          duration: 3000,
+          variant: "destructive"
+        })
       }
       return newVidas
     })
-  }, [maxDepthReached, showToast])
+  }, [maxDepthReached, toast])
 
   // Handle answer selection with improved feedback
   const handleAnswerSelect = useCallback((answer: number) => {
@@ -219,13 +204,20 @@ export const useRestaEnLaCueva = () => {
           "¡Sigue así! 🚀"
         ]
         const randomSuccess = Math.floor(Math.random() * successMessages.length)
-        showToast(successMessages[randomSuccess], `Profundidad: ${newDepth}m | Racha: ${streak + 1}`)
+        toast({
+          title: successMessages[randomSuccess],
+          description: `Profundidad: ${newDepth}m | Racha: ${streak + 1}`,
+          duration: 3000,
+        })        
 
         // Check if level is complete
         if (newDepth >= currentGameLevel.targetDepth) {
           setTimeout(() => {
             setCompletedSets([{ id: currentLevel }])
-            showToast("¡Escapaste! 🌟", `¡Completaste ${currentGameLevel.name}!`)
+            toast({
+              title: "¡Escapaste! 🌟",
+              description: `¡Completaste ${currentGameLevel.name}!`,
+            })
           }, 1000)
         } else {
           nextProblem()
@@ -237,7 +229,12 @@ export const useRestaEnLaCueva = () => {
           const newVidas = prev - 1
           if (newVidas <= 0) {
             setIsGameOver(true)
-            showToast("¡Perdido en la Cueva! 💀", `Profundidad máxima: ${maxDepthReached}m`, "destructive")
+            toast({
+              title: "¡Perdido en la Cueva! 💀",
+              description: `Profundidad máxima: ${maxDepthReached}m`,
+              duration: 3000,
+              variant: "destructive"
+            })
           } else {
             // Retroceder más dramáticamente
             const retreat = Math.min(3, currentDepth)
@@ -252,7 +249,12 @@ export const useRestaEnLaCueva = () => {
               "¡La cueva es traicionera! 🕳️"
             ]
             const randomError = Math.floor(Math.random() * errorMessages.length)
-            showToast(errorMessages[randomError], `Retrocedes ${retreat}m. Vidas: ${newVidas}`, "destructive")
+            toast({
+              title: errorMessages[randomError],
+              description: `Retrocedes ${retreat}m. Vidas: ${newVidas}`,
+              duration: 3000,
+              variant: "destructive"
+            })
           }
           return newVidas
         })
@@ -264,7 +266,7 @@ export const useRestaEnLaCueva = () => {
         setSelectedAnswer(null)
       }, 1500)
     }, 1000)
-  }, [currentProblem, currentDepth, streak, currentGameLevel, currentLevel, showFeedback, isGameOver, maxDepthReached, showToast])
+  }, [currentProblem, currentDepth, streak, currentGameLevel, currentLevel, showFeedback, isGameOver, maxDepthReached, toast])
 
   // Generate next problem
   const nextProblem = useCallback(() => {
@@ -283,10 +285,12 @@ export const useRestaEnLaCueva = () => {
       setStreak(0)
       setIsGameOver(false)
       setCompletedSets([])
-
-      showToast("¡Nueva Cueva! 🕳️", `${restaEnLaCuevaLevels[newLevel].name}`)
+      toast({
+        title: "¡Nueva Cueva! 🕳️",
+        description: `${restaEnLaCuevaLevels[newLevel].name}!`,
+      })      
     }
-  }, [currentLevel, aciertos, showToast, detener])
+  }, [currentLevel, aciertos, toast, detener])
 
   // Handle restart
   const handleRestart = useCallback(() => {
@@ -305,8 +309,11 @@ export const useRestaEnLaCueva = () => {
     setSelectedAnswer(null)
 
     reiniciar()
-    showToast("¡Nueva Exploración! 🔄", "¡A explorar la cueva!")
-  }, [reiniciar, showToast])
+    toast({
+      title: "¡Nueva Exploración! 🔄",
+      description: "¡A explorar la cueva!"
+    })
+  }, [reiniciar, toast])
 
   // Initialize first problem
   useEffect(() => {

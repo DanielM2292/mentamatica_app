@@ -63,9 +63,7 @@ export const useRestaYRescata = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = restaYRescataLevels[currentLevel]
   const currentSegment = segments[currentSegmentIndex]
@@ -83,35 +81,16 @@ export const useRestaYRescata = () => {
     }
   }, [iniciar, currentLevel, segments.length])
 
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
-
   // Check level completion
   useEffect(() => {
     if (currentSegmentIndex > currentGameLevel?.segmentCount && !isLevelComplete) {
       setCompletedSets([{ id: currentLevel }])
-      showToast("¡Nivel Completado! 🌉", `¡Completaste ${currentGameLevel.name}!`)
+      toast({
+        title: "¡Nivel Completado! 🌉",
+        description: `¡Completaste ${currentGameLevel.name}!`,
+      })
     }
-  }, [currentSegmentIndex, currentGameLevel, isLevelComplete, currentLevel, showToast])
+  }, [currentSegmentIndex, currentGameLevel, isLevelComplete, currentLevel, toast])
 
   const generateAnswerOptions = useCallback((correctAnswer: number, segmentIndex: number, level: number): number[] => {
     const seed = level * 10000 + segmentIndex * 1000 + correctAnswer
@@ -181,7 +160,10 @@ export const useRestaYRescata = () => {
         
         const successMessages = ["¡Excelente! 🎉", "¡Perfecto! ⭐", "¡Increíble! 🌟", "¡Fantástico! 🎊"]
         const randomSuccess = Math.floor(Math.random() * successMessages.length)
-        showToast(successMessages[randomSuccess], "¡Respuesta correcta!")
+        toast({
+          title: successMessages[randomSuccess],
+          description: "¡Respuesta correcta!",
+        })
 
         if (currentSegmentIndex < segments.length - 1) {
           setTimeout(() => {
@@ -198,7 +180,11 @@ export const useRestaYRescata = () => {
         
         const errorMessages = ["¡Inténtalo de nuevo! 💪", "¡Casi lo tienes! 🎯", "¡No te rindas! 🚀"]
         const randomError = Math.floor(Math.random() * errorMessages.length)
-        showToast(errorMessages[randomError], "¡Sigue intentando!", "destructive")
+        toast({
+          title: errorMessages[randomError],
+          description: "¡Sigue intentando!", 
+          variant: "destructive"
+        })
         
         setTimeout(() => {
           setShowFeedback(false)
@@ -206,7 +192,7 @@ export const useRestaYRescata = () => {
         }, 1500)
       }
     }, 1000)
-  }, [currentSegment, currentSegmentIndex, segments.length, showFeedback, showToast])
+  }, [currentSegment, currentSegmentIndex, segments.length, showFeedback, toast])
 
   const handleNextLevel = useCallback(() => {
     if (currentLevel < restaYRescataLevels.length - 1) {
@@ -218,10 +204,12 @@ export const useRestaYRescata = () => {
       setCompletedSets([])
       setShowFeedback(false)
       setSelectedAnswer(null)
-
-      showToast("¡Nuevo Nivel! 🌉", `${restaYRescataLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Nivel! 🌉",
+        description: `${restaYRescataLevels[newLevel].name}`,
+      })
     }
-  }, [currentLevel, aciertos, generateRandomSegments, showToast, tiempo, detener])
+  }, [currentLevel, aciertos, generateRandomSegments, toast, tiempo, detener])
 
   const handleRestart = useCallback(() => {
     setCurrentLevel(0)
@@ -236,8 +224,11 @@ export const useRestaYRescata = () => {
     setSelectedAnswer(null)
 
     reiniciar()
-    showToast("¡Nuevo Intento! 🔄", "¡A cruzar el puente!")
-  }, [generateRandomSegments, reiniciar, showToast])
+    toast({
+      title: "¡Nuevo Intento! 🔄",
+      description: "¡A cruzar el puente!",
+    })
+  }, [generateRandomSegments, reiniciar, toast])
 
   // Enviar resultados
   useEnviarResultados({

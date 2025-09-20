@@ -626,7 +626,7 @@ export default function DashboardPage() {
           <h2
             className={`${isSmallMobile ? "text-lg" : "text-xl sm:text-2xl lg:text-4xl"} font-bold ${isSmallMobile ? "mb-1" : "mb-1 sm:mb-2 lg:mb-4"} text-gray-800 px-2`}
           >
-            Bienvenido {user?.username || userStats.name}
+            Bienvenid@ {user?.username || userStats.name}
           </h2>
           <p
             className={`${isSmallMobile ? "text-sm" : "text-sm sm:text-lg lg:text-xl"} text-gray-600 px-2`}

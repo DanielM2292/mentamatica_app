@@ -144,8 +144,6 @@ export const useDragDropNumerico = () => {
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
 
   // Valores calculados
   const currentGameLevel = dragDropNumericoLevels[currentLevel]
@@ -159,29 +157,6 @@ export const useDragDropNumerico = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar nuevo problema
   const generateNewProblem = useCallback(() => {
@@ -207,7 +182,11 @@ export const useDragDropNumerico = () => {
 
     if (allCorrect) {
       setAciertos(prev => prev + 1)
-      showToast("¡Excelente!", "¡Respuesta correcta!")
+      toast({
+        title: "¡Excelente!",
+        description: "¡Respuesta correcta!",
+        duration: 3000,
+      })
 
       // Avanzar al siguiente problema
       setTimeout(() => {
@@ -216,7 +195,11 @@ export const useDragDropNumerico = () => {
         } else {
           // Nivel completado
           setCompletedSets(prev => [...prev, currentLevel.toString()])
-          showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
+          toast({
+            title: "¡Nivel completado!",
+            description: `Has completado el ${currentGameLevel.name}`,
+            duration: 3000,
+          })
         }
       }, 1500)
     } else {
@@ -226,7 +209,7 @@ export const useDragDropNumerico = () => {
         isCorrect: zone.value === zone.expectedValue
       })))
     }
-  }, [currentProblemIndex, currentGameLevel, showToast, currentLevel])
+  }, [currentProblemIndex, currentGameLevel, toast, currentLevel])
 
   // Manejar inicio de arrastre
   const handleDragStart = useCallback((card: NumberCard) => {
@@ -344,8 +327,11 @@ export const useDragDropNumerico = () => {
     })))
 
     setSelectedCard(null)
-    showToast("Problema limpiado", "Puedes intentar de nuevo")
-  }, [currentProblem, showToast])
+    toast({
+      title: "Problema limpiado",
+      description: "Puedes intentar de nuevo",
+    })    
+  }, [currentProblem, toast])
 
   // Siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -353,10 +339,13 @@ export const useDragDropNumerico = () => {
       setTotalAciertos(prev => prev + aciertos)
       setCurrentLevel(prev => prev + 1)
       setCurrentProblemIndex(0)
-
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${dragDropNumericoLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo nivel desbloqueado! 🚀",
+        description: `${dragDropNumericoLevels[currentLevel + 1].name}`,
+        duration: 3000,
+      })      
     }
-  }, [isLastLevel, aciertos, showToast, currentLevel])
+  }, [isLastLevel, aciertos, toast, currentLevel])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -374,8 +363,12 @@ export const useDragDropNumerico = () => {
     setIsDragging(false)
 
     reiniciar()
-    showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
-  }, [reiniciar, showToast])
+    toast({
+      title: "¡Juego reiniciado! 🔄",
+      description: "Comenzando desde el nivel 1",
+      duration: 3000,
+    })
+  }, [reiniciar, toast])
 
   // Efecto para generar nuevo problema cuando cambia el índice
   useEffect(() => {

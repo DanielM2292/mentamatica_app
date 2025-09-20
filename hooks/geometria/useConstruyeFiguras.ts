@@ -157,9 +157,7 @@ export const useConstruyeFigura = () => {
   const linesRefs = useRef<(SVGLineElement | null)[]>([])
   const progressBarRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = construccionLevels[currentLevel]
   const isLastLevel = currentLevel >= construccionLevels.length - 1
@@ -217,29 +215,6 @@ export const useConstruyeFigura = () => {
     "¡Fantástico! 🎊",
     "¡Lo estás haciendo súper! 🚀"
   ]
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Crear partículas de celebración
   const createCelebrationParticles = useCallback((x: number, y: number) => {
@@ -388,7 +363,11 @@ export const useConstruyeFigura = () => {
       }))
       
       createConstructionSparkles(point.x, point.y)
-      showToast("¡Punto seleccionado! 🎯", "Ahora toca otro punto para conectar")
+      toast({
+        title: "¡Punto seleccionado! 🎯",
+        description: "Ahora toca otro punto para conectar",
+        duration: 3000,
+      })
     } else if (constructionState.selectedPoint === pointId) {
       // Deseleccionar punto
       setConstructionState(prev => ({
@@ -408,7 +387,11 @@ export const useConstruyeFigura = () => {
       )
 
       if (existingLine) {
-        showToast("¡Ya conectado! 🔗", "Estos puntos ya están unidos")
+        toast({
+          title: "¡Ya conectado! 🔗",
+          description: "Estos puntos ya están conectados",
+          duration: 3000,
+        })
         return
       }
 
@@ -452,8 +435,11 @@ export const useConstruyeFigura = () => {
         setTimeout(() => {
           setAciertos(prev => prev + 1)
           setFiguresCompleted(prev => prev + 1)
-          
-          showToast("¡Figura Completada! 🎉", template.sound)
+          toast({
+            title: "¡Figura completada! 🎉",
+            description: template.sound,
+            duration: 3000,
+          })
           createCelebrationParticles(x, y)
           
           setConstructionState(prev => ({ ...prev, isComplete: true }))
@@ -461,7 +447,11 @@ export const useConstruyeFigura = () => {
           // Verificar si el nivel está completo
           if (figuresCompleted + 1 >= currentGameLevel.figuresPerLevel) {
             setCompletedSets([{ id: currentGameLevel.figuresPerLevel }])
-            showToast("¡Nivel Completado! 🏆", "¡Eres un constructor increíble!")
+            toast({
+              title: "¡Nivel completado! 🏆",
+              description: "¡Eres un constructor increíble!",
+              duration: 3000,
+            })
           } else {
             // Nueva figura
             setTimeout(() => {
@@ -471,7 +461,7 @@ export const useConstruyeFigura = () => {
         }, 500)
       }
     }
-  }, [isGameActive, constructionState, figuresCompleted, currentGameLevel, currentLevel, generateConstructionArea, showToast, showEncouragementMessage, createCelebrationParticles, createConstructionSparkles])
+  }, [isGameActive, constructionState, figuresCompleted, currentGameLevel, currentLevel, generateConstructionArea, toast, showEncouragementMessage, createCelebrationParticles, createConstructionSparkles])
 
   // Remover línea
   const handleRemoveLine = useCallback((lineId: number) => {
@@ -496,17 +486,25 @@ export const useConstruyeFigura = () => {
       isComplete: false,
     }))
 
-    showToast("🗑️ Línea eliminada", "Puedes intentar de nuevo")
-  }, [constructionState.lines, showToast])
+    toast({
+      title: "🗑️ Línea eliminada",
+      description: "Puedes intentar de nuevo",
+      duration: 3000,
+    })
+  }, [constructionState.lines, toast])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
     setShowHint(prev => !prev)
     if (!showHint && constructionState.targetFigure) {
       const template = figureTemplates[constructionState.targetFigure]
-      showToast("💡 Pista", `${template.description}`)
+      toast({
+        title: "💡 Pista",
+        description: `${template.description}`,
+        duration: 4000,
+      })
     }
-  }, [showHint, constructionState.targetFigure, showToast])
+  }, [showHint, constructionState.targetFigure, toast])
 
   // Limpiar construcción
   const handleClearConstruction = useCallback(() => {
@@ -524,8 +522,12 @@ export const useConstruyeFigura = () => {
       currentConnections: 0,
       isComplete: false,
     }))
-    showToast("🧹 ¡Limpio!", "Puedes empezar de nuevo")
-  }, [showToast])
+    toast({
+      title: "🧹 ¡Limpio!",
+      description: "Puedes empezar de nuevo",
+      duration: 3000,
+    })
+  }, [toast])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -537,9 +539,13 @@ export const useConstruyeFigura = () => {
       setCompletedSets([])
 
       generateConstructionArea()
-      showToast("¡Nuevo Desafío! 🔧", `${construccionLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🔧",
+        description: `${construccionLevels[newLevel].name}`,
+        duration: 3000,
+      })
     }
-  }, [currentLevel, aciertos, generateConstructionArea, showToast, detener])
+  }, [currentLevel, aciertos, generateConstructionArea, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -555,8 +561,12 @@ export const useConstruyeFigura = () => {
 
     generateConstructionArea()
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A construir figuras!")
-  }, [generateConstructionArea, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A construir figuras!",
+      duration: 3000,
+    })
+  }, [generateConstructionArea, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

@@ -51,9 +51,7 @@ export const useNumeroCorrect = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
   const processingBalloons = useRef<Set<string>>(new Set())
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = numeroCorrectoLevels[currentLevel]
   const isLastLevel = currentLevel === numeroCorrectoLevels.length - 1
@@ -66,29 +64,6 @@ export const useNumeroCorrect = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generate balloons - MEJORADO para pantallas pequeñas y grandes
   const generateBalloons = useCallback((count: number): Balloon[] => {
@@ -219,7 +194,11 @@ export const useNumeroCorrect = () => {
         ))
 
         createExplosionEffect(balloon.x, balloon.y, balloon.color)
-        showToast("¡Excelente!", `¡Encontraste el ${balloon.number}!`)
+        toast({
+          title: "¡Excelente!",
+          description: `¡Encontraste el ${balloon.number}!`,
+          duration: 3000,
+        })
 
         setAciertos(prev => prev + 1)
         setNextExpectedNumber(prev => prev + 1)
@@ -232,18 +211,27 @@ export const useNumeroCorrect = () => {
 
           if (nextExpectedNumber >= currentGameLevel.maxNumber) {
             setCompletedSets(prev => [...prev, currentLevel.toString()])
-            showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
+            toast({
+              title: "¡Nivel completado! 🎉",
+              description: `Has completado el ${currentGameLevel.name}`,
+              duration: 3000,
+            })
           }
         }, 500)
       } else {
         setErrores(prev => prev + 1)
         const balloonElement = document.getElementById(balloonId)
         if (balloonElement) createErrorEffect(balloonElement)
-        showToast("¡Oops!", `Busca el número ${nextExpectedNumber}`, "destructive")
+        toast({
+          title: "¡Oops!",
+          description: `Busca el número ${nextExpectedNumber}`,
+          duration: 3000,
+          variant: "destructive",
+        })
         setTimeout(() => processingBalloons.current.delete(balloonId), 100)
       }
     },
-    [nextExpectedNumber, currentGameLevel, createExplosionEffect, createErrorEffect, showToast, balloons, currentLevel]
+    [nextExpectedNumber, currentGameLevel, createExplosionEffect, createErrorEffect, toast, balloons, currentLevel]
   )
 
   // Start game - MEJORADO para usar el nivel correcto
@@ -268,14 +256,18 @@ export const useNumeroCorrect = () => {
       setTotalAciertos(prev => prev + aciertos)
       setAciertos(0) // Reiniciar aciertos para el nuevo nivel
       setCurrentLevel(nextLevelIndex)
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${numeroCorrectoLevels[nextLevelIndex].name}`)
+      toast({
+        title: "¡Nuevo nivel desbloqueado! 🚀",
+        description: `${numeroCorrectoLevels[nextLevelIndex].name}`,
+        duration: 3000,
+      })
 
       // Usar setTimeout para asegurar que el estado se actualice
       setTimeout(() => {
         startGame(nextLevelIndex)
       }, 100)
     }
-  }, [isLastLevel, aciertos, showToast, currentLevel, startGame])
+  }, [isLastLevel, aciertos, toast, currentLevel, startGame])
 
   // Restart game - CORREGIDO
   const handleRestart = useCallback(() => {
@@ -287,13 +279,16 @@ export const useNumeroCorrect = () => {
     setTiempoFinal(null)
 
     reiniciar()
-    showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
+    toast({
+      title: "¡Juego reiniciado! 🔄",
+      description: "Comenzando desde el nivel 1",
+    })
 
     // Usar setTimeout para asegurar que el estado se actualice
     setTimeout(() => {
       startGame(0)
     }, 100)
-  }, [reiniciar, showToast, startGame])
+  }, [reiniciar, toast, startGame])
 
   // Auto-start game when level changes - MEJORADO
   useEffect(() => {

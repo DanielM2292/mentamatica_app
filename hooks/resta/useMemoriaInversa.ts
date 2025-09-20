@@ -67,9 +67,7 @@ export const useMemoriaInversa = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = memoriaInversaLevels[currentLevel]
   const isLastLevel = currentLevel >= memoriaInversaLevels.length - 1
@@ -82,29 +80,6 @@ export const useMemoriaInversa = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function to prevent duplicates
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generate random cards for current level
   const generateRandomCards = useCallback((level: number): MemoryCard[] => {
@@ -204,13 +179,21 @@ export const useMemoriaInversa = () => {
           ]
           
           const randomSuccess = Math.floor(Math.random() * successMessages.length)
-          showToast(successMessages[randomSuccess], successDescriptions[randomSuccess])
+          toast({
+            title: successMessages[randomSuccess],
+            description: successDescriptions[randomSuccess],
+            duration: 3000,
+          })
 
           // Check if level is complete
           if (matchedPairs + 1 >= currentGameLevel.pairs) {
             setTimeout(() => {
               setCompletedSets([{ id: currentLevel }])
-              showToast("¡Memoria Perfecta! 🌟", `¡Completaste ${currentGameLevel.name}!`)
+              toast({
+                title: "¡Memoria Perfecta! 🌟",
+                description: `¡Completaste ${currentGameLevel.name}!`,
+                duration: 3000,
+              })
             }, 1000)
           }
         } else {
@@ -230,13 +213,17 @@ export const useMemoriaInversa = () => {
             "¡Puedes hacerlo! ⚡"
           ]
           const randomError = Math.floor(Math.random() * errorMessages.length)
-          showToast(errorMessages[randomError], "¡Inténtalo de nuevo!")
+          toast({
+            title: errorMessages[randomError],
+            description: "¡Inténtalo de nuevo!",
+            duration: 3000,
+          })          
         }
 
         setFlippedCards([])
       }, 1000)
     }
-  }, [flippedCards, cards, matchedPairs, currentGameLevel, currentLevel, showToast])
+  }, [flippedCards, cards, matchedPairs, currentGameLevel, currentLevel, toast])
 
   // Handle next level with new random cards
   const handleNextLevel = useCallback(() => {
@@ -249,10 +236,12 @@ export const useMemoriaInversa = () => {
       setCompletedSets([])
       setFlippedCards([])
       setCards(generateRandomCards(newLevel))
-
-      showToast("¡Nuevo Desafío! 🧠", `${memoriaInversaLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🧠",
+        description: `${memoriaInversaLevels[newLevel].name}`,
+      })
     }
-  }, [currentLevel, aciertos, generateRandomCards, showToast, detener])
+  }, [currentLevel, aciertos, generateRandomCards, toast, detener])
 
   // Handle restart with new random cards
   const handleRestart = useCallback(() => {
@@ -268,8 +257,12 @@ export const useMemoriaInversa = () => {
     setCards(generateRandomCards(0))
 
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡Entrena tu memoria!")
-  }, [generateRandomCards, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡Entrena tu memoria!",
+      duration: 3000,
+    })
+  }, [generateRandomCards, reiniciar, toast])
 
   // Toggle hint with better tips
   const toggleHint = useCallback(() => {
@@ -282,9 +275,13 @@ export const useMemoriaInversa = () => {
         "Concéntrate en los números, no en los colores. ¡El resultado es lo importante!"
       ]
       const randomHint = hints[Math.floor(Math.random() * hints.length)]
-      showToast("💡 Pista", randomHint)
+      toast({
+        title: "💡 Pista",
+        description: randomHint,
+        duration: 3000,
+      })
     }
-  }, [showHint, showToast])
+  }, [showHint, toast])
 
   // Initialize cards for current level
   useEffect(() => {

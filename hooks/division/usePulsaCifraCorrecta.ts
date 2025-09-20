@@ -91,8 +91,6 @@ export const usePulsaCifraCorrecta = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const problemTimerRef = useRef<NodeJS.Timeout | null>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
 
   // Computed values
   const currentGameLevel = pulsaCifraLevels[currentLevel]
@@ -120,29 +118,6 @@ export const usePulsaCifraCorrecta = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 800 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 1500,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar problema de división
   const generateProblem = useCallback((): Problem => {
@@ -228,7 +203,12 @@ export const usePulsaCifraCorrecta = () => {
           // Tiempo agotado para este problema
           setErrores(prevErrores => prevErrores + 1)
           setStreak(0)
-          showToast("⏰ Tiempo Agotado", "¡Más rápido la próxima vez!", "destructive")
+          toast({
+            title: "⏰ Tiempo Agotado",
+            description: "¡Más rápido la próxima vez!",
+            duration: 2000,
+            variant: "destructive"
+          })
 
           // Generar nuevo problema
           setTimeout(() => {
@@ -242,7 +222,7 @@ export const usePulsaCifraCorrecta = () => {
         return prev - 1
       })
     }, 1000)
-  }, [currentGameLevel, showToast])
+  }, [currentGameLevel, toast])
 
   // Generar nuevo problema
   const generateNewProblem = useCallback(() => {
@@ -286,12 +266,20 @@ export const usePulsaCifraCorrecta = () => {
           "¡Excelente! 🚀"
         ]
         const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)]
-        showToast(randomMessage, `${currentProblem?.expression} = ${option.value}`)
+        toast({
+          title: randomMessage,
+          description: `${currentProblem.expression} = ${option.value}`,
+          duration: 2000,
+        })
 
         // Verificar si el nivel está completo
         if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
           setCompletedSets([{ id: currentLevel }])
-          showToast("¡Nivel Completado! 🏆", "¡Velocidad mental increíble!")
+          toast({
+            title: "¡Nivel Completado! 🏆",
+            description: "¡Velocidad mental increíble!",
+            duration: 3000,
+          })
         } else {
           // Generar nuevo problema
           setTimeout(() => {
@@ -303,7 +291,12 @@ export const usePulsaCifraCorrecta = () => {
         setStreak(0)
 
         const correctOption = options.find(o => o.isCorrect)
-        showToast("¡Ups! 😅", `La respuesta correcta era ${correctOption?.value}`, "destructive")
+        toast({
+          title: "¡Ups! 😅",
+          description: `La respuesta correcta era ${correctOption?.value}`,
+          duration: 3000,
+          variant: "destructive"
+        })
 
         // Generar nuevo problema
         setTimeout(() => {
@@ -311,7 +304,7 @@ export const usePulsaCifraCorrecta = () => {
         }, 2000)
       }
     }, 300)
-  }, [isGameActive, selectedOption, options, problemsCompleted, currentGameLevel, currentLevel, streak, currentProblem, showToast, generateNewProblem])
+  }, [isGameActive, selectedOption, options, problemsCompleted, currentGameLevel, currentLevel, streak, currentProblem, toast, generateNewProblem])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -324,9 +317,13 @@ export const usePulsaCifraCorrecta = () => {
       setSelectedOption(null)
 
       generateNewProblem()
-      showToast("¡Nuevo Desafío! ⚡", `${pulsaCifraLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! ⚡",
+        description: `${pulsaCifraLevels[newLevel].name}`,
+        duration: 3000,
+      })
     }
-  }, [currentLevel, aciertos, generateNewProblem, showToast, detener])
+  }, [currentLevel, aciertos, generateNewProblem, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -347,8 +344,12 @@ export const usePulsaCifraCorrecta = () => {
     generateNewProblem()
 
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A toda velocidad!")
-  }, [generateNewProblem, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A toda velocidad!",
+      duration: 2000,
+    })
+  }, [generateNewProblem, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

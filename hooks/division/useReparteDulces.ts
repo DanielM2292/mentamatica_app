@@ -106,9 +106,7 @@ export const useReparteDulces = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = reparteDulcesLevels[currentLevel]
   const isLastLevel = currentLevel >= reparteDulcesLevels.length - 1
@@ -134,29 +132,6 @@ export const useReparteDulces = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar problema de división
   const generateProblem = useCallback((): Problem => {
@@ -236,7 +211,12 @@ export const useReparteDulces = () => {
     // Verificar si el personaje ya tiene suficientes dulces
     if (character.receivedCandies.length >= character.expectedAmount) {
       setErrores(prev => prev + 1)
-      showToast("¡Ya tiene suficientes! 🍭", `${character.name} ya tiene todos sus dulces`, 'destructive')
+      toast({
+        title: "¡Ya tiene suficientes! 🍭",
+        description: `${character.name} ya tiene suficientes dulces.`,
+        duration: 3000,
+        variant: 'destructive',
+      })
       return
     }
 
@@ -269,13 +249,20 @@ export const useReparteDulces = () => {
     if (allCharactersComplete) {
       setAciertos(prev => prev + 1)
       setProblemsCompleted(prev => prev + 1)
-      
-      showToast("¡Perfecto! 🎉", `${currentProblem.expression} = ${currentProblem.quotient}`)
+      toast({
+        title: "¡Perfecto! 🎉",
+        description: `${currentProblem.expression} = ${currentProblem.quotient}`,
+        duration: 3000,
+      })
       
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
         setCompletedSets([{ id: currentLevel }])
-        showToast("¡Nivel Completado! 🏆", "¡Excelente reparto de dulces!")
+        toast({
+          title: "¡Nivel Completado! 🏆",
+          description: "¡Excelente reparto de dulces!",
+          duration: 3000,
+        })
       } else {
         // Generar nuevo problema
         setTimeout(() => {
@@ -287,7 +274,7 @@ export const useReparteDulces = () => {
         }, 2000)
       }
     }
-  }, [currentProblem, candies, characters_state, problemsCompleted, currentGameLevel, currentLevel, generateProblem, generateCharacters, generateCandies, showToast])
+  }, [currentProblem, candies, characters_state, problemsCompleted, currentGameLevel, currentLevel, generateProblem, generateCharacters, generateCandies, toast])
 
   // Remover dulce de personaje
   const handleRemoveFromCharacter = useCallback((candyId: number) => {
@@ -308,9 +295,13 @@ export const useReparteDulces = () => {
   const toggleHint = useCallback(() => {
     setShowHint(prev => !prev)
     if (!showHint && currentProblem) {
-      showToast("💡 Pista", `Cada personaje debe recibir exactamente ${currentProblem.quotient} dulces`)
+      toast({
+        title: "💡 Pista",
+        description: `Cada personaje debe recibir exactamente ${currentProblem.quotient} dulces.`,
+        duration: 3000,
+      })
     }
-  }, [showHint, currentProblem, showToast])
+  }, [showHint, currentProblem, toast])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -325,9 +316,13 @@ export const useReparteDulces = () => {
       setCharacters(generateCharacters(newProblem))
       setCandies(generateCandies(newProblem))
       setSelectedCandy(Math.floor(Math.random() * candyTypes.length))
-      showToast("¡Nuevo Desafío! 🍭", `${reparteDulcesLevels[currentLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🍭",
+        description: `${reparteDulcesLevels[currentLevel].name}`,
+        duration: 3000,
+      })
     }
-  }, [currentLevel, aciertos, generateProblem, generateCharacters, generateCandies, showToast, detener])
+  }, [currentLevel, aciertos, generateProblem, generateCharacters, generateCandies, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -346,8 +341,12 @@ export const useReparteDulces = () => {
     setSelectedCandy(Math.floor(Math.random() * candyTypes.length))
 
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A repartir dulces!")
-  }, [generateProblem, generateCharacters, generateCandies, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A repartir dulces!",
+      duration: 3000,
+    })
+  }, [generateProblem, generateCharacters, generateCandies, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

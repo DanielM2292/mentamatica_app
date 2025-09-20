@@ -70,9 +70,7 @@ export const useContadorEspacial = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values - Similar a useGameLogic
   const currentGameLevel = contadorEspacialLevels[currentLevel]
   const currentMission = currentGameLevel?.missions[currentMissionIndex]
@@ -86,29 +84,6 @@ export const useContadorEspacial = () => {
     iniciar()
   }, [iniciar])
 
-  // Toast function to prevent duplicates
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
-
   // Initialize mission
   const initializeMission = useCallback(() => {
     if (!currentMission) return
@@ -121,7 +96,11 @@ export const useContadorEspacial = () => {
   // Handle mission completion
   const handleMissionComplete = useCallback((newValue: number) => {
     setAciertos((prev) => prev + 1)
-    showToast("¡Excelente! 🎉", `¡Llegaste al número ${newValue}!`)
+    toast({
+      title: "¡Excelente! 🎉",
+      description: `¡Llegaste al número ${newValue}!`,
+      duration: 3000,
+    })
 
     // Check if this was the last mission of the level
     if (currentMissionIndex >= currentGameLevel.missions.length - 1) {
@@ -129,7 +108,10 @@ export const useContadorEspacial = () => {
       setTimeout(() => {
         setCompletedSets([`level-${currentLevel}`])
         setIsGameActive(false)
-        showToast("¡Nivel Completado! 🌟", `¡Terminaste ${currentGameLevel.name}!`)
+        toast({
+          title: "¡Nivel Completado! 🌟",
+          description: `¡Terminaste ${currentGameLevel.name}!`,
+        })
       }, 1500)
     } else {
       // Move to next mission
@@ -137,7 +119,7 @@ export const useContadorEspacial = () => {
         setCurrentMissionIndex((prev) => prev + 1)
       }, 2000)
     }
-  }, [currentMissionIndex, currentGameLevel, currentLevel, showToast])
+  }, [currentMissionIndex, currentGameLevel, currentLevel, toast])
 
   // Move up (increase number by 1)
   const moveUp = useCallback(() => {
@@ -163,16 +145,23 @@ export const useContadorEspacial = () => {
       } else {
         // Give encouraging feedback
         if (newValue < currentMission?.target) {
-          showToast("¡Muy bien! 👍", "¡Sigue subiendo!")
+          toast({
+            title: "¡Muy bien! 👍",
+            description: "¡Sigue subiendo!",
+          })
         } else {
-          showToast("¡Ups! 😅", "Te pasaste un poquito")
+          toast({
+            title: "¡Ups! 😅",
+            description: "Te pasaste un poquito",
+            variant: "destructive",
+          })
           setErrores(prev => prev + 1)
         }
       }
     }, 800)
 
     animationTimeouts.current.push(timeout)
-  }, [currentValue, currentMission, isMoving, showToast, handleMissionComplete])
+  }, [currentValue, currentMission, isMoving, toast, handleMissionComplete])
 
   // Move down (decrease number by 1)
   const moveDown = useCallback(() => {
@@ -198,16 +187,23 @@ export const useContadorEspacial = () => {
       } else {
         // Give encouraging feedback
         if (newValue > currentMission?.target) {
-          showToast("¡Muy bien! 👍", "¡Sigue bajando!")
+          toast({
+            title: "¡Muy bien! 👍",
+            description: "¡Sigue bajando!",
+          })
         } else {
-          showToast("¡Ups! 😅", "Te pasaste un poquito", "destructive")
+          toast({
+            title: "¡Ups! 😅",
+            description: "Te pasaste un poquito",
+            variant: "destructive",
+          })
           setErrores(prev => prev + 1)
         }
       }
     }, 800)
 
     animationTimeouts.current.push(timeout)
-  }, [currentValue, currentMission, isMoving, showToast, handleMissionComplete])
+  }, [currentValue, currentMission, isMoving, toast, handleMissionComplete])
 
   // Handle next level - Similar a useGameLogic
   const handleNextLevel = useCallback(() => {
@@ -216,14 +212,16 @@ export const useContadorEspacial = () => {
       setCurrentLevel(prev => prev + 1)
       setCurrentMissionIndex(0)      
       setCompletedSets([])
-
-      showToast("¡Nuevo Nivel! 🚀", `${contadorEspacialLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo Nivel! 🚀",
+        description: `${contadorEspacialLevels[currentLevel + 1].name}`,
+      })
 
       setTimeout(() => {
         initializeMission()
       }, 1000)
     }
-  }, [currentLevel, aciertos, isLastLevel, showToast, initializeMission])
+  }, [currentLevel, aciertos, isLastLevel, toast, initializeMission])
 
   // Handle restart - Similar a useGameLogic
   const handleRestart = useCallback(() => {
@@ -236,12 +234,15 @@ export const useContadorEspacial = () => {
     setTiempoFinal(null)
 
     reiniciar()
-    showToast("¡Empezamos de nuevo! 🔄", "¡Nueva aventura!")
+    toast({
+      title: "¡Empezamos de nuevo! 🔄",
+      description: "¡Nueva aventura!",
+    })
 
     setTimeout(() => {
       initializeMission()
     }, 1000)
-  }, [reiniciar, showToast, initializeMission])
+  }, [reiniciar, toast, initializeMission])
 
   // Handle final time - Similar a useGameLogic
   const handleTiempoFinalizado = (tiempo: number) => {

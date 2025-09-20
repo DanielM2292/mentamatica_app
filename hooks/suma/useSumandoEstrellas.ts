@@ -115,8 +115,6 @@ export const useSumandoEstrellas = () => {
 
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
 
   // Valores calculados
   const currentGameLevel = sumandoEstrellasLevels[currentLevel]
@@ -130,29 +128,6 @@ export const useSumandoEstrellas = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar nuevo problema
   const generateNewProblem = useCallback(() => {
@@ -183,7 +158,11 @@ export const useSumandoEstrellas = () => {
       setTimeout(() => {
         if (star.isCorrect) {
           setAciertos((prev) => prev + 1)
-          showToast("¡Excelente!", `¡${currentProblem?.num1} + ${currentProblem?.num2} = ${star.value}!`)
+          toast({
+            title: "¡Excelente!",
+            description: `¡${currentProblem?.num1} + ${currentProblem?.num2} = ${star.value}!`,
+            duration: 3000,
+          })
 
           // Avanzar al siguiente problema
           if (currentProblemIndex < currentGameLevel.numbersPerLevel - 1) {
@@ -194,12 +173,20 @@ export const useSumandoEstrellas = () => {
             // Nivel completado
             setTimeout(() => {
               setCompletedSets((prev) => [...prev, currentLevel.toString()])
-              showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
+              toast({
+                title: "¡Nivel completado! 🎉",
+                description: `Has completado el ${currentGameLevel.name}`,
+              })
             }, 1500)
           }
         } else {
           setErrores((prev) => prev + 1)
-          showToast("¡Inténtalo de nuevo!", "Esa no es la respuesta correcta", "destructive")
+          toast({
+            title: "¡Inténtalo de nuevo!",
+            description: "Esa no es la respuesta correcta",
+            duration: 3000,
+            variant: "destructive",
+          })
 
           // Reset después de error
           setTimeout(() => {
@@ -217,7 +204,7 @@ export const useSumandoEstrellas = () => {
         }
       }, 500)
     },
-    [isGameActive, showResult, stars, currentProblem, currentProblemIndex, currentGameLevel, showToast, currentLevel],
+    [isGameActive, showResult, stars, currentProblem, currentProblemIndex, currentGameLevel, toast, currentLevel],
   )
 
   // Siguiente nivel
@@ -226,10 +213,12 @@ export const useSumandoEstrellas = () => {
       setTotalAciertos((prev) => prev + aciertos)
       setCurrentLevel((prev) => prev + 1)
       setCurrentProblemIndex(0)
-
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${sumandoEstrellasLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo nivel desbloqueado! 🚀",
+        description: `${sumandoEstrellasLevels[currentLevel + 1].name}`,
+      })
     }
-  }, [isLastLevel, aciertos, showToast, currentLevel])
+  }, [isLastLevel, aciertos, toast, currentLevel])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -246,8 +235,11 @@ export const useSumandoEstrellas = () => {
     setShowResult(false)
 
     reiniciar()
-    showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
-  }, [reiniciar, showToast])
+    toast({
+      title: "¡Juego reiniciado! 🔄",
+      description: "Comenzando desde el nivel 1",
+    })
+  }, [reiniciar, toast])
 
   // Efecto para generar nuevo problema cuando cambia el índice
   useEffect(() => {

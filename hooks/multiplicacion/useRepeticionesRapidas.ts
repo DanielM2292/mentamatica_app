@@ -98,9 +98,7 @@ export const useRepeticionesRapidas = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Computed values
   const currentGameLevel = repeticionesLevels[currentLevel]
   const isLastLevel = currentLevel === repeticionesLevels.length - 1
@@ -113,29 +111,6 @@ export const useRepeticionesRapidas = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar problema de multiplicación
   const generateProblem = useCallback((): Problem => {
@@ -212,7 +187,11 @@ export const useRepeticionesRapidas = () => {
     // Verificar si la zona no está llena
     if (zone.placedItems.length >= zone.expectedCount) {
       setErrores(prev => prev + 1);
-      showToast("¡Grupo lleno! 📦", "Este grupo ya tiene suficientes elementos", "destructive")
+      toast({
+        title: "¡Grupo lleno! 📦",
+        description: "Este grupo ya tiene suficientes elementos",
+        variant: "destructive",
+      })
       return
     }
 
@@ -247,8 +226,10 @@ export const useRepeticionesRapidas = () => {
       setAciertos(prev => prev + 1)
       const newProblemsCompleted = problemsCompleted + 1
       setProblemsCompleted(newProblemsCompleted)
-      
-      showToast("¡Perfecto! 🎯", `${currentProblem.expression} = ${currentProblem.result}`)
+      toast({
+        title: "¡Perfecto! 🎯",
+        description: `${currentProblem.expression} = ${currentProblem.result}`,
+      })
       
       // Verificar si el nivel está completo
       if (newProblemsCompleted >= currentGameLevel.problemsPerLevel) {
@@ -259,9 +240,15 @@ export const useRepeticionesRapidas = () => {
           // AÑADIDO: Verificar si es el último nivel completado
           if (isLastLevel) {
             detener()
-            showToast("¡Juego Completado! 🏆", "¡Felicidades! Has terminado todos los niveles")
+            toast({
+              title: "¡Juego Completado! 🏆",
+              description: "¡Felicidades! Has terminado todos los niveles",
+            })
           } else {
-            showToast("¡Nivel Completado! 🎉", "¡Excelente trabajo agrupando!")
+            toast({
+              title: "¡Nivel Completado! 🎉",
+              description: "¡Excelente trabajo agrupando!",
+            })
           }
         }, 1500)
       } else {
@@ -275,7 +262,7 @@ export const useRepeticionesRapidas = () => {
         }, 2000)
       }
     }
-  }, [currentProblem, dragItems, dropZones, problemsCompleted, currentGameLevel, currentLevel, generateProblem, generateDragItems, generateDropZones, showToast])
+  }, [currentProblem, dragItems, dropZones, problemsCompleted, currentGameLevel, currentLevel, generateProblem, generateDragItems, generateDropZones, toast])
 
   // Remover elemento de zona
   const handleRemoveFromZone = useCallback((itemId: number) => {
@@ -297,9 +284,12 @@ export const useRepeticionesRapidas = () => {
   const toggleHint = useCallback(() => {
     setShowHint(prev => !prev)
     if (!showHint && currentProblem) {
-      showToast("💡 Pista", `Necesitas ${currentProblem.multiplier} grupos de ${currentProblem.multiplicand} elementos cada uno`)
+      toast({
+        title: "💡 Pista",
+        description: `Necesitas ${currentProblem.multiplier} grupos de ${currentProblem.multiplicand} elementos cada uno`,
+      })
     }
-  }, [showHint, currentProblem, showToast])
+  }, [showHint, currentProblem, toast])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -317,16 +307,21 @@ export const useRepeticionesRapidas = () => {
       setDropZones(generateDropZones(newProblem))
       setSelectedElement(Math.floor(Math.random() * elementTypes.length))
       setIsGameActive(true)
-
-      showToast("¡Nuevo Desafío! 🎯", `${repeticionesLevels[newLevel].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🎯",
+        description: `${repeticionesLevels[newLevel].name}`,
+      })
     } else {
       // Completar el juego
       setTotalAciertos(prev => prev + aciertos)
       setIsGameActive(false)
       detener()
-      showToast("¡Juego Completado! 🏆", "¡Felicidades! Has terminado todos los niveles")
+      toast({
+        title: "¡Juego Completado! 🏆",
+        description: "¡Felicidades! Has terminado todos los niveles",
+      })
     }
-  }, [currentLevel, aciertos, isLastLevel, generateProblem, generateDragItems, generateDropZones, showToast, detener])
+  }, [currentLevel, aciertos, isLastLevel, generateProblem, generateDragItems, generateDropZones, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -349,8 +344,11 @@ export const useRepeticionesRapidas = () => {
 
     reiniciar()
     iniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A agrupar elementos!")
-  }, [generateProblem, generateDragItems, generateDropZones, reiniciar, iniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A agrupar elementos!",
+    })
+  }, [generateProblem, generateDragItems, generateDropZones, reiniciar, iniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

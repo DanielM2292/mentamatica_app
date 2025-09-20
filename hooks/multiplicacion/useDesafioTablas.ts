@@ -103,9 +103,7 @@ export const useDesafioTablas = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Valores calculados
   const currentGameLevel = desafioTablasLevels[currentLevel]
   const isLastLevel = currentLevel === desafioTablasLevels.length - 1
@@ -120,29 +118,6 @@ export const useDesafioTablas = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Función para mostrar toast
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 800 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 1500,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar celdas de tabla
   const generateTableCells = useCallback((): TableCell[] => {
@@ -176,7 +151,11 @@ export const useDesafioTablas = () => {
         "¡Súper! 💫"
       ]
       const randomMessage = successMessages[Math.floor(Math.random() * successMessages.length)]
-      showToast(randomMessage, `${currentCell.multiplicand} × ${currentCell.multiplier} = ${currentCell.result}`)
+      toast({
+        title: randomMessage,
+        description: `${currentCell.multiplicand} × ${currentCell.multiplier} = ${currentCell.result}`,
+        duration: 3000,
+      })
     } else {
       setErrores(prev => prev + 1)
       setStreak(0)
@@ -187,7 +166,12 @@ export const useDesafioTablas = () => {
         "¡Sigue intentando! 💪"
       ]
       const randomErrorMessage = errorMessages[Math.floor(Math.random() * errorMessages.length)]
-      showToast(randomErrorMessage, `${currentCell.multiplicand} × ${currentCell.multiplier} = ${currentCell.result}`, "destructive")
+      toast({
+        title: randomErrorMessage,
+        description: `${currentCell.multiplicand} × ${currentCell.multiplier} = ${currentCell.result}`,
+        duration: 3000,
+        variant: "destructive"
+      })
     }
 
     setInputValue("")
@@ -198,7 +182,11 @@ export const useDesafioTablas = () => {
       setTimeout(() => {
         setCompletedSets(prev => [...prev, currentLevel.toString()])
         setIsGameActive(false)
-        showToast("¡Nivel Completado! 🏆", "¡Dominaste las tablas!")
+        toast({
+          title: "¡Nivel Completado! 🏆",
+          description: "¡Dominaste las tablas!",
+          duration: 3000,
+        })
       }, 1000)
     } else {
       // Activar siguiente celda
@@ -214,7 +202,7 @@ export const useDesafioTablas = () => {
         }
       }, 1500)
     }
-  }, [currentCell, currentCellIndex, completedCells, currentGameLevel, currentLevel, streak, showToast, isGameActive])
+  }, [currentCell, currentCellIndex, completedCells, currentGameLevel, currentLevel, streak, toast, isGameActive])
 
   // Manejar input
   const handleInputChange = useCallback((value: string) => {
@@ -243,9 +231,12 @@ export const useDesafioTablas = () => {
       setTableCells(newCells)
       setIsGameActive(true)
 
-      showToast("¡Nuevo Desafío! ⚡", `${desafioTablasLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo Desafío! ⚡", 
+        description:`${desafioTablasLevels[currentLevel + 1].name}`
+      })
     }
-  }, [isLastLevel, aciertos, currentLevel, showToast])
+  }, [isLastLevel, aciertos, currentLevel, toast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -268,8 +259,11 @@ export const useDesafioTablas = () => {
 
     reiniciar()
     iniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A por las tablas!")
-  }, [reiniciar, iniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A por las tablas!",
+    })
+  }, [reiniciar, iniciar, toast])
 
   // Inicializar juego
   useEffect(() => {
@@ -294,9 +288,13 @@ export const useDesafioTablas = () => {
       setTotalAciertos(prev => prev + aciertos)
       setTiempoFinal(tiempo)
       detener()
-      showToast("¡Juego Completado! 🎉", "¡Felicidades por completar todos los niveles!")
+      toast({
+        title: "¡Juego Completado! 🎉",
+        description: "¡Felicidades por completar todos los niveles!",
+        duration: 3000,
+      })
     }
-  }, [isGameComplete, aciertos, tiempo, detener, tiempoFinal, showToast])
+  }, [isGameComplete, aciertos, tiempo, detener, tiempoFinal, toast])
 
   // Limpieza
   useEffect(() => {

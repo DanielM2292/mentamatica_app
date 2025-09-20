@@ -16,7 +16,7 @@ const carreraNumerosLevels = [
     numbersPerLevel: 5,
     maxNumber: 15,
     minNumber: 1,
-    timeLimit: 15000, // 15 segundos por problema
+    timeLimit: 25000, // 25 segundos por problema
   },
   {
     name: "Nivel 2",
@@ -25,7 +25,7 @@ const carreraNumerosLevels = [
     numbersPerLevel: 5,
     maxNumber: 25,
     minNumber: 1,
-    timeLimit: 10000, // 10 segundos por problema
+    timeLimit: 20000, // 20 segundos por problema
   },
   {
     name: "Nivel 3",
@@ -34,7 +34,7 @@ const carreraNumerosLevels = [
     numbersPerLevel: 10,
     maxNumber: 50,
     minNumber: 1,
-    timeLimit: 8000, // 8 segundos por problema
+    timeLimit: 15000, // 15 segundos por problema
   },
 ]
 
@@ -89,9 +89,7 @@ export const useCarreraNumeros = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const problemTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Valores calculados
   const currentGameLevel = carreraNumerosLevels[currentLevel]
   const isLastLevel = currentLevel === carreraNumerosLevels.length - 1
@@ -105,29 +103,6 @@ export const useCarreraNumeros = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Inicializar posiciones de carrera
   const initializeRacePositions = useCallback(() => {
@@ -172,7 +147,11 @@ export const useCarreraNumeros = () => {
     }
 
     setErrores((prev) => prev + 1)
-    showToast("¡Tiempo agotado!", "Los oponentes avanzan", "destructive")
+    toast({
+      title: "¡Tiempo agotado!",
+      description: "Los oponentes avanzan",
+      variant: "destructive",
+    })
 
     // Avanzar oponentes
     setRacePositions((prev) =>
@@ -188,10 +167,13 @@ export const useCarreraNumeros = () => {
       } else {
         // Nivel completado
         setCompletedSets((prev) => [...prev, currentLevel.toString()])
-        showToast("¡Nivel completado! 🏁", `Has completado el ${currentGameLevel.name}`)
+        toast({
+          title: "¡Nivel completado! 🏁",
+          description: `Has completado el ${currentGameLevel.name}`,
+        })
       }
     }, 1500)
-  }, [currentProblemIndex, currentGameLevel, showToast, currentLevel])
+  }, [currentProblemIndex, currentGameLevel, toast, currentLevel])
 
   // Manejar cambio en respuesta del usuario
   const handleAnswerChange = useCallback(
@@ -221,7 +203,10 @@ export const useCarreraNumeros = () => {
 
     if (isCorrect) {
       setAciertos((prev) => prev + 1)
-      showToast("¡Excelente!", `¡${currentProblem.num1} + ${currentProblem.num2} = ${currentProblem.correctAnswer}!`)
+      toast({
+        title: "¡Excelente!",
+        description: `¡${currentProblem.num1} + ${currentProblem.num2} = ${currentProblem.correctAnswer}!`,
+      })
 
       // Avanzar jugador más que los oponentes
       const playerAdvance = 15 + Math.random() * 10
@@ -238,7 +223,11 @@ export const useCarreraNumeros = () => {
       )
     } else {
       setErrores((prev) => prev + 1)
-      showToast("¡Respuesta incorrecta!", `La respuesta era ${currentProblem.correctAnswer}`, "destructive")
+      toast({
+        title: "¡Respuesta incorrecta!",
+        description: `La respuesta era ${currentProblem.correctAnswer}`,
+        variant: "destructive",
+      })
 
       // Solo avanzar oponentes
       setRacePositions((prev) =>
@@ -255,10 +244,14 @@ export const useCarreraNumeros = () => {
       } else {
         // Nivel completado
         setCompletedSets((prev) => [...prev, currentLevel.toString()])
-        showToast("¡Nivel completado! 🏁", `Has completado el ${currentGameLevel.name}`)
+        toast({
+          title: "¡Nivel completado! 🏁",
+          description: `Has completado el ${currentGameLevel.name}`,
+        })
+        //
       }
     }, 1500)
-  }, [currentProblem, userAnswer, isAnswering, currentProblemIndex, currentGameLevel, showToast, currentLevel])
+  }, [currentProblem, userAnswer, isAnswering, currentProblemIndex, currentGameLevel, toast, currentLevel])
 
   // Siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -267,10 +260,12 @@ export const useCarreraNumeros = () => {
       setCurrentLevel((prev) => prev + 1)
       setCurrentProblemIndex(0)
       initializeRacePositions()
-
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${carreraNumerosLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo nivel desbloqueado! 🚀",
+        description: `${carreraNumerosLevels[currentLevel + 1].name}`,
+      })
     }
-  }, [isLastLevel, aciertos, showToast, currentLevel, initializeRacePositions])
+  }, [isLastLevel, aciertos, toast, currentLevel, initializeRacePositions])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -293,8 +288,11 @@ export const useCarreraNumeros = () => {
     initializeRacePositions()
 
     reiniciar()
-    showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
-  }, [reiniciar, showToast, initializeRacePositions])
+    toast({
+      title: "¡Juego reiniciado! 🔄",
+      description: "Comenzando desde el nivel 1",
+    })
+  }, [reiniciar, toast, initializeRacePositions])
 
   // Inicializar posiciones al montar
   useEffect(() => {

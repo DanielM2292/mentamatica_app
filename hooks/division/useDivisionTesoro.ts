@@ -122,8 +122,6 @@ export const useDivisionTesoro = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
 
   // Computed values
   const currentGameLevel = divisionTesoroLevels[currentLevel]
@@ -151,29 +149,6 @@ export const useDivisionTesoro = () => {
   useEffect(() => {
     iniciar()
   }, [iniciar])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Generar problema de división con historia
   const generateProblem = useCallback((): Problem => {
@@ -267,12 +242,20 @@ export const useDivisionTesoro = () => {
         receivedCoins: currentProblem.quotient,
       })))
 
-      showToast("¡Tesoro Encontrado! 🏴‍☠️", `Cada pirata recibe ${currentProblem.quotient} ${currentTreasureType.name}`)
+      toast({
+        title: "¡Tesoro Encontrado! 🏴‍☠️",
+        description: `${currentProblem.quotient} ${currentTreasureType.name}`,
+        duration: 3000,
+      })
 
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
         setCompletedSets([{ id: currentLevel }])
-        showToast("¡Aventura Completada! 🏆", "¡Todos los tesoros han sido encontrados!")
+        toast({
+          title: "¡Aventura Completada! 🏆",
+          description: "¡Todos los tesoros han sido encontrados!",
+          duration: 3000,
+        })
       } else {
         // Revelar siguiente mapa
         setTimeout(() => {
@@ -305,9 +288,14 @@ export const useDivisionTesoro = () => {
       }
     } else {
       setErrores(prev => prev + 1)
-      showToast("¡Pista Incorrecta! 🗺️", `El tesoro no está ahí. Intenta de nuevo.`, "destructive")
+      toast({
+        title: "¡Pista Incorrecta! 🗺️",
+        description: "El tesoro no está ahí. Intenta de nuevo.",
+        duration: 3000,
+        variant: "destructive",
+      })
     }
-  }, [currentProblem, currentMapIndex, problemsCompleted, currentGameLevel, currentLevel, treasureMaps, currentTreasureType, generatePirates, showToast])
+  }, [currentProblem, currentMapIndex, problemsCompleted, currentGameLevel, currentLevel, treasureMaps, currentTreasureType, generatePirates, toast])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -336,9 +324,13 @@ export const useDivisionTesoro = () => {
       }
 
       setSelectedTreasure(Math.floor(Math.random() * treasureTypes.length))
-      showToast("¡Nueva Aventura! 🏴‍☠️", `${divisionTesoroLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nueva Aventura! 🏴‍☠️",
+        description: `${divisionTesoroLevels[currentLevel + 1].name}`,
+        duration: 3000,
+      })
     }
-  }, [isLastLevel, aciertos, generateTreasureMaps, generatePirates, showToast, detener])
+  }, [isLastLevel, aciertos, generateTreasureMaps, generatePirates, toast, detener])
 
   // Manejar input
   const handleInputChange = useCallback((value: string) => {
@@ -357,9 +349,13 @@ export const useDivisionTesoro = () => {
   const toggleHint = useCallback(() => {
     setShowHint(prev => !prev)
     if (!showHint && currentProblem) {
-      showToast("🗺️ Pista del Mapa", `Divide ${currentProblem.dividend} entre ${currentProblem.divisor} piratas`)
+      toast({
+        title: "🗺️ Pista del Mapa",
+        description: `Divide ${currentProblem.dividend} entre ${currentProblem.divisor} piratas`,
+        duration: 3000,
+      })
     }
-  }, [showHint, currentProblem, showToast])
+  }, [showHint, currentProblem, toast])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -394,8 +390,12 @@ export const useDivisionTesoro = () => {
     setIsGameActive(true)
 
     reiniciar()
-    showToast("¡Nueva Expedición! 🗺️", "¡A buscar tesoros!")
-  }, [generateTreasureMaps, generatePirates, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Expedición! 🗺️",
+      description: "¡A buscar tesoros!",
+      duration: 3000,
+    })
+  }, [generateTreasureMaps, generatePirates, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

@@ -151,8 +151,6 @@ export const usePerimetroMagico = () => {
   const treasureRef = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
   const roundTimer = useRef<NodeJS.Timeout>()
 
   // Computed values
@@ -203,29 +201,6 @@ export const usePerimetroMagico = () => {
     "¡Fantástico! 🎊",
     "¡Lo estás haciendo súper! 🚀"
   ]
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Crear partículas de celebración
   const createCelebrationParticles = useCallback((x: number, y: number) => {
@@ -336,7 +311,12 @@ export const usePerimetroMagico = () => {
     const currentProblem = gameState.problems[gameState.currentProblem]
     
     if (!currentProblem || isNaN(answer)) {
-      showToast("¡Ups! 🤔", "Necesitas escribir un número", "destructive")
+      toast({
+        title: "¡Ups! 🤔",
+        description: "Necesitas escribir un número",
+        duration: 4000,
+        variant: "destructive",
+      })
       
       // Animar input con error
       if (inputRef.current) {
@@ -370,7 +350,11 @@ export const usePerimetroMagico = () => {
       }))
 
       const shapeData = shapeTypes[currentProblem.shape]
-      showToast("¡Cofre Desbloqueado! 🎉", shapeData.sound)
+      toast({
+        title: "¡Cofre Desbloqueado! 🎉",
+        description: shapeData.sound,
+        duration: 3000,
+      })
       showEncouragementMessage()
       
       // Crear efectos visuales
@@ -380,7 +364,11 @@ export const usePerimetroMagico = () => {
       // Verificar si el nivel está completo
       if (problemsCompleted + 1 >= currentGameLevel.problemsPerLevel) {
         setCompletedSets([{ id: currentLevel }])
-        showToast("¡Nivel Completado! 🏆", `¡Tesoro total: ${newTreasure} monedas!`)
+        toast({
+          title: "¡Nivel Completado! 🏆",
+          description: `¡Tesoro total: ${newTreasure} monedas!`,
+          duration: 3000,
+        })
       } else {
         // Siguiente problema
         setTimeout(() => {
@@ -394,7 +382,12 @@ export const usePerimetroMagico = () => {
     } else {
       // Respuesta incorrecta
       setErrores(prev => prev + 1)
-      showToast("¡Inténtalo de nuevo! 🤔", `El perímetro correcto es ${currentProblem.correctPerimeter} cm`, "destructive")
+      toast({
+        title: "¡Inténtalo de nuevo! 🤔",
+        description: `El perímetro correcto es ${currentProblem.correctPerimeter} cm`,
+        duration: 3000,
+        variant: "destructive",
+      })
       setGameState(prev => ({ ...prev, userAnswer: "" }))
       
       // Animar input con error
@@ -407,7 +400,7 @@ export const usePerimetroMagico = () => {
         }, 500)
       }
     }
-  }, [gameState, problemsCompleted, currentGameLevel, currentLevel, showToast, showEncouragementMessage, createCelebrationParticles, createTreasureSparkles])
+  }, [gameState, problemsCompleted, currentGameLevel, currentLevel, toast, showEncouragementMessage, createCelebrationParticles, createTreasureSparkles])
 
   // Manejar cambio de respuesta
   const handleAnswerChange = useCallback((value: string) => {
@@ -424,7 +417,12 @@ export const usePerimetroMagico = () => {
     } else if (roundTime === 0 && isGameActive) {
       // Tiempo agotado
       setErrores(prev => prev + 1)
-      showToast("¡Tiempo Agotado! ⏰", "¡No te preocupes! Tendrás más tiempo en el siguiente nivel", "destructive")
+      toast({
+        title: "¡Tiempo Agotado! ⏰",
+        description: "¡No te preocupes! Tendrás más tiempo en el siguiente nivel",
+        duration: 3000,
+        variant: "destructive",
+      })
       
       setTimeout(() => {
         generateProblems()
@@ -434,7 +432,7 @@ export const usePerimetroMagico = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateProblems, showToast, gameState.problems.length])
+  }, [isGameActive, roundTime, generateProblems, toast, gameState.problems.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
@@ -443,10 +441,14 @@ export const usePerimetroMagico = () => {
       const currentProblem = gameState.problems[gameState.currentProblem]
       if (currentProblem) {
         const shapeData = shapeTypes[currentProblem.shape]
-        showToast("💡 Pista", `El perímetro es la suma de todos los lados: ${shapeData.formula}`)
+        toast({
+          title: "💡 Pista",
+          description: `El perímetro es la suma de todos los lados: ${shapeData.formula}`,
+          duration: 3000,
+        })
       }
     }
-  }, [showHint, gameState.problems, gameState.currentProblem, showToast])
+  }, [showHint, gameState.problems, gameState.currentProblem, toast])
 
   // Toggle formula
   const toggleFormula = useCallback(() => {
@@ -474,9 +476,13 @@ export const usePerimetroMagico = () => {
       setCompletedSets([])
 
       generateProblems()
-      showToast("¡Nuevo Desafío! 🗝️", `${perimetroLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🗝️",
+        description: `${perimetroLevels[currentLevel + 1].name}`,
+        duration: 3000,
+      })
     }
-  }, [isLastLevel, aciertos, generateProblems, showToast, detener])
+  }, [isLastLevel, aciertos, generateProblems, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -492,8 +498,12 @@ export const usePerimetroMagico = () => {
 
     generateProblems()
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A buscar tesoros!")
-  }, [generateProblems, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A buscar tesoros!",
+      duration: 3000,
+    })
+  }, [generateProblems, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

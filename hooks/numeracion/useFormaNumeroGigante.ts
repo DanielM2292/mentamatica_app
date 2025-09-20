@@ -102,9 +102,7 @@ export const useFormaNumeroGigante = () => {
   // Refs
   const gameContainerRef = useRef<HTMLDivElement>(null)
   const draggedItem = useRef<DigitCard | null>(null)
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
-
+  
   // Valores calculados
   const currentGameLevel = formaNumeroLevels[currentLevel]
   const currentTargetNumber = randomNumbers[currentNumberIndex]
@@ -118,29 +116,6 @@ export const useFormaNumeroGigante = () => {
     iniciar()
     return () => detener()
   }, [iniciar, detener])
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 500 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 2000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Inicializar slots
   const initializeDropSlots = useCallback((targetNumber: number) => {
@@ -231,7 +206,10 @@ export const useFormaNumeroGigante = () => {
 
     if (isCorrect) {
       setAciertos((prev) => prev + 1)
-      showToast("¡Excelente!", `¡Formaste correctamente ${currentTargetNumber?.toLocaleString()}!`)
+      toast({
+        title: "¡Excelente!",
+        description: `¡Formaste correctamente ${currentTargetNumber?.toLocaleString()}!`,
+      })
 
       // Limpiar inmediatamente las tarjetas y slots
       setDigitCards([])
@@ -249,15 +227,22 @@ export const useFormaNumeroGigante = () => {
         // Nivel completado
         setTimeout(() => {
           setCompletedSets(prev => [...prev, currentLevel.toString()])
-          showToast("¡Nivel completado! 🎉", `Has completado el ${currentGameLevel.name}`)
+          toast({
+            title: "¡Nivel completado! 🎉",
+            description: `Has completado el ${currentGameLevel.name}`,
+          })
         }, 1500)
       }
     } else {
       setErrores((prev) => prev + 1)
-      showToast("¡Inténtalo de nuevo!", "El número no es correcto", "destructive")
+      toast({
+        title: "¡Inténtalo de nuevo!",
+        description: `El número no es correcto`,
+        variant: "destructive",
+      })
       clearNumber();
     }
-  }, [checkNumber, currentTargetNumber, currentNumberIndex, currentGameLevel, showToast, currentLevel])
+  }, [checkNumber, currentTargetNumber, currentNumberIndex, currentGameLevel, toast, currentLevel])
 
   // Limpiar número
   const clearNumber = useCallback(() => {
@@ -281,10 +266,12 @@ export const useFormaNumeroGigante = () => {
       setDigitCards([])
       setDropSlots([])
       setNeedsNewNumber(false) // Reset del flag
-
-      showToast("¡Nuevo nivel desbloqueado! 🚀", `${formaNumeroLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo nivel desbloqueado! 🚀",
+        description: `${formaNumeroLevels[currentLevel + 1].name}`,
+      })
     }
-  }, [isLastLevel, aciertos, showToast, currentLevel])
+  }, [isLastLevel, aciertos, toast, currentLevel])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -299,8 +286,11 @@ export const useFormaNumeroGigante = () => {
     setNeedsNewNumber(false) // Reset del flag
 
     reiniciar()
-    showToast("¡Juego reiniciado! 🔄", "Comenzando desde el nivel 1")
-  }, [reiniciar, showToast])
+    toast({
+      title: "¡Juego reiniciado! 🔄",
+      description: "Comenzando desde el nivel 1",
+    })
+  }, [reiniciar, toast])
 
   // Efecto para generar números aleatorios cuando cambia el nivel
   useEffect(() => {

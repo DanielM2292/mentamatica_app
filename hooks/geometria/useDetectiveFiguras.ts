@@ -104,8 +104,6 @@ export const useDetectiveFiguras = () => {
   const progressBarRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<HTMLDivElement>(null)
   const animationTimeouts = useRef<NodeJS.Timeout[]>([])
-  const lastToastTime = useRef<number>(0)
-  const lastToastMessage = useRef<string>("")
   const roundTimer = useRef<NodeJS.Timeout>()
 
   // Computed values
@@ -156,29 +154,6 @@ export const useDetectiveFiguras = () => {
     "¡Fantástico! 🎊",
     "¡Lo estás haciendo súper bien! 🚀"
   ]
-
-  // Toast function
-  const showToast = useCallback(
-    (title: string, description: string, variant?: "default" | "destructive") => {
-      const now = Date.now()
-      const message = `${title}-${description}`
-
-      if (now - lastToastTime.current < 1000 && lastToastMessage.current === message) {
-        return
-      }
-
-      lastToastTime.current = now
-      lastToastMessage.current = message
-
-      toast({
-        title,
-        description,
-        duration: 3000,
-        ...(variant && { variant }),
-      })
-    },
-    [toast],
-  )
 
   // Crear partículas de celebración
   const createCelebrationParticles = useCallback((x: number, y: number) => {
@@ -341,7 +316,11 @@ export const useDetectiveFiguras = () => {
       setAciertos(prev => prev + 1)
       
       const figureData = figureTypes[figure.type]
-      showToast("¡Correcto! 🎯", figureData.sound)
+      toast({
+        title: "¡Correcto! 🎯",
+        description: figureData.sound,
+        duration: 3000,
+      })
       showEncouragementMessage()
       createCelebrationParticles(x, y)
 
@@ -353,7 +332,11 @@ export const useDetectiveFiguras = () => {
         // Verificar si el nivel está completo
         if (roundsCompleted + 1 >= currentGameLevel.figuresPerLevel) {
           setCompletedSets([{ id: currentLevel }])
-          showToast("¡Nivel Completado! 🏆", "¡Eres un detective increíble!")
+          toast({
+            title: "¡Nivel Completado! 🏆",
+            description: "¡Eres un detective increíble!",
+            duration: 3000,
+          })
         } else {
           // Nueva ronda
           setTimeout(() => {
@@ -381,10 +364,14 @@ export const useDetectiveFiguras = () => {
           ),
         }))
       }, 600)
-      
-      showToast("¡Oops! 🤔", "Esa no es la figura que buscamos. ¡Inténtalo de nuevo!", "destructive")
+      toast({
+        title: "¡Oops! 🤔",
+        description: "Esa figura no es la que buscamos. ¡Inténtalo de nuevo!",
+        duration: 3000,
+        variant: "destructive",
+      })
     }
-  }, [gameState, isGameActive, roundsCompleted, currentGameLevel, currentLevel, generateScene, showToast, showEncouragementMessage, createCelebrationParticles])
+  }, [gameState, isGameActive, roundsCompleted, currentGameLevel, currentLevel, generateScene, toast, showEncouragementMessage, createCelebrationParticles])
 
   // Timer de ronda
   useEffect(() => {
@@ -396,7 +383,12 @@ export const useDetectiveFiguras = () => {
     } else if (roundTime === 0 && isGameActive) {
       // Tiempo agotado
       setErrores(prev => prev + 1)
-      showToast("¡Tiempo Agotado! ⏰", "¡No te preocupes! Inténtalo de nuevo", "destructive")
+      toast({
+        title: "¡Tiempo Agotado! ⏰",
+        description: "¡No te preocupes! Inténtalo de nuevo",
+        duration: 3000,
+        variant: "destructive",
+      })
       
       setTimeout(() => {
         generateScene()
@@ -406,16 +398,20 @@ export const useDetectiveFiguras = () => {
     return () => {
       if (roundTimer.current) clearTimeout(roundTimer.current)
     }
-  }, [isGameActive, roundTime, generateScene, showToast, gameState.figures.length])
+  }, [isGameActive, roundTime, generateScene, toast, gameState.figures.length])
 
   // Toggle hint
   const toggleHint = useCallback(() => {
     setShowHint(prev => !prev)
     if (!showHint && gameState.targetFigure) {
       const figureData = figureTypes[gameState.targetFigure]
-      showToast("💡 Pista", `Busca todas las figuras: ${figureData.name} ${figureData.emoji}`)
+      toast({
+        title: "💡 Pista",
+        description: `Busca todas las figuras: ${figureData.name} ${figureData.emoji}`,
+        duration: 3000,
+      })
     }
-  }, [showHint, gameState.targetFigure, showToast])
+  }, [showHint, gameState.targetFigure, toast])
 
   // Manejar siguiente nivel
   const handleNextLevel = useCallback(() => {
@@ -426,9 +422,13 @@ export const useDetectiveFiguras = () => {
       setCompletedSets([])
 
       generateScene()
-      showToast("¡Nuevo Desafío! 🔍", `${detectiveLevels[currentLevel + 1].name}`)
+      toast({
+        title: "¡Nuevo Desafío! 🔍",
+        description: `${detectiveLevels[currentLevel + 1].name}`,
+        duration: 3000,
+      })
     }
-  }, [isLastLevel, aciertos, generateScene, showToast, detener])
+  }, [isLastLevel, aciertos, generateScene, toast, detener])
 
   // Reiniciar juego
   const handleRestart = useCallback(() => {
@@ -443,8 +443,12 @@ export const useDetectiveFiguras = () => {
 
     generateScene()
     reiniciar()
-    showToast("¡Nueva Partida! 🔄", "¡A buscar figuras!")
-  }, [generateScene, reiniciar, showToast])
+    toast({
+      title: "¡Nueva Partida! 🔄",
+      description: "¡A buscar figuras!",
+      duration: 3000,
+    })
+  }, [generateScene, reiniciar, toast])
 
   // Inicializar juego
   useEffect(() => {

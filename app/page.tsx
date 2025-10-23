@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sparkles, Send } from "lucide-react"
+import { Sparkles, Send, Download, User, Users } from "lucide-react"
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs"
 
 export default function Page() {
@@ -13,10 +13,10 @@ export default function Page() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser()
 
-  console.log("Estado actual:", { 
-    isLoaded, 
-    isSignedIn, 
-    userId: user?.id, 
+  console.log("Estado actual:", {
+    isLoaded,
+    isSignedIn,
+    userId: user?.id,
   });
   useEffect(() => {
     if (isSignedIn && user) {
@@ -73,6 +73,15 @@ export default function Page() {
     },
   ]
 
+  const handleDownload = (fileName: string) => {
+    const link = document.createElement('a');
+    link.href = `/manuales/${fileName}`;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F5F0E1" }}>
       {/* Header - Responsive */}
@@ -94,7 +103,7 @@ export default function Page() {
         </div>
 
         <SignedOut>
-          <SignInButton 
+          <SignInButton
             mode="modal"
             afterSignInUrl="/"
             afterSignUpUrl="/"
@@ -137,7 +146,6 @@ export default function Page() {
           <div className="block lg:hidden space-y-8">
             {/* Botón de registro prominente en móvil */}
             <SignedOut>
-              
             </SignedOut>
 
             {/* Animaciones en grid 2x1 para móvil */}
@@ -154,7 +162,7 @@ export default function Page() {
             </div>
 
             <SignedOut>
-              <SignUpButton 
+              <SignUpButton
                 mode="modal"
                 afterSignUpUrl="/"
               >
@@ -215,85 +223,88 @@ export default function Page() {
         </div>
 
         {/* Email Subscription - Mobile Optimized */}
-        <div className="max-w-md mx-auto text-center animate-fade-in-up px-4">
-          <p className="text-gray-700 mb-4 text-sm sm:text-base">Si deseas más información escribe tu correo electrónico</p>
-          <div className="relative">
-            <div className="flex items-center">
-              <Input
-                type="email"
-                placeholder="example@hotmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-l-full border-2 text-center transition-all duration-300 focus:scale-105 text-sm sm:text-base"
-                style={{
-                  backgroundColor: "#D2B48C",
-                  borderColor: "#C19A6B",
-                  color: "white",
-                }}
-              />
-              <Button
-                onClick={handleSubmitEmail}
-                className="rounded-r-full px-3 sm:px-4 py-2 sm:py-3 h-full hover:scale-110 transition-all duration-300"
-                style={{
-                  backgroundColor: "#C19A6B",
-                  borderColor: "#C19A6B",
-                  color: "white",
-                }}
+        <div className="max-w-2xl mx-auto text-center animate-fade-in-up px-4">
+          <p className="text-gray-700 mb-4 text-2xl 2xl:text-base font-bold">Manuales de uso</p>
+          <div className="p-4 sm:p-6 rounded-xl shadow-lg relative overflow-hidden" style={{ backgroundColor: "#E2D9C8" }}>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#E2D9C8]/80 to-[#D8CDB8]/80 animate-pulse opacity-20"></div>
+            <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-6">
+              <button
+                onClick={() => handleDownload("manualPadres.pdf")}
+                className="group relative w-full sm:w-1/2 px-4 py-3 sm:px-6 sm:py-4 rounded-xl text-white bg-gradient-to-r from-[#C19A6B] to-[#A57F50] hover:from-[#A57F50] hover:to-[#8B6A40] transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl animate-pulse-gentle flex items-center justify-center gap-3 text-sm sm:text-base font-bold"
               >
-                <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-              </Button>
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" style={{ animationDuration: "1.5s" }} />
+                Manual para Padres
+                <span className="absolute right-4 sm:right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xl">✨</span>
+              </button>
+              <button
+                onClick={() => handleDownload("manualNinios.pdf")}
+                className="group relative w-full sm:w-1/2 px-4 py-3 sm:px-6 sm:py-4 rounded-xl text-white bg-gradient-to-r from-[#C19A6B] to-[#A57F50] hover:from-[#A57F50] hover:to-[#8B6A40] transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl animate-pulse-gentle flex items-center justify-center gap-3 text-sm sm:text-base font-bold"
+              >
+                <User className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" style={{ animationDuration: "1.5s" }} />
+                Manual para Niños
+                <span className="absolute right-4 sm:right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xl">✨</span>
+              </button>
             </div>
           </div>
         </div>
       </main>
 
       <style jsx>{`
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      
-      @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      
-      @keyframes bounceGentle {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
-      }
-      
-      @keyframes slideInScale {
-        from { 
-          opacity: 0; 
-          transform: scale(0.8) translateY(20px); 
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        to { 
-          opacity: 1; 
-          transform: scale(1) translateY(0); 
+        
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-      }
-      
-      .animate-fade-in {
-        animation: fadeIn 1s ease-out;
-      }
-      
-      .animate-fade-in-delay {
-        animation: fadeIn 1s ease-out 0.3s both;
-      }
-      
-      .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out both;
-      }
-      
-      .animate-bounce-gentle {
-        animation: bounceGentle 3s ease-in-out infinite;
-      }
-      
-      .animate-slide-in-scale {
-        animation: slideInScale 0.5s ease-out both;
-      }
-    `}</style>
+        
+        @keyframes bounceGentle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes slideInScale {
+          from { 
+            opacity: 0; 
+            transform: scale(0.8) translateY(20px); 
+          }
+          to { 
+            opacity: 1; 
+            transform: scale(1) translateY(0); 
+          }
+        }
+
+        @keyframes pulseGentle {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.03); }
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 1s ease-out;
+        }
+        
+        .animate-fade-in-delay {
+          animation: fadeIn 1s ease-out 0.3s both;
+        }
+        
+        .animate-fade-in-up {
+          animation: fadeInUp 0.6s ease-out both;
+        }
+        
+        .animate-bounce-gentle {
+          animation: bounceGentle 3s ease-in-out infinite;
+        }
+        
+        .animate-slide-in-scale {
+          animation: slideInScale 0.5s ease-out both;
+        }
+
+        .animate-pulse-gentle {
+          animation: pulseGentle 2s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   )
 }
@@ -347,8 +358,7 @@ function SmoothCountingBox() {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i + 1 === currentCount ? 'bg-purple-500 scale-125' : 'bg-purple-200'
-              }`}
+            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i + 1 === currentCount ? 'bg-purple-500 scale-125' : 'bg-purple-200'}`}
           />
         ))}
       </div>
@@ -455,8 +465,7 @@ function SmoothOperationsBox() {
         {operations.map((_, i) => (
           <div
             key={i}
-            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i === currentStep ? 'bg-blue-500 scale-125' : 'bg-blue-200'
-              }`}
+            className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${i === currentStep ? 'bg-blue-500 scale-125' : 'bg-blue-200'}`}
           />
         ))}
       </div>

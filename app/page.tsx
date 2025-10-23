@@ -229,7 +229,7 @@ export default function Page() {
             <div className="absolute inset-0 bg-gradient-to-br from-[#E2D9C8]/80 to-[#D8CDB8]/80 animate-pulse opacity-20"></div>
             <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-6">
               <button
-                onClick={() => handleDownload("manualPadres.pdf")}
+                onClick={() => handleDownload("ManualPadres.pdf")}
                 className="group relative w-full sm:w-1/2 px-4 py-3 sm:px-6 sm:py-4 rounded-xl text-white bg-gradient-to-r from-[#C19A6B] to-[#A57F50] hover:from-[#A57F50] hover:to-[#8B6A40] transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl animate-pulse-gentle flex items-center justify-center gap-3 text-sm sm:text-base font-bold"
               >
                 <Users className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" style={{ animationDuration: "1.5s" }} />
@@ -237,7 +237,7 @@ export default function Page() {
                 <span className="absolute right-4 sm:right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xl">✨</span>
               </button>
               <button
-                onClick={() => handleDownload("manualNinios.pdf")}
+                onClick={() => handleDownload("ManualNinios.pdf")}
                 className="group relative w-full sm:w-1/2 px-4 py-3 sm:px-6 sm:py-4 rounded-xl text-white bg-gradient-to-r from-[#C19A6B] to-[#A57F50] hover:from-[#A57F50] hover:to-[#8B6A40] transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl animate-pulse-gentle flex items-center justify-center gap-3 text-sm sm:text-base font-bold"
               >
                 <User className="w-5 h-5 sm:w-6 sm:h-6 animate-bounce" style={{ animationDuration: "1.5s" }} />
